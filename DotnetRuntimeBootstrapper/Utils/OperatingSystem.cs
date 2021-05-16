@@ -136,7 +136,7 @@ namespace DotnetRuntimeBootstrapper.Utils
             var startInfo = new ProcessStartInfo
             {
                 FileName = "shutdown",
-                Arguments = "/r /t:0 /c"
+                Arguments = "/r /t:0"
             };
 
             using (var process = new Process{StartInfo = startInfo})
