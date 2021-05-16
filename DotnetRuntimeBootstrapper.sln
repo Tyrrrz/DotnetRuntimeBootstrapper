@@ -1,0 +1,21 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper", "DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj", "{C3E22118-1186-41FB-939F-7C48EA109D07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.MSBuild", "DotnetRuntimeBootstrapper.MSBuild\DotnetRuntimeBootstrapper.MSBuild.csproj", "{40809F7D-623B-4CB1-8EF4-25A90352B487}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3E22118-1186-41FB-939F-7C48EA109D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3E22118-1186-41FB-939F-7C48EA109D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3E22118-1186-41FB-939F-7C48EA109D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3E22118-1186-41FB-939F-7C48EA109D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40809F7D-623B-4CB1-8EF4-25A90352B487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40809F7D-623B-4CB1-8EF4-25A90352B487}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40809F7D-623B-4CB1-8EF4-25A90352B487}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40809F7D-623B-4CB1-8EF4-25A90352B487}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

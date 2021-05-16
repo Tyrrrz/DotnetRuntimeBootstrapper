@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{C3E22118-1186-41FB-939F-7C48EA109D07}</ProjectGuid>
+        <OutputType>WinExe</OutputType>
+        <RootNamespace>DotnetRuntimeBootstrapper</RootNamespace>
+        <AssemblyName>DotnetRuntimeBootstrapper</AssemblyName>
+        <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <Deterministic>true</Deterministic>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Deployment" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="MainForm.cs">
+            <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="MainForm.Designer.cs">
+            <DependentUpon>MainForm.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Inputs.cs" />
+        <Compile Include="Program.cs" />
+        <Compile Include="RuntimeComponents\DotnetRuntimeComponent.cs" />
+        <Compile Include="RuntimeComponents\IRuntimeComponent.cs" />
+        <Compile Include="RuntimeComponents\VisualCppRuntimeComponent.cs" />
+        <Compile Include="RuntimeComponents\WindowsUpdate2999226RuntimeComponent.cs" />
+        <Compile Include="RuntimeComponents\WindowsUpdate3063858RuntimeComponent.cs" />
+        <Compile Include="Utils\CommandLine.cs" />
+        <Compile Include="Utils\Dotnet.cs" />
+        <Compile Include="Utils\Extensions\FunctionalExtensions.cs" />
+        <Compile Include="Utils\Extensions\StreamExtensions.cs" />
+        <Compile Include="Utils\Extensions\WebClientExtensions.cs" />
+        <Compile Include="Utils\HttpClient.cs" />
+        <Compile Include="Utils\Native\NativeMethods.cs" />
+        <Compile Include="Utils\Native\SystemInfo.cs" />
+        <Compile Include="Utils\Native\SystemVersionInfo.cs" />
+        <Compile Include="Utils\OperatingSystem.cs" />
+        <Compile Include="Utils\OperatingSystemVersion.cs" />
+        <Compile Include="Utils\ProcessorArchitecture.cs" />
+        <Compile Include="Utils\SemanticVersion.cs" />
+        <Compile Include="Utils\Task.cs" />
+        <Compile Include="Utils\TaskCompletionSource.cs" />
+        <Compile Include="Utils\TempFile.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="App.config" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Inputs.cfg" />
+    </ItemGroup>
+
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
