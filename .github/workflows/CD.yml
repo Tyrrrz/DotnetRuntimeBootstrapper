@@ -13,6 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.3
 
+      - name: Install .NET
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: 5.0.x
+
       - name: Install MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
@@ -22,6 +27,9 @@ jobs:
           nuget-version: latest
           nuget-api-key: ${{ secrets.NUGET_TOKEN }}
           nuget-api-key-source: nuget.org
+
+      - name: Restore packages
+        run: dotnet restore
 
       - name: Build
         run: msbuild -p:Configuration=Release
