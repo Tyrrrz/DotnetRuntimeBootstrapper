@@ -49,6 +49,13 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Env\Dotnet.cs" />
+        <Compile Include="Env\Native\NativeMethods.cs" />
+        <Compile Include="Env\Native\SystemInfo.cs" />
+        <Compile Include="Env\Native\SystemVersionInfo.cs" />
+        <Compile Include="Env\OperatingSystem.cs" />
+        <Compile Include="Env\OperatingSystemVersion.cs" />
+        <Compile Include="Env\ProcessorArchitecture.cs" />
         <Compile Include="MainForm.cs">
             <SubType>Form</SubType>
         </Compile>
@@ -63,17 +70,10 @@
         <Compile Include="RuntimeComponents\WindowsUpdate2999226RuntimeComponent.cs" />
         <Compile Include="RuntimeComponents\WindowsUpdate3063858RuntimeComponent.cs" />
         <Compile Include="Utils\CommandLine.cs" />
-        <Compile Include="Utils\Dotnet.cs" />
         <Compile Include="Utils\Extensions\FunctionalExtensions.cs" />
         <Compile Include="Utils\Extensions\StreamExtensions.cs" />
         <Compile Include="Utils\Extensions\WebClientExtensions.cs" />
         <Compile Include="Utils\HttpClient.cs" />
-        <Compile Include="Utils\Native\NativeMethods.cs" />
-        <Compile Include="Utils\Native\SystemInfo.cs" />
-        <Compile Include="Utils\Native\SystemVersionInfo.cs" />
-        <Compile Include="Utils\OperatingSystem.cs" />
-        <Compile Include="Utils\OperatingSystemVersion.cs" />
-        <Compile Include="Utils\ProcessorArchitecture.cs" />
         <Compile Include="Utils\SemanticVersion.cs" />
         <Compile Include="Utils\Task.cs" />
         <Compile Include="Utils\TaskCompletionSource.cs" />

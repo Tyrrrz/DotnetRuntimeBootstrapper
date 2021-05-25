@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using DotnetRuntimeBootstrapper.Utils;
 
-namespace DotnetRuntimeBootstrapper.Utils
+namespace DotnetRuntimeBootstrapper.Env
 {
     internal static class Dotnet
     {
@@ -19,10 +21,15 @@ namespace DotnetRuntimeBootstrapper.Utils
 
         public static void Run(string targetExecutableFilePath, string[] arguments)
         {
+            var argumentsFormatted =
+                CommandLine.EscapeArgument(targetExecutableFilePath) +
+                " -- " +
+                string.Join(" ", arguments.Select(CommandLine.EscapeArgument).ToArray());
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"{CommandLine.EscapeArgument(targetExecutableFilePath)} -- {CommandLine.EscapeArgument(string.Join(" ", arguments))}",
+                Arguments = argumentsFormatted,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };

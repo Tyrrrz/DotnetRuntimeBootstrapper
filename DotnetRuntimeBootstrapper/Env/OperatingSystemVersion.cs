@@ -1,4 +1,4 @@
-﻿namespace DotnetRuntimeBootstrapper.Utils
+﻿namespace DotnetRuntimeBootstrapper.Env
 {
     internal enum OperatingSystemVersion
     {

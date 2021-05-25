@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.RuntimeComponents;
 using DotnetRuntimeBootstrapper.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.Utils.OperatingSystem;
+using OperatingSystem = DotnetRuntimeBootstrapper.Env.OperatingSystem;
 
 // ReSharper disable LocalizableElement
 
@@ -32,58 +33,48 @@ namespace DotnetRuntimeBootstrapper
             Application.Exit();
         }
 
-        private void Invoke(Action updateProgress) => base.Invoke(updateProgress);
+        private void InvokeOnUI(Action updateProgress) => Invoke(updateProgress);
 
-        private void UpdateProgress(double progress)
+        private void UpdateProgress(double progress) => InvokeOnUI(() =>
         {
-            Invoke(() =>
-            {
-                ProgressBar.Value = (int) (progress * 100);
-                ProgressBar.Visible = true;
-            });
-        }
+            ProgressBar.Value = (int) (progress * 100);
+            ProgressBar.Visible = true;
+        });
 
-        private void ReportError(Exception exception)
+        private void ReportError(Exception exception) => InvokeOnUI(() =>
         {
-            Invoke(() =>
-            {
-                MessageBox.Show(
-                    "An error occurred:" + Environment.NewLine + exception,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+            MessageBox.Show(
+                "An error occurred:" + Environment.NewLine + exception,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
 
-                Exit(DialogResult.No);
-            });
-        }
+            Exit(DialogResult.No);
+        });
 
-        private void PromptReboot()
+        private void PromptReboot() => InvokeOnUI(() =>
         {
-            Invoke(() =>
+            var result = MessageBox.Show(
+                "You need to restart Windows to finish installation. " +
+                "Would you like to do it now?",
+                "Restart required",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (result == DialogResult.Yes)
             {
-                var result = MessageBox.Show(
-                    "You need to restart Windows to finish installation. " +
-                    "Would you like to do it now?",
-                    "Restart required",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning
-                );
+                OperatingSystem.InitiateReboot();
+            }
 
-                if (result == DialogResult.Yes)
-                {
-                    OperatingSystem.InitiateReboot();
-                }
-
-                Exit(DialogResult.No);
-            });
-        }
+            Exit(DialogResult.No);
+        });
 
         private Task InstallComponentsAsync()
         {
-            var task = Task.Successful;
-            var componentsInstalled = 0;
-
+            // Download
+            var componentInstallerFiles = new Dictionary<IRuntimeComponent, TempFile>();
             foreach (var component in _missingRuntimeComponents)
             {
                 var installerUrl = component.GetInstallerDownloadUrl();
@@ -93,36 +84,46 @@ namespace DotnetRuntimeBootstrapper
                     Path.GetExtension(installerUrl)
                 );
 
-                task = task
-                    .Then(() =>
+                componentInstallerFiles[component] = installerFile;
+            }
+
+            var downloadTask = Task.WhenAll(_missingRuntimeComponents
+                .Select(component =>
+                {
+                    var installerUrl = component.GetInstallerDownloadUrl();
+                    var installerFile = componentInstallerFiles[component];
+
+                    return _httpClient.DownloadAsync(installerUrl, installerFile.Path, UpdateProgress);
+                })
+                .ToArray()
+            );
+
+            // Install
+            var installTask = downloadTask
+                .Then(() =>
+                {
+                    var componentsInstalledCount = 0;
+
+                    foreach (var component in _missingRuntimeComponents)
                     {
-                        Invoke(() =>
+                        var currentComponentsInstalledCount = componentsInstalledCount;
+
+                        InvokeOnUI(() =>
                         {
                             DescriptionLabel.Text =
-                                $"Downloading {component.DisplayName}... [{componentsInstalled + 1} / {_missingRuntimeComponents.Length}]";
+                                $"Installing {component.DisplayName}... ({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
                         });
 
-                        return _httpClient.DownloadAsync(installerUrl, installerFile.Path, UpdateProgress);
-                    })
-                    .Then(() =>
-                    {
-                        Invoke(() =>
-                        {
-                            DescriptionLabel.Text =
-                                $"Installing {component.DisplayName}... [{componentsInstalled + 1} / {_missingRuntimeComponents.Length}]";
-                        });
-
-                        using (installerFile)
+                        using (var installerFile = componentInstallerFiles[component])
                         {
                             component.RunInstaller(installerFile.Path);
                         }
 
-                        UpdateProgress(0);
-                    })
-                    .Then(() => componentsInstalled++);
-            }
+                        componentsInstalledCount++;
+                    }
+                });
 
-            return task;
+            return installTask;
         }
 
         private void MainForm_Load(object sender, EventArgs args)
@@ -154,7 +155,7 @@ namespace DotnetRuntimeBootstrapper
             InstallButton.Visible = false;
             ExitButton.Visible = false;
             PictureBox.Image = SystemIcons.Information.ToBitmap();
-            DescriptionLabel.Text = "Downloading dependencies...";
+            DescriptionLabel.Text = "Downloading files...";
 
             InstallComponentsAsync()
                 .Then(() =>

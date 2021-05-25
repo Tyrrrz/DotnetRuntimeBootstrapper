@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.Utils.Native
+namespace DotnetRuntimeBootstrapper.Env.Native
 {
     internal static class NativeMethods
     {

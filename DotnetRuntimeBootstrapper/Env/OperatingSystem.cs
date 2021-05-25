@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using DotnetRuntimeBootstrapper.Utils.Native;
+using DotnetRuntimeBootstrapper.Env.Native;
+using DotnetRuntimeBootstrapper.Utils;
 
-namespace DotnetRuntimeBootstrapper.Utils
+namespace DotnetRuntimeBootstrapper.Env
 {
     internal static class OperatingSystem
     {
@@ -136,7 +137,7 @@ namespace DotnetRuntimeBootstrapper.Utils
             var startInfo = new ProcessStartInfo
             {
                 FileName = "shutdown",
-                Arguments = "/r /t:0"
+                Arguments = "/r /t 0"
             };
 
             using (var process = new Process{StartInfo = startInfo})

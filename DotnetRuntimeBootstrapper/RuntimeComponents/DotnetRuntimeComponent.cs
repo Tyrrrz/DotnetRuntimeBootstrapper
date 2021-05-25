@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using DotnetRuntimeBootstrapper.Env;
 using DotnetRuntimeBootstrapper.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.Utils.OperatingSystem;
+using OperatingSystem = DotnetRuntimeBootstrapper.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.RuntimeComponents
 {

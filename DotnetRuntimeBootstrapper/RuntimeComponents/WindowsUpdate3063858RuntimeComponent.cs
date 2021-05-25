@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using DotnetRuntimeBootstrapper.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.Utils.OperatingSystem;
+using DotnetRuntimeBootstrapper.Env;
+using OperatingSystem = DotnetRuntimeBootstrapper.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.RuntimeComponents
 {

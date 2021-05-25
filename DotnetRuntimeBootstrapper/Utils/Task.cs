@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace DotnetRuntimeBootstrapper.Utils
 {
@@ -97,6 +98,26 @@ namespace DotnetRuntimeBootstrapper.Utils
             return new Task(source);
         }
 
-        public static Task Successful { get; } = Create(source => source.SetSuccessful());
+        public static Task WhenAll(Task[] tasks) => Create(source =>
+        {
+            var completedCount = 0;
+
+            foreach (var task in tasks)
+            {
+                task.Source.OnCompleted(outcome =>
+                {
+                    if (outcome.IsSuccessful)
+                    {
+                        var lastCompletedCount = Interlocked.Increment(ref completedCount);
+                        if (lastCompletedCount >= tasks.Length)
+                            source.SetSuccessful();
+                    }
+                    else
+                    {
+                        source.SetOutcome(outcome);
+                    }
+                });
+            }
+        });
     }
 }
