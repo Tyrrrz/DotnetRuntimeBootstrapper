@@ -9,7 +9,7 @@ namespace DotnetRuntimeBootstrapper.Env
     {
         public static IEnumerable<string> ListRuntimes()
         {
-            var commandOutput = CommandLine.TryExecuteProcess("dotnet", "--list-runtimes");
+            var commandOutput = CommandLine.TryRun("dotnet", "--list-runtimes");
             if (string.IsNullOrEmpty(commandOutput))
                 yield break;
 

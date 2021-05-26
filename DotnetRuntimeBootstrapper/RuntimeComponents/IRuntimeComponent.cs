@@ -1,4 +1,6 @@
-﻿namespace DotnetRuntimeBootstrapper.RuntimeComponents
+﻿using System;
+
+namespace DotnetRuntimeBootstrapper.RuntimeComponents
 {
     public interface IRuntimeComponent
     {
@@ -8,8 +10,6 @@
 
         bool CheckIfInstalled();
 
-        string GetInstallerDownloadUrl();
-
-        void RunInstaller(string installerFilePath);
+        DownloadedRuntimeComponentInstaller DownloadInstaller(Action<double> handleProgress);
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.RuntimeComponents;
 using DotnetRuntimeBootstrapper.Utils;
@@ -15,7 +14,6 @@ namespace DotnetRuntimeBootstrapper
 {
     public partial class MainForm : Form
     {
-        private readonly HttpClient _httpClient = new HttpClient();
         private readonly IRuntimeComponent[] _missingRuntimeComponents;
 
         public DialogResult Result { get; private set; } = DialogResult.None;
@@ -56,7 +54,7 @@ namespace DotnetRuntimeBootstrapper
         private void PromptReboot() => InvokeOnUI(() =>
         {
             var result = MessageBox.Show(
-                "You need to restart Windows to finish installation. " +
+                $"You need to restart Windows before you can run {Inputs.TargetApplicationName}. " +
                 "Would you like to do it now?",
                 "Restart required",
                 MessageBoxButtons.YesNo,
@@ -71,95 +69,81 @@ namespace DotnetRuntimeBootstrapper
             Exit(DialogResult.No);
         });
 
-        private Task InstallComponentsAsync()
+        private void MainForm_Load(object sender, EventArgs args)
         {
-            // Download
-            var componentInstallerFiles = new Dictionary<IRuntimeComponent, TempFile>();
-            foreach (var component in _missingRuntimeComponents)
+            Text = $"Missing Dependencies: {Inputs.TargetApplicationName}";
+            PictureBox.Image = SystemIcons.Warning.ToBitmap();
+
+            DescriptionLabel.Text =
+                $"Your system is missing runtime components required by {Inputs.TargetApplicationName}. " +
+                "Would you like to download and install them?" +
+                Environment.NewLine +
+                Environment.NewLine +
+                string.Join(Environment.NewLine, _missingRuntimeComponents.Select(c =>
+                    $"• {c.DisplayName}"
+                ).ToArray());
+        }
+
+        private void InstallButton_Click(object sender, EventArgs args)
+        {
+            InstallButton.Visible = false;
+            InstallButton.Enabled = false;
+            ExitButton.Visible = false;
+            ExitButton.Enabled = false;
+
+            PictureBox.Image = SystemIcons.Information.ToBitmap();
+            DescriptionLabel.Text = "Downloading files...";
+
+            new Thread(() =>
             {
-                var installerUrl = component.GetInstallerDownloadUrl();
-
-                var installerFile = TempFile.Create(
-                    Path.GetFileNameWithoutExtension(installerUrl),
-                    Path.GetExtension(installerUrl)
-                );
-
-                componentInstallerFiles[component] = installerFile;
-            }
-
-            var downloadTask = Task.WhenAll(_missingRuntimeComponents
-                .Select(component =>
+                try
                 {
-                    var installerUrl = component.GetInstallerDownloadUrl();
-                    var installerFile = componentInstallerFiles[component];
-
-                    return _httpClient.DownloadAsync(installerUrl, installerFile.Path, UpdateProgress);
-                })
-                .ToArray()
-            );
-
-            // Install
-            var installTask = downloadTask
-                .Then(() =>
-                {
-                    var componentsInstalledCount = 0;
-
+                    // Download
+                    var componentInstallers = new List<DownloadedRuntimeComponentInstaller>();
+                    var componentsDownloaded = 0;
                     foreach (var component in _missingRuntimeComponents)
+                    {
+                        var currentComponentsDownloaded = componentsDownloaded;
+
+                        InvokeOnUI(() =>
+                        {
+                            DescriptionLabel.Text =
+                                $"Downloading {component.DisplayName}... " +
+                                $"({currentComponentsDownloaded + 1} of {_missingRuntimeComponents.Length * 2})";
+                        });
+
+                        var progressOffset = 1.0 * componentsDownloaded / _missingRuntimeComponents.Length;
+
+                        var installer = component.DownloadInstaller(p =>
+                            UpdateProgress(progressOffset + p * 1.0 / _missingRuntimeComponents.Length)
+                        );
+
+                        componentInstallers.Add(installer);
+                        componentsDownloaded++;
+                    }
+
+                    InvokeOnUI(() => ProgressBar.Style = ProgressBarStyle.Marquee);
+
+                    // Install
+                    var componentsInstalledCount = 0;
+                    foreach (var componentInstaller in componentInstallers)
                     {
                         var currentComponentsInstalledCount = componentsInstalledCount;
 
                         InvokeOnUI(() =>
                         {
                             DescriptionLabel.Text =
-                                $"Installing {component.DisplayName}... ({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
+                                $"Installing {componentInstaller.Component.DisplayName}... " +
+                                $"({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
                         });
 
-                        using (var installerFile = componentInstallerFiles[component])
-                        {
-                            component.RunInstaller(installerFile.Path);
-                        }
-
+                        componentInstaller.Run();
                         componentsInstalledCount++;
+
+                        FileEx.TryDelete(componentInstaller.FilePath);
                     }
-                });
 
-            return installTask;
-        }
-
-        private void MainForm_Load(object sender, EventArgs args)
-        {
-            Text = $"Missing Dependencies: {Inputs.TargetApplicationName}";
-            PictureBox.Image = SystemIcons.Warning.ToBitmap();
-
-            var descriptionBuffer = new StringBuilder();
-
-            descriptionBuffer
-                .AppendLine(
-                    $"Your system is missing runtime components required to run {Inputs.TargetApplicationName}. " +
-                    "Would you like to download and install them?"
-                )
-                .AppendLine();
-
-            foreach (var component in _missingRuntimeComponents)
-            {
-                descriptionBuffer
-                    .Append("• ")
-                    .AppendLine(component.DisplayName);
-            }
-
-            DescriptionLabel.Text = descriptionBuffer.ToString();
-        }
-
-        private void InstallButton_Click(object sender, EventArgs args)
-        {
-            InstallButton.Visible = false;
-            ExitButton.Visible = false;
-            PictureBox.Image = SystemIcons.Information.ToBitmap();
-            DescriptionLabel.Text = "Downloading files...";
-
-            InstallComponentsAsync()
-                .Then(() =>
-                {
+                    // Exit
                     if (_missingRuntimeComponents.Any(c => c.IsRebootRequired))
                     {
                         PromptReboot();
@@ -168,8 +152,12 @@ namespace DotnetRuntimeBootstrapper
                     {
                         Exit(DialogResult.OK);
                     }
-                })
-                .Catch(ReportError);
+                }
+                catch (Exception ex)
+                {
+                    ReportError(ex);
+                }
+            }).Start();
         }
 
         private void ExitButton_Click(object sender, EventArgs e) => Exit(DialogResult.Cancel);

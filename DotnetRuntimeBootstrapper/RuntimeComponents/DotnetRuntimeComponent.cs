@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using DotnetRuntimeBootstrapper.Env;
 using DotnetRuntimeBootstrapper.Utils;
@@ -53,48 +52,45 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
             return false;
         }
 
-        public string GetInstallerDownloadUrl()
+        private string GetRuntimeMoniker()
         {
-            // Don't use 'https' because it requires TLS1.2 which Windows 7 doesn't support out of the box
-            const string host = "http://dotnetcli.azureedge.net/dotnet";
-
-            var architectureMoniker = OperatingSystem.ProcessorArchitectureMoniker;
-
-            // Desktop
             if (string.Equals(_name, "Microsoft.WindowsDesktop.App", StringComparison.OrdinalIgnoreCase))
             {
-                return _version.Major >= 5
-                    ? $"{host}/WindowsDesktop/{_version}/windowsdesktop-runtime-{_version}-win-{architectureMoniker}.exe"
-                    : $"{host}/Runtime/{_version}/windowsdesktop-runtime-{_version}-win-{architectureMoniker}.exe";
+                return "runtime-desktop";
             }
 
-            // ASP.NET Core
             if (string.Equals(_name, "Microsoft.AspNetCore.App", StringComparison.OrdinalIgnoreCase))
             {
-                return
-                    $"{host}/aspnetcore/Runtime/{_version}/aspnetcore-runtime-{_version}-win-{architectureMoniker}.exe";
+                return "runtime-aspnetcore";
             }
 
-            // Base
-            return
-                $"{host}/Runtime/{_version}/dotnet-runtime-{_version}-win-{architectureMoniker}.exe";
+            return "runtime";
         }
 
-        public void RunInstaller(string installerFilePath)
+        private string GetInstallerDownloadUrl()
         {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = installerFilePath,
-                Arguments = "/install", // can also use /quiet but probably best not to
-                UseShellExecute = true,
-                Verb = "runas"
-            };
+            var runtimeMoniker = GetRuntimeMoniker();
+            var architectureMoniker = OperatingSystem.ProcessorArchitectureMoniker;
 
-            using (var process = new Process{StartInfo = startInfo})
-            {
-                process.Start();
-                process.WaitForExit();
-            }
+            // Get the download page and extract the installer download URL
+            var downloadPageUrl =
+                $"https://dotnet.microsoft.com/download/dotnet/thank-you/{runtimeMoniker}-{_version}-windows-{architectureMoniker}-installer";
+
+            var downloadPageContent = Http.GetContentString(downloadPageUrl);
+
+            var installerUrl = Regex.Match(downloadPageContent, "href=\"(.*?.exe)\"").Groups[1].Value;
+            if (string.IsNullOrEmpty(installerUrl))
+                throw new InvalidOperationException("Failed to extract .NET runtime installer URL.");
+
+            return installerUrl;
+        }
+
+        public DownloadedRuntimeComponentInstaller DownloadInstaller(Action<double> handleProgress)
+        {
+            var filePath = FileEx.GetTempFileName("dotnet_runtime_installer", "exe");
+            Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
+
+            return new DownloadedRuntimeComponentInstaller(this, filePath);
         }
     }
 }

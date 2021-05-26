@@ -46,7 +46,7 @@ namespace DotnetRuntimeBootstrapper.Env
 
             var result = new List<string>();
 
-            var wmicOutput = CommandLine.TryExecuteProcess("wmic", "qfe list full");
+            var wmicOutput = CommandLine.TryRun("wmic", "qfe list full");
 
             if (!string.IsNullOrEmpty(wmicOutput))
             {
@@ -129,6 +129,10 @@ namespace DotnetRuntimeBootstrapper.Env
                 return "x64";
             }
         }
+
+        public static bool IsProcessor64Bit =>
+            ProcessorArchitecture == ProcessorArchitecture.X64 ||
+            ProcessorArchitecture == ProcessorArchitecture.Arm64;
 
         public static bool IsUpdateInstalled(string updateId) => GetInstalledUpdates().Contains(updateId);
 

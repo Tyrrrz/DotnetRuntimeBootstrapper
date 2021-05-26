@@ -5,24 +5,24 @@ using OperatingSystem = DotnetRuntimeBootstrapper.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.RuntimeComponents
 {
-    public class WindowsUpdate3063858RuntimeComponent : IRuntimeComponent
+    public class WindowsUpdate3154518RuntimeComponent : IRuntimeComponent
     {
-        public string DisplayName => "Windows Update KB3063858";
+        public string DisplayName => "Windows Update KB3154518";
 
         public bool IsRebootRequired => true;
 
         public bool CheckIfInstalled() =>
             OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
-            OperatingSystem.IsUpdateInstalled("KB3063858");
+            OperatingSystem.IsUpdateInstalled("KB3154518");
 
         private string GetInstallerDownloadUrl() =>
             OperatingSystem.IsProcessor64Bit
-                ? "https://download.microsoft.com/download/0/8/E/08E0386B-F6AF-4651-8D1B-C0A95D2731F0/Windows6.1-KB3063858-x64.msu"
-                : "https://download.microsoft.com/download/C/9/6/C96CD606-3E05-4E1C-B201-51211AE80B1E/Windows6.1-KB3063858-x86.msu";
+                ? "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x64.msu"
+                : "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x86.msu";
 
         public DownloadedRuntimeComponentInstaller DownloadInstaller(Action<double> handleProgress)
         {
-            var filePath = FileEx.GetTempFileName("KB3063858", "msu");
+            var filePath = FileEx.GetTempFileName("KB3154518", "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
             return new DownloadedRuntimeComponentInstaller(this, filePath);

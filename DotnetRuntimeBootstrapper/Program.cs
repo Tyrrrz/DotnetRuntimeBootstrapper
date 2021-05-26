@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.Env;
 using DotnetRuntimeBootstrapper.RuntimeComponents;
@@ -16,6 +17,7 @@ namespace DotnetRuntimeBootstrapper
                 // Low-level dependencies first, high-level last
                 new WindowsUpdate2999226RuntimeComponent(),
                 new WindowsUpdate3063858RuntimeComponent(),
+                new WindowsUpdate3154518RuntimeComponent(),
                 new VisualCppRuntimeComponent(),
                 new DotnetRuntimeComponent(Inputs.TargetRuntimeName, Inputs.TargetRuntimeVersion)
             };
@@ -46,6 +48,19 @@ namespace DotnetRuntimeBootstrapper
                     // Ignore errors
                 }
             };
+
+            // Disable certificate validation (old operating systems may not properly support newer protocols).
+            // Try to switch to TLS1.2 if possible.
+            try
+            {
+                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+                ServicePointManager.SecurityProtocol |= (SecurityProtocolType) 0x00000C00;
+            }
+            catch
+            {
+                // This can fail on Windows 7 without KB3154518 installed.
+                // If that's the case we will attempt to install it and exit early.
+            }
 
             // Install missing components (if any)
             var missingComponents = GetMissingRuntimeComponents();

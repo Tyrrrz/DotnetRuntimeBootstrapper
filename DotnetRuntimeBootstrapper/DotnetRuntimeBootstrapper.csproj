@@ -65,19 +65,18 @@
         <Compile Include="Inputs.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="RuntimeComponents\DotnetRuntimeComponent.cs" />
+        <Compile Include="RuntimeComponents\DownloadedRuntimeComponentInstaller.cs" />
         <Compile Include="RuntimeComponents\IRuntimeComponent.cs" />
         <Compile Include="RuntimeComponents\VisualCppRuntimeComponent.cs" />
         <Compile Include="RuntimeComponents\WindowsUpdate2999226RuntimeComponent.cs" />
         <Compile Include="RuntimeComponents\WindowsUpdate3063858RuntimeComponent.cs" />
+        <Compile Include="RuntimeComponents\WindowsUpdate3154518RuntimeComponent.cs" />
         <Compile Include="Utils\CommandLine.cs" />
         <Compile Include="Utils\Extensions\FunctionalExtensions.cs" />
         <Compile Include="Utils\Extensions\StreamExtensions.cs" />
-        <Compile Include="Utils\Extensions\WebClientExtensions.cs" />
-        <Compile Include="Utils\HttpClient.cs" />
+        <Compile Include="Utils\FileEx.cs" />
+        <Compile Include="Utils\Http.cs" />
         <Compile Include="Utils\SemanticVersion.cs" />
-        <Compile Include="Utils\Task.cs" />
-        <Compile Include="Utils\TaskCompletionSource.cs" />
-        <Compile Include="Utils\TempFile.cs" />
     </ItemGroup>
 
     <ItemGroup>

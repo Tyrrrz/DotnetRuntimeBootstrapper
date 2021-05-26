@@ -9,7 +9,7 @@ namespace DotnetRuntimeBootstrapper.Utils
         public static string EscapeArgument(string argument) =>
             '"' + argument.Replace("\"", "\\\"") + '"';
 
-        public static string ExecuteProcess(string executableFilePath, string arguments = "")
+        public static string Run(string executableFilePath, string arguments = "")
         {
             var startInfo = new ProcessStartInfo
             {
@@ -21,16 +21,12 @@ namespace DotnetRuntimeBootstrapper.Utils
                 CreateNoWindow = true
             };
 
-            var process = new Process
-            {
-                StartInfo = startInfo
-            };
-
-            using (process)
+            using (var process = new Process {StartInfo = startInfo})
             using (var stdOutSignal = new ManualResetEvent(false))
             using (var stdErrSignal = new ManualResetEvent(false))
             {
                 var stdOutBuffer = new StringBuilder();
+                var stdErrBuffer = new StringBuilder();
 
                 process.EnableRaisingEvents = true;
 
@@ -50,7 +46,7 @@ namespace DotnetRuntimeBootstrapper.Utils
                 {
                     if (args.Data != null)
                     {
-                        // We don't care about stderr
+                        stdErrBuffer.AppendLine(args.Data);
                     }
                     else
                     {
@@ -67,15 +63,17 @@ namespace DotnetRuntimeBootstrapper.Utils
                 stdOutSignal.WaitOne();
                 stdErrSignal.WaitOne();
 
-                return stdOutBuffer.ToString();
+                return process.ExitCode == 0
+                    ? stdOutBuffer.ToString()
+                    : stdErrBuffer.ToString();
             }
         }
 
-        public static string TryExecuteProcess(string executableFilePath, string arguments = "")
+        public static string TryRun(string executableFilePath, string arguments = "")
         {
             try
             {
-                return ExecuteProcess(executableFilePath, arguments);
+                return Run(executableFilePath, arguments);
             }
             catch
             {
