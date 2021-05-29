@@ -69,16 +69,13 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
 
         private string GetInstallerDownloadUrl()
         {
-            var runtimeMoniker = GetRuntimeMoniker();
-            var architectureMoniker = OperatingSystem.ProcessorArchitectureMoniker;
-
-            // Get the download page and extract the installer download URL
             var downloadPageUrl =
-                $"https://dotnet.microsoft.com/download/dotnet/thank-you/{runtimeMoniker}-{_version}-windows-{architectureMoniker}-installer";
+                "https://dotnet.microsoft.com/download/dotnet/thank-you/" +
+                $"{GetRuntimeMoniker()}-{_version}-windows-{OperatingSystem.ProcessorArchitectureMoniker}-installer";
 
             var downloadPageContent = Http.GetContentString(downloadPageUrl);
 
-            var installerUrl = Regex.Match(downloadPageContent, "href=\"(.*?.exe)\"").Groups[1].Value;
+            var installerUrl = Regex.Match(downloadPageContent, "href=\"(.*?\\.exe)\"").Groups[1].Value;
             if (string.IsNullOrEmpty(installerUrl))
                 throw new InvalidOperationException("Failed to extract .NET runtime installer URL.");
 
