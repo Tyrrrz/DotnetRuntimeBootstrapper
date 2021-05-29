@@ -1,92 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{C3E22118-1186-41FB-939F-7C48EA109D07}</ProjectGuid>
-        <OutputType>WinExe</OutputType>
-        <RootNamespace>DotnetRuntimeBootstrapper</RootNamespace>
-        <AssemblyName>DotnetRuntimeBootstrapper</AssemblyName>
-        <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <Deterministic>true</Deterministic>
+        <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
+    <!-- Embed the bootstrapper -->
+    <ItemGroup>
+        <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Launcher/bin/$(Configuration)/DotnetRuntimeBootstrapper.Launcher.exe">
+            <Link>Bootstrapper.exe</Link>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </EmbeddedResource>
+        <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Launcher/bin/$(Configuration)/DotnetRuntimeBootstrapper.Launcher.exe.config">
+            <Link>Bootstrapper.exe.config</Link>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" PrivateAssets="all" />
+      <PackageReference Include="Mono.Cecil" Version="0.11.3" PrivateAssets="all" GeneratePathProperty="true" />
+    </ItemGroup>
+
+    <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
+       (i.e. only for DotnetRuntimeBootstrapper.Demo; shouldn't be required when referenced as NuGet package) -->
+    <PropertyGroup>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
+    <Target Name="GetDependencyTargetPaths">
+        <ItemGroup>
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
+        </ItemGroup>
+    </Target>
 
-    <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Windows.Forms" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Data.DataSetExtensions" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Deployment" />
-        <Reference Include="System.Drawing" />
-        <Reference Include="System.Windows.Forms" />
-        <Reference Include="System.Xml" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Env\Dotnet.cs" />
-        <Compile Include="Env\Native\NativeMethods.cs" />
-        <Compile Include="Env\Native\SystemInfo.cs" />
-        <Compile Include="Env\Native\SystemVersionInfo.cs" />
-        <Compile Include="Env\OperatingSystem.cs" />
-        <Compile Include="Env\OperatingSystemVersion.cs" />
-        <Compile Include="Env\ProcessorArchitecture.cs" />
-        <Compile Include="InstallationForm.cs">
-            <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="InstallationForm.Designer.cs">
-            <DependentUpon>InstallationForm.cs</DependentUpon>
-        </Compile>
-        <Compile Include="Inputs.cs" />
-        <Compile Include="Program.cs" />
-        <Compile Include="RuntimeComponents\DotnetRuntimeComponent.cs" />
-        <Compile Include="RuntimeComponents\DownloadedRuntimeComponentInstaller.cs" />
-        <Compile Include="RuntimeComponents\IRuntimeComponent.cs" />
-        <Compile Include="RuntimeComponents\VisualCppRuntimeComponent.cs" />
-        <Compile Include="RuntimeComponents\WindowsUpdate2999226RuntimeComponent.cs" />
-        <Compile Include="RuntimeComponents\WindowsUpdate3063858RuntimeComponent.cs" />
-        <Compile Include="RuntimeComponents\WindowsUpdate3154518RuntimeComponent.cs" />
-        <Compile Include="Utils\CommandLine.cs" />
-        <Compile Include="Utils\Extensions\AssemblyExtensions.cs" />
-        <Compile Include="Utils\Extensions\FunctionalExtensions.cs" />
-        <Compile Include="Utils\Extensions\RegistryExtensions.cs" />
-        <Compile Include="Utils\FileEx.cs" />
-        <Compile Include="Utils\Http.cs" />
-        <Compile Include="Utils\SemanticVersion.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="App.config" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Include="Inputs.cfg" />
-    </ItemGroup>
-
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

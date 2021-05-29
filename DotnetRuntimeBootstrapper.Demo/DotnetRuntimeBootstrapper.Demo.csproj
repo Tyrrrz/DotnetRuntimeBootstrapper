@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <UseWindowsForms>true</UseWindowsForms>
+    </PropertyGroup>
+
+    <!-- Import targets files manually (normally taken care of by NuGet) -->
+    <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.targets" />
+
+    <ItemGroup>
+      <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />
+    </ItemGroup>
+
+</Project>

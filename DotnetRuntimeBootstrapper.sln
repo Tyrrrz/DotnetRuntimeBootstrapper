@@ -1,12 +1,14 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper", "DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj", "{C3E22118-1186-41FB-939F-7C48EA109D07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Launcher", "DotnetRuntimeBootstrapper.Launcher\DotnetRuntimeBootstrapper.Launcher.csproj", "{C3E22118-1186-41FB-939F-7C48EA109D07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.MSBuild", "DotnetRuntimeBootstrapper.MSBuild\DotnetRuntimeBootstrapper.MSBuild.csproj", "{40809F7D-623B-4CB1-8EF4-25A90352B487}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper", "DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj", "{40809F7D-623B-4CB1-8EF4-25A90352B487}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{ADC60863-6275-4C58-9223-C8CCDBB7D12D}"
 ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
 EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Demo", "DotnetRuntimeBootstrapper.Demo\DotnetRuntimeBootstrapper.Demo.csproj", "{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,5 +24,9 @@ Global
 		{40809F7D-623B-4CB1-8EF4-25A90352B487}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40809F7D-623B-4CB1-8EF4-25A90352B487}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40809F7D-623B-4CB1-8EF4-25A90352B487}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
