@@ -6,11 +6,17 @@ namespace DotnetRuntimeBootstrapper.Utils
 {
     internal static class Http
     {
-        public static string GetContentString(string url)
+        private static HttpWebRequest CreateRequest(string url, string method = "GET")
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
-            request.Method = "GET";
+            request.Method = method;
 
+            return request;
+        }
+
+        public static string GetContentString(string url)
+        {
+            var request = CreateRequest(url);
             var response = request.GetResponse();
 
             using (var stream = response.GetResponseStream())
@@ -24,9 +30,7 @@ namespace DotnetRuntimeBootstrapper.Utils
         {
             using (var destination = File.Create(outputFilePath))
             {
-                var request = (HttpWebRequest) WebRequest.Create(url);
-                request.Method = "GET";
-
+                var request = CreateRequest(url);
                 var response = request.GetResponse();
 
                 using (var source = response.GetResponseStream())
@@ -46,7 +50,6 @@ namespace DotnetRuntimeBootstrapper.Utils
                         totalBytesCopied += bytesCopied;
                         handleProgress?.Invoke(1.0 * totalBytesCopied / response.ContentLength);
                     } while (bytesCopied > 0);
-
                 }
             }
         }

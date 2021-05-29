@@ -1,6 +1,6 @@
 ﻿namespace DotnetRuntimeBootstrapper
 {
-    partial class MainForm
+    partial class InstallationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -40,9 +40,9 @@
             this.MainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.PictureBox)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // ExitButton
-            // 
+            //
             this.ExitButton.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ExitButton.AutoEllipsis = true;
             this.ExitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -54,9 +54,9 @@
             this.ToolTip.SetToolTip(this.ExitButton, "Exit the application");
             this.ExitButton.UseVisualStyleBackColor = true;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
-            // 
+            //
             // InstallButton
-            // 
+            //
             this.InstallButton.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.InstallButton.AutoEllipsis = true;
             this.InstallButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
@@ -68,9 +68,9 @@
             this.ToolTip.SetToolTip(this.InstallButton, "Download and install the missing components");
             this.InstallButton.UseVisualStyleBackColor = true;
             this.InstallButton.Click += new System.EventHandler(this.InstallButton_Click);
-            // 
+            //
             // MainPanel
-            // 
+            //
             this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.MainPanel.BackColor = System.Drawing.Color.White;
             this.MainPanel.Controls.Add(this.PictureBox);
@@ -80,35 +80,35 @@
             this.MainPanel.Name = "MainPanel";
             this.MainPanel.Size = new System.Drawing.Size(510, 210);
             this.MainPanel.TabIndex = 6;
-            // 
+            //
             // PictureBox
-            // 
+            //
             this.PictureBox.Location = new System.Drawing.Point(16, 16);
             this.PictureBox.Name = "PictureBox";
             this.PictureBox.Size = new System.Drawing.Size(32, 32);
             this.PictureBox.TabIndex = 6;
             this.PictureBox.TabStop = false;
-            // 
+            //
             // ProgressBar
-            // 
+            //
             this.ProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.ProgressBar.Location = new System.Drawing.Point(9, 180);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(490, 22);
             this.ProgressBar.TabIndex = 6;
             this.ProgressBar.Visible = false;
-            // 
+            //
             // DescriptionLabel
-            // 
+            //
             this.DescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.DescriptionLabel.Location = new System.Drawing.Point(59, 12);
             this.DescriptionLabel.Name = "DescriptionLabel";
             this.DescriptionLabel.Size = new System.Drawing.Size(440, 190);
             this.DescriptionLabel.TabIndex = 5;
             this.DescriptionLabel.Text = "Foo bar\r\n  - bar foo\r\n\r\nBaz baz";
-            // 
-            // MainForm
-            // 
+            //
+            // InstallationForm
+            //
             this.AcceptButton = this.InstallButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -120,11 +120,11 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(250, 200);
-            this.Name = "MainForm";
+            this.Name = "InstallationForm";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = ".NET Runtime Bootstrapper";
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Load += new System.EventHandler(this.InstallationForm_Load);
             this.MainPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize) (this.PictureBox)).EndInit();
             this.ResumeLayout(false);

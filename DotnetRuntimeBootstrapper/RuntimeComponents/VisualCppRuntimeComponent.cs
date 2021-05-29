@@ -1,6 +1,7 @@
 ﻿using System;
 using DotnetRuntimeBootstrapper.Env;
 using DotnetRuntimeBootstrapper.Utils;
+using DotnetRuntimeBootstrapper.Utils.Extensions;
 using Microsoft.Win32;
 using OperatingSystem = DotnetRuntimeBootstrapper.Env.OperatingSystem;
 
@@ -12,17 +13,10 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
 
         public bool IsRebootRequired => true;
 
-        public bool CheckIfInstalled()
-        {
-            var architectureMoniker = OperatingSystem.ProcessorArchitectureMoniker;
-
-            var registryKey = Registry.LocalMachine.OpenSubKey(
-                $"SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{architectureMoniker}",
-                false
+        public bool CheckIfInstalled() =>
+            Registry.LocalMachine.ContainsSubKey(
+                $"SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{OperatingSystem.ProcessorArchitectureMoniker}"
             );
-
-            return registryKey != null;
-        }
 
         private string GetInstallerDownloadUrl()
         {

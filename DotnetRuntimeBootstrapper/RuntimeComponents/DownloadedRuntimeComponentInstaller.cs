@@ -32,7 +32,7 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
                 };
             }
 
-            // EXE or MSI
+            // Regular executable
             return new ProcessStartInfo
             {
                 FileName = FilePath ?? "",

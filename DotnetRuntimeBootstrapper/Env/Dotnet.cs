@@ -19,7 +19,7 @@ namespace DotnetRuntimeBootstrapper.Env
             }
         }
 
-        public static void Run(string targetExecutableFilePath, string[] arguments)
+        public static int Run(string targetExecutableFilePath, string[] arguments)
         {
             var argumentsFormatted =
                 CommandLine.EscapeArgument(targetExecutableFilePath) +
@@ -43,6 +43,8 @@ namespace DotnetRuntimeBootstrapper.Env
             {
                 process.Start();
                 process.WaitForExit();
+
+                return process.ExitCode;
             }
         }
     }

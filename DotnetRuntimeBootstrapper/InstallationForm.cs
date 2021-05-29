@@ -12,13 +12,13 @@ using OperatingSystem = DotnetRuntimeBootstrapper.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper
 {
-    public partial class MainForm : Form
+    public partial class InstallationForm : Form
     {
         private readonly IRuntimeComponent[] _missingRuntimeComponents;
 
         public DialogResult Result { get; private set; } = DialogResult.None;
 
-        public MainForm(IRuntimeComponent[] missingRuntimeComponents)
+        public InstallationForm(IRuntimeComponent[] missingRuntimeComponents)
         {
             _missingRuntimeComponents = missingRuntimeComponents;
 
@@ -69,7 +69,7 @@ namespace DotnetRuntimeBootstrapper
             Exit(DialogResult.No);
         });
 
-        private void MainForm_Load(object sender, EventArgs args)
+        private void InstallationForm_Load(object sender, EventArgs args)
         {
             Text = $"Missing Dependencies: {Inputs.TargetApplicationName}";
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
@@ -109,7 +109,7 @@ namespace DotnetRuntimeBootstrapper
                         {
                             DescriptionLabel.Text =
                                 $"Downloading {component.DisplayName}... " +
-                                $"({currentComponentsDownloaded + 1} of {_missingRuntimeComponents.Length * 2})";
+                                $"({currentComponentsDownloaded + 1} of {2 * _missingRuntimeComponents.Length})";
                         });
 
                         var progressOffset = 1.0 * componentsDownloaded / _missingRuntimeComponents.Length;
@@ -134,7 +134,7 @@ namespace DotnetRuntimeBootstrapper
                         {
                             DescriptionLabel.Text =
                                 $"Installing {componentInstaller.Component.DisplayName}... " +
-                                $"({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
+                                $"({2 * currentComponentsInstalledCount + 1} of {2 * _missingRuntimeComponents.Length})";
                         });
 
                         componentInstaller.Run();
@@ -143,7 +143,7 @@ namespace DotnetRuntimeBootstrapper
                         FileEx.TryDelete(componentInstaller.FilePath);
                     }
 
-                    // Exit
+                    // Finalize
                     if (_missingRuntimeComponents.Any(c => c.IsRebootRequired))
                     {
                         PromptReboot();

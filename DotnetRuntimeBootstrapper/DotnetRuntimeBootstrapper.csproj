@@ -56,11 +56,11 @@
         <Compile Include="Env\OperatingSystem.cs" />
         <Compile Include="Env\OperatingSystemVersion.cs" />
         <Compile Include="Env\ProcessorArchitecture.cs" />
-        <Compile Include="MainForm.cs">
+        <Compile Include="InstallationForm.cs">
             <SubType>Form</SubType>
         </Compile>
-        <Compile Include="MainForm.Designer.cs">
-            <DependentUpon>MainForm.cs</DependentUpon>
+        <Compile Include="InstallationForm.Designer.cs">
+            <DependentUpon>InstallationForm.cs</DependentUpon>
         </Compile>
         <Compile Include="Inputs.cs" />
         <Compile Include="Program.cs" />
@@ -73,6 +73,7 @@
         <Compile Include="RuntimeComponents\WindowsUpdate3154518RuntimeComponent.cs" />
         <Compile Include="Utils\CommandLine.cs" />
         <Compile Include="Utils\Extensions\FunctionalExtensions.cs" />
+        <Compile Include="Utils\Extensions\RegistryExtensions.cs" />
         <Compile Include="Utils\Extensions\StreamExtensions.cs" />
         <Compile Include="Utils\FileEx.cs" />
         <Compile Include="Utils\Http.cs" />

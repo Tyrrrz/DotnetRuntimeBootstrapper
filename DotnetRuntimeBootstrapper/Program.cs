@@ -10,6 +10,38 @@ namespace DotnetRuntimeBootstrapper
 {
     public static class Program
     {
+        private static void Init()
+        {
+            // Rudimentary error logging
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                // Dump unhandled exceptions to a file
+                try
+                {
+                    File.WriteAllText("bootstrapper-error.txt", e.ExceptionObject.ToString());
+                }
+                catch
+                {
+                    // Ignore errors
+                }
+            };
+
+            // Disable certificate validation (valid certificate may fail on old operating systems).
+            // Try to enable TLS1.2 if it's supported (not a requirement, at least yet).
+            try
+            {
+                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+                ServicePointManager.SecurityProtocol =
+                    (SecurityProtocolType) 0x00000C00 |
+                    SecurityProtocolType.Tls |
+                    SecurityProtocolType.Ssl3;
+            }
+            catch
+            {
+                // Ignore errors
+            }
+        }
+
         private static IRuntimeComponent[] GetMissingRuntimeComponents()
         {
             var result = new List<IRuntimeComponent>
@@ -32,57 +64,35 @@ namespace DotnetRuntimeBootstrapper
             return result.ToArray();
         }
 
-        [STAThread]
-        public static void Main(string[] args)
+        private static bool PerformInstallation(IRuntimeComponent[] missingRuntimeComponents)
         {
-            // Rudimentary error logging
-            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-            {
-                // Try to dump exception to file
-                try
-                {
-                    File.WriteAllText("bootstrapper-error.txt", e.ExceptionObject.ToString());
-                }
-                catch
-                {
-                    // Ignore errors
-                }
-            };
+            if (missingRuntimeComponents.Length <= 0)
+                return true;
 
-            // Disable certificate validation (old operating systems may not properly support newer protocols).
-            // Try to switch to TLS1.2 if possible.
-            try
-            {
-                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
-                ServicePointManager.SecurityProtocol |= (SecurityProtocolType) 0x00000C00;
-            }
-            catch
-            {
-                // This can fail on Windows 7 without KB3154518 installed.
-                // If that's the case we will attempt to install it and exit early.
-            }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            // Install missing components (if any)
+            var form = new InstallationForm(missingRuntimeComponents);
+            Application.Run(form);
+
+            return form.Result == DialogResult.OK;
+        }
+
+        [STAThread]
+        public static int Main(string[] args)
+        {
+            Init();
+
+            // Install missing components
             var missingComponents = GetMissingRuntimeComponents();
-            if (missingComponents.Length > 0)
+            if (!PerformInstallation(missingComponents))
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-
-                var form = new MainForm(missingComponents);
-
-                Application.Run(form);
-
-                if (form.Result != DialogResult.OK)
-                {
-                    Environment.ExitCode = 1;
-                    return;
-                }
+                // Either the installation failed or requires reboot
+                return 1;
             }
 
-            // At this point the missing components have either been installed or
-            // were already installed previously, so just run the target executable.
-            Dotnet.Run(Inputs.TargetExecutableFilePath, args);
+            // Run the target
+            return Dotnet.Run(Inputs.TargetExecutableFilePath, args);
         }
     }
 }
