@@ -35,7 +35,7 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
             // Regular executable
             return new ProcessStartInfo
             {
-                FileName = FilePath ?? "",
+                FileName = FilePath,
                 Arguments = "/quiet",
                 UseShellExecute = true,
                 Verb = "runas"
@@ -44,15 +44,14 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
 
         public void Run()
         {
-            using (var process = new Process{StartInfo = GetStartInfo()})
-            {
-                process.Start();
-                process.WaitForExit();
+            using var process = new Process{StartInfo = GetStartInfo()};
 
-                // Below seems to have false negatives
-                //if (process.ExitCode != 0)
-                    //throw new InvalidOperationException($"Failed to run the installer. Exit code {process.ExitCode}.");
-            }
+            process.Start();
+            process.WaitForExit();
+
+            // Below seems to have false negatives
+            //if (process.ExitCode != 0)
+            //throw new InvalidOperationException($"Failed to run the installer. Exit code {process.ExitCode}.");
         }
     }
 }

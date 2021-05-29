@@ -18,18 +18,14 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
                 $"SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{OperatingSystem.ProcessorArchitectureMoniker}"
             );
 
-        private string GetInstallerDownloadUrl()
+        private string GetInstallerDownloadUrl() => OperatingSystem.ProcessorArchitecture switch
         {
-            if (OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X86)
-                return "https://aka.ms/vs/16/release/vc_redist.x86.exe";
+            ProcessorArchitecture.X86 => "https://aka.ms/vs/16/release/vc_redist.x86.exe",
+            ProcessorArchitecture.X64 => "https://aka.ms/vs/16/release/vc_redist.x64.exe",
+            _ => "https://aka.ms/vs/16/release/VC_redist.arm64.exe"
+        };
 
-            if (OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64)
-                return "https://aka.ms/vs/16/release/vc_redist.x64.exe";
-
-            return "https://aka.ms/vs/16/release/VC_redist.arm64.exe";
-        }
-
-        public DownloadedRuntimeComponentInstaller DownloadInstaller(Action<double> handleProgress)
+        public DownloadedRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName("visual_cpp_redist", "exe");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);

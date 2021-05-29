@@ -38,7 +38,7 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
 
                 // Versions should match or there should be a higher version within the same major
                 var isVersionMatch =
-                    runtimeVersion != null &&
+                    runtimeVersion is not null &&
                     runtimeVersion.Major == _version.Major &&
                     runtimeVersion.Minor >= _version.Minor &&
                     runtimeVersion.Patch >= _version.Patch;
@@ -82,7 +82,7 @@ namespace DotnetRuntimeBootstrapper.RuntimeComponents
             return installerUrl;
         }
 
-        public DownloadedRuntimeComponentInstaller DownloadInstaller(Action<double> handleProgress)
+        public DownloadedRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName("dotnet_runtime_installer", "exe");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);

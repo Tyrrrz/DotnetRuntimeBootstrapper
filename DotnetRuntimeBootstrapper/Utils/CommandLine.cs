@@ -21,55 +21,54 @@ namespace DotnetRuntimeBootstrapper.Utils
                 CreateNoWindow = true
             };
 
-            using (var process = new Process {StartInfo = startInfo})
-            using (var stdOutSignal = new ManualResetEvent(false))
-            using (var stdErrSignal = new ManualResetEvent(false))
+            using var process = new Process {StartInfo = startInfo};
+            using var stdOutSignal = new ManualResetEvent(false);
+            using var stdErrSignal = new ManualResetEvent(false);
+
+            var stdOutBuffer = new StringBuilder();
+            var stdErrBuffer = new StringBuilder();
+
+            process.EnableRaisingEvents = true;
+
+            process.OutputDataReceived += (_, args) =>
             {
-                var stdOutBuffer = new StringBuilder();
-                var stdErrBuffer = new StringBuilder();
-
-                process.EnableRaisingEvents = true;
-
-                process.OutputDataReceived += (sender, args) =>
+                if (args.Data is not null)
                 {
-                    if (args.Data != null)
-                    {
-                        stdOutBuffer.AppendLine(args.Data);
-                    }
-                    else
-                    {
-                        stdOutSignal.Set();
-                    }
-                };
-
-                process.ErrorDataReceived += (sender, args) =>
+                    stdOutBuffer.AppendLine(args.Data);
+                }
+                else
                 {
-                    if (args.Data != null)
-                    {
-                        stdErrBuffer.AppendLine(args.Data);
-                    }
-                    else
-                    {
-                        stdErrSignal.Set();
-                    }
-                };
+                    stdOutSignal.Set();
+                }
+            };
 
-                process.Start();
+            process.ErrorDataReceived += (_, args) =>
+            {
+                if (args.Data is not null)
+                {
+                    stdErrBuffer.AppendLine(args.Data);
+                }
+                else
+                {
+                    stdErrSignal.Set();
+                }
+            };
 
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+            process.Start();
 
-                process.WaitForExit();
-                stdOutSignal.WaitOne();
-                stdErrSignal.WaitOne();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
 
-                return process.ExitCode == 0
-                    ? stdOutBuffer.ToString()
-                    : stdErrBuffer.ToString();
-            }
+            process.WaitForExit();
+            stdOutSignal.WaitOne();
+            stdErrSignal.WaitOne();
+
+            return process.ExitCode == 0
+                ? stdOutBuffer.ToString()
+                : stdErrBuffer.ToString();
         }
 
-        public static string TryRun(string executableFilePath, string arguments = "")
+        public static string? TryRun(string executableFilePath, string arguments = "")
         {
             try
             {

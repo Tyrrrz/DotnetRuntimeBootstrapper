@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <Version>1.0</Version>
+    <Company>Tyrrrz</Company>
+    <Copyright>Copyright (C) Alexey Golub</Copyright>
+    <LangVersion>latest</LangVersion>
+    <Nullable>annotations</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+</Project>

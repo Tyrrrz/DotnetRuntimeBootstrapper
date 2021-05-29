@@ -13,7 +13,7 @@ namespace DotnetRuntimeBootstrapper.Env
 
         private static SystemInfo GetSystemInfo()
         {
-            if (_systemInfo != null)
+            if (_systemInfo is not null)
                 return _systemInfo.Value;
 
             var systemInfo = default(SystemInfo);
@@ -27,7 +27,7 @@ namespace DotnetRuntimeBootstrapper.Env
 
         private static SystemVersionInfo GetSystemVersionInfo()
         {
-            if (_systemVersionInfo != null)
+            if (_systemVersionInfo is not null)
                 return _systemVersionInfo.Value;
 
             var systemVersionInfo = default(SystemVersionInfo);
@@ -37,11 +37,11 @@ namespace DotnetRuntimeBootstrapper.Env
             return systemVersionInfo;
         }
 
-        private static HashSet<string> _installedUpdates;
+        private static HashSet<string>? _installedUpdates;
 
         private static HashSet<string> GetInstalledUpdates()
         {
-            if (_installedUpdates != null)
+            if (_installedUpdates is not null)
                 return _installedUpdates;
 
             var result = new List<string>();
@@ -90,49 +90,26 @@ namespace DotnetRuntimeBootstrapper.Env
             }
         }
 
-        public static ProcessorArchitecture ProcessorArchitecture
+        public static ProcessorArchitecture ProcessorArchitecture => GetSystemInfo().ProcessorArchitecture switch
         {
-            get
-            {
-                if (GetSystemInfo().ProcessorArchitecture == 0)
-                    return ProcessorArchitecture.X86;
+            0 => ProcessorArchitecture.X86,
+            9 => ProcessorArchitecture.X64,
+            5 => ProcessorArchitecture.Arm,
+            12 => ProcessorArchitecture.Arm64,
+            _ => ProcessorArchitecture.X64
+        };
 
-                if (GetSystemInfo().ProcessorArchitecture == 9)
-                    return ProcessorArchitecture.X64;
-
-                if (GetSystemInfo().ProcessorArchitecture == 5)
-                    return ProcessorArchitecture.Arm;
-
-                if (GetSystemInfo().ProcessorArchitecture == 12)
-                    return ProcessorArchitecture.Arm64;
-
-                return ProcessorArchitecture.X64;
-            }
-        }
-
-        public static string ProcessorArchitectureMoniker
+        public static string ProcessorArchitectureMoniker => ProcessorArchitecture switch
         {
-            get
-            {
-                if (ProcessorArchitecture == ProcessorArchitecture.X86)
-                    return "x86";
-
-                if (ProcessorArchitecture == ProcessorArchitecture.X64)
-                    return "x64";
-
-                if (ProcessorArchitecture == ProcessorArchitecture.Arm)
-                    return "arm";
-
-                if (ProcessorArchitecture == ProcessorArchitecture.Arm64)
-                    return "arm64";
-
-                return "x64";
-            }
-        }
+            ProcessorArchitecture.X86 => "x86",
+            ProcessorArchitecture.X64 => "x64",
+            ProcessorArchitecture.Arm => "arm",
+            ProcessorArchitecture.Arm64 => "arm64",
+            _ => "x64"
+        };
 
         public static bool IsProcessor64Bit =>
-            ProcessorArchitecture == ProcessorArchitecture.X64 ||
-            ProcessorArchitecture == ProcessorArchitecture.Arm64;
+            ProcessorArchitecture is ProcessorArchitecture.X64 or ProcessorArchitecture.Arm64;
 
         public static bool IsUpdateInstalled(string updateId) => GetInstalledUpdates().Contains(updateId);
 
@@ -144,11 +121,9 @@ namespace DotnetRuntimeBootstrapper.Env
                 Arguments = "/r /t 0"
             };
 
-            using (var process = new Process{StartInfo = startInfo})
-            {
-                process.Start();
-                process.WaitForExit();
-            }
+            using var process = new Process{StartInfo = startInfo};
+            process.Start();
+            process.WaitForExit();
         }
     }
 }

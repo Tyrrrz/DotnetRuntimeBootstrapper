@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace DotnetRuntimeBootstrapper.Utils
@@ -23,7 +24,7 @@ namespace DotnetRuntimeBootstrapper.Utils
 
     public partial class SemanticVersion
     {
-        public static SemanticVersion TryParse(string value)
+        public static SemanticVersion? TryParse(string value)
         {
             var components = value.Split('.');
 
@@ -62,5 +63,9 @@ namespace DotnetRuntimeBootstrapper.Utils
 
             return new SemanticVersion(major, minor, patch);
         }
+
+        public static SemanticVersion Parse(string value) =>
+            TryParse(value) ??
+            throw new FormatException($"String '{value}' does not represent a valid semantic version.");
     }
 }

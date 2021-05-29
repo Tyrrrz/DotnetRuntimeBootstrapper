@@ -7,7 +7,7 @@ namespace DotnetRuntimeBootstrapper.Utils
 {
     internal static class FileEx
     {
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new();
 
         private static string GetRandomSuffix()
         {

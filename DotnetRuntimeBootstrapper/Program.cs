@@ -13,12 +13,12 @@ namespace DotnetRuntimeBootstrapper
         private static void Init()
         {
             // Rudimentary error logging
-            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            AppDomain.CurrentDomain.UnhandledException += (_, args) =>
             {
                 // Dump unhandled exceptions to a file
                 try
                 {
-                    File.WriteAllText("bootstrapper-error.txt", e.ExceptionObject.ToString());
+                    File.WriteAllText("bootstrapper-error.txt", args.ExceptionObject.ToString());
                 }
                 catch
                 {
@@ -30,7 +30,7 @@ namespace DotnetRuntimeBootstrapper
             // Try to enable TLS1.2 if it's supported (not a requirement, at least yet).
             try
             {
-                ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+                ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
                 ServicePointManager.SecurityProtocol =
                     (SecurityProtocolType) 0x00000C00 |
                     SecurityProtocolType.Tls |

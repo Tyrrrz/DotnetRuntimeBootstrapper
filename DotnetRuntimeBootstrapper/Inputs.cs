@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Resources;
 using DotnetRuntimeBootstrapper.Utils;
 using DotnetRuntimeBootstrapper.Utils.Extensions;
 
@@ -15,56 +13,47 @@ namespace DotnetRuntimeBootstrapper
     {
         private static Dictionary<string, string> ResolveMap()
         {
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
             var assembly = typeof(Program).Assembly;
             var rootNamespace = typeof(Program).Namespace;
 
-            var resourceStream = assembly.GetManifestResourceStream($"{rootNamespace}.Inputs.cfg");
-            if (resourceStream == null)
+            foreach (var line in assembly.GetManifestResourceString($"{rootNamespace}.Inputs.cfg").Split('\n'))
             {
-                throw new MissingManifestResourceException(
-                    "Missing manifest resource containing inputs."
-                );
-            }
+                var equalsPos = line.IndexOf('=');
+                if (equalsPos < 0)
+                    continue;
 
-            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                var key = line.Substring(0, equalsPos).Trim();
+                var value = line.Substring(equalsPos + 1).Trim();
 
-            using (resourceStream)
-            using (var resourceReader = new StreamReader(resourceStream))
-            {
-                foreach (var line in resourceReader.ReadAllLines())
-                {
-                    var equalsPos = line.IndexOf('=');
-                    if (equalsPos < 0)
-                        continue;
-
-                    var key = line.Substring(0, equalsPos).Trim();
-                    var value = line.Substring(equalsPos + 1).Trim();
-
-                    result[key] = value;
-                }
+                result[key] = value;
             }
 
             return result;
         }
 
-        private static Dictionary<string, string> _map;
-        private static Dictionary<string, string> Map => _map ?? (_map = ResolveMap());
+        private static Dictionary<string, string>? _map;
+        private static Dictionary<string, string> Map => _map ??= ResolveMap();
 
-        private static string TryGetValue(string key) =>
+        private static string? TryGetValue(string key) =>
             Map.TryGetValue(key, out var value)
                 ? value
                 : null;
 
+        private static string GetValue(string key) =>
+            TryGetValue(key) ?? throw new InvalidOperationException($"Required input '{key}' is missing.");
+
         public static string TargetApplicationName =>
-            TryGetValue(nameof(TargetApplicationName));
+            GetValue(nameof(TargetApplicationName));
 
         public static string TargetExecutableFilePath =>
-            TryGetValue(nameof(TargetExecutableFilePath));
+            GetValue(nameof(TargetExecutableFilePath));
 
         public static string TargetRuntimeName =>
-            TryGetValue(nameof(TargetRuntimeName));
+            GetValue(nameof(TargetRuntimeName));
 
         public static SemanticVersion TargetRuntimeVersion =>
-            TryGetValue(nameof(TargetRuntimeVersion))?.Pipe(SemanticVersion.TryParse);
+            GetValue(nameof(TargetRuntimeVersion)).Pipe(SemanticVersion.Parse);
     }
 }
