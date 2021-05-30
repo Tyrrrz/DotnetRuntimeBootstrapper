@@ -1,10 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+        <NoPackageAnalysis>true</NoPackageAnalysis>
+        <Authors>$(Company)</Authors>
+        <Description>Custom bootstrapper for Windows desktop applications that automatically installs .NET runtime</Description>
+        <PackageTags>windows dotnet runtime install bootstrapper</PackageTags>
+        <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
+        <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
+        <PackageIcon>favicon.png</PackageIcon>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <DebugType>embedded</DebugType>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
     </PropertyGroup>
 
-    <!-- Embed the bootstrapper -->
+    <!-- Embed the bootstrapper inside the assembly -->
     <ItemGroup>
         <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Launcher/bin/$(Configuration)/DotnetRuntimeBootstrapper.Launcher.exe">
             <Link>Bootstrapper.exe</Link>
@@ -16,6 +30,13 @@
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
             <Visible>false</Visible>
         </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- TODO: include output assembly -->
+        <None Include="../favicon.png" Pack="true" PackagePath="" />
+        <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
+        <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="buildMultiTargeting" />
     </ItemGroup>
 
     <ItemGroup>
