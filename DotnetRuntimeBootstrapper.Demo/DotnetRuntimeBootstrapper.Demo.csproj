@@ -5,6 +5,9 @@
         <TargetFramework>net5.0-windows</TargetFramework>
         <IsPackable>false</IsPackable>
         <UseWindowsForms>true</UseWindowsForms>
+        <Version>1.2.3</Version>
+        <Description>Foo bar</Description>
+        <ApplicationIcon>../favicon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <!-- Import targets files manually (normally taken care of by NuGet) -->
