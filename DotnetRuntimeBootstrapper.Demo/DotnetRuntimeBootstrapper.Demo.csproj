@@ -11,7 +11,7 @@
     </PropertyGroup>
 
     <!-- Import targets files manually (normally taken care of by NuGet) -->
-    <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.targets" />
+    <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
 
     <ItemGroup>
       <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />

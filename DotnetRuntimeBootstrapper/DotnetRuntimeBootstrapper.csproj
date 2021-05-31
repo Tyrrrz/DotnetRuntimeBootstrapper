@@ -16,9 +16,10 @@
         <DebugType>embedded</DebugType>
         <DevelopmentDependency>true</DevelopmentDependency>
         <IncludeBuildOutput>false</IncludeBuildOutput>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
-    <!-- Embed the bootstrapper inside the assembly -->
+    <!-- Embed the bootstrapper file inside the assembly -->
     <ItemGroup>
         <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Launcher/bin/$(Configuration)/DotnetRuntimeBootstrapper.Launcher.exe">
             <Link>Bootstrapper.exe</Link>
@@ -33,10 +34,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- TODO: include output assembly -->
         <None Include="../favicon.png" Pack="true" PackagePath="" />
+        <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
         <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
-        <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="buildMultiTargeting" />
+        <None Include="$(OutputPath)/netstandard2.0/*.dll" Pack="true" PackagePath="build/netstandard2.0" />
+        <None Include="$(OutputPath)/net472/*.dll" Pack="true" PackagePath="build/net472" />
     </ItemGroup>
 
     <ItemGroup>

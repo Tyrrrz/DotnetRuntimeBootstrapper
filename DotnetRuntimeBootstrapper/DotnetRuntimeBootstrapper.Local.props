@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="TaskRootDirectory">
+
+    <!-- Props for local testing, used in the demo project -->
+
+    <PropertyGroup>
+        <TaskRootDirectory>$(MSBuildThisFileDirectory)/bin/$(Configuration)</TaskRootDirectory>
+    </PropertyGroup>
+
+    <Import Project="DotnetRuntimeBootstrapper.targets" />
+
+</Project>
