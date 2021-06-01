@@ -1,5 +1,5 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Launcher", "DotnetRuntimeBootstrapper.Launcher\DotnetRuntimeBootstrapper.Launcher.csproj", "{C3E22118-1186-41FB-939F-7C48EA109D07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Executable", "DotnetRuntimeBootstrapper.Executable\DotnetRuntimeBootstrapper.Executable.csproj", "{C3E22118-1186-41FB-939F-7C48EA109D07}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper", "DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj", "{40809F7D-623B-4CB1-8EF4-25A90352B487}"
 EndProject
