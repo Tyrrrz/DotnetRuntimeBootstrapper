@@ -1,69 +1,80 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
-        <NoPackageAnalysis>true</NoPackageAnalysis>
-        <Authors>$(Company)</Authors>
-        <Description>Custom bootstrapper for Windows desktop applications that automatically installs .NET runtime</Description>
-        <PackageTags>windows dotnet runtime install bootstrapper</PackageTags>
-        <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
-        <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
-        <PackageIcon>favicon.png</PackageIcon>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <DebugType>embedded</DebugType>
-        <DevelopmentDependency>true</DevelopmentDependency>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <Authors>$(Company)</Authors>
+    <Description>Custom bootstrapper for Windows desktop applications that automatically installs .NET runtime</Description>
+    <PackageTags>windows dotnet runtime install bootstrapper</PackageTags>
+    <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
+    <PackageIcon>favicon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
 
-    <!-- Embed the bootstrapper file inside the assembly -->
+  <!-- Embed the bootstrapper file inside the assembly -->
+  <ItemGroup>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/DotnetRuntimeBootstrapper.Executable.exe">
+      <Link>Bootstrapper.exe</Link>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/DotnetRuntimeBootstrapper.Executable.exe.config">
+      <Link>Bootstrapper.exe.config</Link>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../favicon.png" Pack="true" PackagePath="" />
+    <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
+    <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
+    <None Include="rcedit.exe" Pack="true" PackagePath="build" />
+    <None Include="$(OutputPath)/netstandard2.0/*.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/net472/*.dll" Pack="true" PackagePath="build/net472" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" PrivateAssets="all" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.3" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <!-- Non-linking dependency on the bootstrapper executable project (to ensure build order) -->
+  <ItemGroup>
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.Executable\DotnetRuntimeBootstrapper.Executable.csproj">
+      <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <CopyLocal>false</CopyLocal>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- Download RCEdit CLI -->
+  <Target Name="DownloadRCEdit" BeforeTargets="Build">
+    <Exec Command="powershell -ExecutionPolicy Bypass -File ./Download-RCEdit.ps1" />
+    <Copy SourceFiles="$(ProjectDir)/rcedit.exe" DestinationFiles="$(OutDir)/rcedit.exe" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
+     (i.e. only for DotnetRuntimeBootstrapper.Demo; shouldn't be required when referenced as NuGet package) -->
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-        <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/DotnetRuntimeBootstrapper.Executable.exe">
-            <Link>Bootstrapper.exe</Link>
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-            <Visible>false</Visible>
-        </EmbeddedResource>
-        <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/DotnetRuntimeBootstrapper.Executable.exe.config">
-            <Link>Bootstrapper.exe.config</Link>
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-            <Visible>false</Visible>
-        </EmbeddedResource>
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
-
-    <ItemGroup>
-        <None Include="../favicon.png" Pack="true" PackagePath="" />
-        <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
-        <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
-        <None Include="rcedit.exe" Pack="true" PackagePath="build" />
-        <None Include="$(OutputPath)/netstandard2.0/*.dll" Pack="true" PackagePath="build/netstandard2.0" />
-        <None Include="$(OutputPath)/net472/*.dll" Pack="true" PackagePath="build/net472" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" PrivateAssets="all" />
-      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" PrivateAssets="all" />
-      <PackageReference Include="Mono.Cecil" Version="0.11.3" PrivateAssets="all" GeneratePathProperty="true" />
-    </ItemGroup>
-
-    <!-- Download RCEdit CLI -->
-    <Target Name="DownloadRCEdit" BeforeTargets="Build">
-        <Exec Command="powershell -ExecutionPolicy Bypass -File ./Download-RCEdit.ps1" />
-        <Copy SourceFiles="$(ProjectDir)/rcedit.exe" DestinationFiles="$(OutDir)/rcedit.exe" SkipUnchangedFiles="true" />
-    </Target>
-    
-    <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
-       (i.e. only for DotnetRuntimeBootstrapper.Demo; shouldn't be required when referenced as NuGet package) -->
-    <PropertyGroup>
-        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
-    </PropertyGroup>
-
-    <Target Name="GetDependencyTargetPaths">
-        <ItemGroup>
-            <TargetPathWithTargetPlatformMoniker Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
-        </ItemGroup>
-    </Target>
+  </Target>
 
 </Project>

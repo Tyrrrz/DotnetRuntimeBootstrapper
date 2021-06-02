@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>net5.0-windows</TargetFramework>
-        <IsPackable>false</IsPackable>
-        <UseWindowsForms>true</UseWindowsForms>
-        <Version>1.2.3</Version>
-        <ApplicationIcon>../favicon.ico</ApplicationIcon>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Version>1.2.3</Version>
+    <ApplicationIcon>../favicon.ico</ApplicationIcon>
+  </PropertyGroup>
 
-    <!-- Import targets files manually (normally taken care of by NuGet) -->
-    <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
+  <!-- Import props/targets manually (normally taken care of by NuGet) -->
+  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
+  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.targets" />
 
-    <ItemGroup>
-      <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />
+  </ItemGroup>
 
 </Project>

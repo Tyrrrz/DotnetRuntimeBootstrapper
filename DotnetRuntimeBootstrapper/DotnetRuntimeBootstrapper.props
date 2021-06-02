@@ -1,9 +1,10 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="TaskRootDirectory">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="TaskAssembly">
 
-    <PropertyGroup>
-        <TaskRootDirectory>$(MSBuildThisFileDirectory)</TaskRootDirectory>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
+  </PropertyGroup>
 
-    <Import Project="DotnetRuntimeBootstrapper.targets" />
+  <UsingTask TaskName="DotnetRuntimeBootstrapper.CreateBootstrapperTask" AssemblyFile="$(TaskAssembly)" />
 
 </Project>

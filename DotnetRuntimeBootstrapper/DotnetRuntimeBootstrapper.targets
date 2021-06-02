@@ -1,21 +1,15 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
-    <PropertyGroup>
-        <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(TaskRootDirectory)/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
-        <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(TaskRootDirectory)/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
-    </PropertyGroup>
-
-    <UsingTask TaskName="DotnetRuntimeBootstrapper.CreateBootstrapperTask" AssemblyFile="$(TaskAssembly)" />
-
-    <Target Name="CreateBootstrapper" AfterTargets="Build">
-        <!-- TODO: properly resolve runtime name/version -->
-        <CreateBootstrapperTask
-                TargetApplicationName="$(AssemblyName)"
-                TargetExecutableFilePath="$(OutputPath)/$(AssemblyName).dll"
-                TargetRuntimeName="Microsoft.WindowsDesktop.App"
-                TargetRuntimeVersion="3.1.15"
-                ApplicationIconFilePath="$(ApplicationIcon)"
-        />
-    </Target>
+  <!-- TODO: Run only for Windows targets -->
+  <Target Name="CreateBootstrapper" AfterTargets="Build">
+    <!-- TODO: properly resolve runtime name/version -->
+    <CreateBootstrapperTask
+      TargetApplicationName="$(AssemblyName)"
+      TargetExecutableFilePath="$(OutDir)/$(AssemblyName).dll"
+      TargetRuntimeName="Microsoft.WindowsDesktop.App"
+      TargetRuntimeVersion="3.1.15"
+      ApplicationIconFilePath="$(ApplicationIcon)"
+    />
+  </Target>
 
 </Project>

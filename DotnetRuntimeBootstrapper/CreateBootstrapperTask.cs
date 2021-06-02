@@ -71,13 +71,9 @@ namespace DotnetRuntimeBootstrapper
                 $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}"
             );
 
-            var resource = new EmbeddedResource(
-                resourceName,
-                ManifestResourceAttributes.Public,
-                configData
-            );
-
+            var resource = new EmbeddedResource(resourceName, ManifestResourceAttributes.Public, configData);
             assembly.MainModule.Resources.Add(resource);
+
             assembly.Write();
         }
 
