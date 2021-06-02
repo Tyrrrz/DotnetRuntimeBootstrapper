@@ -12,17 +12,19 @@ namespace DotnetRuntimeBootstrapper.Executable
     // to properly wrap target executables which may also be console applications.
     public static class Program
     {
-        private static void DumpError(Exception exception)
+        private static void DumpError(string message)
         {
             try
             {
-                File.WriteAllText($"BootstrapperError_{DateTimeOffset.Now.ToFileTime()}.txt", exception.ToString());
+                File.WriteAllText($"BootstrapperError_{DateTimeOffset.Now.ToFileTime()}.txt", message);
             }
             catch
             {
                 // Ignore
             }
         }
+
+        private static void DumpError(Exception exception) => DumpError(exception.ToString());
 
         private static void Init()
         {
@@ -91,7 +93,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 var config = BootstrapperConfig.Resolve();
                 if (!File.Exists(config.TargetExecutableFilePath))
                 {
-                    Console.Error.WriteLine($"Target executable not found: '{config.TargetExecutableFilePath}'.");
+                    DumpError($"Target executable not found: '{config.TargetExecutableFilePath}'.");
                     return 1;
                 }
 
