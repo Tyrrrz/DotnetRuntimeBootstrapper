@@ -65,11 +65,17 @@ namespace DotnetRuntimeBootstrapper.Executable
             if (missingRuntimeComponents.Length <= 0)
                 return true;
 
+            // Show the installation form
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
             var form = new InstallationForm(config, missingRuntimeComponents);
             Application.Run(form);
+
+            // Refresh the PATH variable so that .NET CLI can be found immediately after it's installed
+            Environment.SetEnvironmentVariable(
+                "PATH",
+                Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine)
+            );
 
             return form.Result == DialogResult.OK;
         }
