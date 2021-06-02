@@ -1,7 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
-  <!-- TODO: Run only for Windows targets -->
-  <Target Name="CreateBootstrapper" AfterTargets="Build">
+  <Target Name="CreateBootstrapper" AfterTargets="Build" Condition="'$(OutputType)' == 'WinExe'">
     <!-- TODO: properly resolve runtime name/version -->
     <CreateBootstrapperTask
       TargetApplicationName="$(AssemblyName)"
