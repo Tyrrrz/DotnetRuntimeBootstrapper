@@ -73,7 +73,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationForm_Load(object sender, EventArgs args)
         {
-            Text = $"Missing Dependencies: {_config.TargetApplicationName}";
+            Text = $"{_config.TargetApplicationName} (missing dependencies)";
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
 
             DescriptionLabel.Text =
@@ -108,7 +108,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                         {
                             DescriptionLabel.Text =
                                 $"Downloading {component.DisplayName}... " +
-                                $"({componentInstallers.Count + 1} of {2 * _missingRuntimeComponents.Length})";
+                                $"({componentInstallers.Count + 1} of {_missingRuntimeComponents.Length})";
                         });
 
                         var progressOffset = 1.0 * componentInstallers.Count / _missingRuntimeComponents.Length;
@@ -132,7 +132,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                         {
                             DescriptionLabel.Text =
                                 $"Installing {componentInstaller.Component.DisplayName}... " +
-                                $"({2 * currentComponentsInstalledCount + 1} of {2 * _missingRuntimeComponents.Length})";
+                                $"({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
                         });
 
                         componentInstaller.Run();

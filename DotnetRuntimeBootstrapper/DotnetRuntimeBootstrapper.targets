@@ -6,7 +6,7 @@
       TargetApplicationName="$(AssemblyName)"
       TargetExecutableFilePath="$(OutDir)/$(AssemblyName).dll"
       TargetRuntimeName="Microsoft.WindowsDesktop.App"
-      TargetRuntimeVersion="3.1.15"
+      TargetRuntimeVersion="5.0.0"
       ApplicationIconFilePath="$(ApplicationIcon)"
     />
   </Target>

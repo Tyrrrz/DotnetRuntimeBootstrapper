@@ -11,7 +11,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
     {
         public string DisplayName => "Visual C++ Redistributable 2015-2019";
 
-        public bool IsRebootRequired => true;
+        public bool IsRebootRequired => false;
 
         public bool CheckIfInstalled() =>
             Registry.LocalMachine.ContainsSubKey(
