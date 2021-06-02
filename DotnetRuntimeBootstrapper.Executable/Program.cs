@@ -8,13 +8,26 @@ using DotnetRuntimeBootstrapper.Executable.RuntimeComponents;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
+    // This program is compiled as a console application in order to be able
+    // to properly wrap target executables which may also be console applications.
     public static class Program
     {
+        private static void DumpError(Exception exception)
+        {
+            try
+            {
+                File.WriteAllText($"BootstrapperError_{DateTimeOffset.Now.ToFileTime()}.txt", exception.ToString());
+            }
+            catch
+            {
+                // Ignore
+            }
+        }
+
         private static void Init()
         {
             // Rudimentary error logging
-            AppDomain.CurrentDomain.UnhandledException +=
-                (_, args) => Console.Error.WriteLine(args.ExceptionObject.ToString());
+            AppDomain.CurrentDomain.UnhandledException += (_, args) => DumpError((Exception) args.ExceptionObject);
 
             // Disable certificate validation (valid certificate may fail on old operating systems).
             // Try to enable TLS1.2 if it's supported (not a requirement, at least yet).
@@ -89,7 +102,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.ToString());
+                DumpError(ex);
                 return 1;
             }
         }

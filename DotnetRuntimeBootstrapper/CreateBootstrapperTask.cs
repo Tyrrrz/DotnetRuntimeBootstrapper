@@ -17,6 +17,8 @@ namespace DotnetRuntimeBootstrapper
         [Required]
         public string TargetExecutableFilePath { get; set; } = default!;
 
+        public string TargetExecutableFileName => Path.GetFileName(TargetExecutableFilePath);
+
         [Required]
         public string TargetRuntimeName { get; set; } = default!;
 
@@ -66,7 +68,7 @@ namespace DotnetRuntimeBootstrapper
             // Inject new resource
             var configData = Encoding.UTF8.GetBytes(
                 $"{nameof(TargetApplicationName)}={TargetApplicationName}" + Environment.NewLine +
-                $"{nameof(TargetExecutableFilePath)}={TargetExecutableFilePath}" + Environment.NewLine +
+                $"{nameof(TargetExecutableFilePath)}={TargetExecutableFileName}" + Environment.NewLine +
                 $"{nameof(TargetRuntimeName)}={TargetRuntimeName}" + Environment.NewLine +
                 $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}"
             );

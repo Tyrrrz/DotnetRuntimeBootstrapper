@@ -50,9 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Env\Dotnet.cs" />
-    <Compile Include="Env\Native\NativeMethods.cs" />
-    <Compile Include="Env\Native\SystemInfo.cs" />
-    <Compile Include="Env\Native\SystemVersionInfo.cs" />
     <Compile Include="Env\OperatingSystem.cs" />
     <Compile Include="Env\OperatingSystemVersion.cs" />
     <Compile Include="Env\ProcessorArchitecture.cs" />
@@ -63,6 +60,9 @@
       <DependentUpon>InstallationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="BootstrapperConfig.cs" />
+    <Compile Include="Native\NativeMethods.cs" />
+    <Compile Include="Native\SystemInfo.cs" />
+    <Compile Include="Native\SystemVersionInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RuntimeComponents\DotnetRuntimeComponent.cs" />
     <Compile Include="RuntimeComponents\RuntimeComponentInstaller.cs" />
