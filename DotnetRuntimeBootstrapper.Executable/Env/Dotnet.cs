@@ -26,26 +26,21 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
                 " -- " +
                 string.Join(" ", arguments.Select(CommandLine.EscapeArgument).ToArray());
 
-            var startInfo = new ProcessStartInfo
+            using var process = new Process
             {
-                FileName = "dotnet",
-                Arguments = argumentsFormatted,
-                UseShellExecute = false,
-                CreateNoWindow = true
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "dotnet",
+                    Arguments = argumentsFormatted,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
             };
 
-            var process = new Process
-            {
-                StartInfo = startInfo
-            };
+            process.Start();
+            process.WaitForExit();
 
-            using (process)
-            {
-                process.Start();
-                process.WaitForExit();
-
-                return process.ExitCode;
-            }
+            return process.ExitCode;
         }
     }
 }

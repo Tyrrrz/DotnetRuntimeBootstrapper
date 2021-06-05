@@ -12,7 +12,7 @@ namespace DotnetRuntimeBootstrapper.Utils
 
         public static string Run(string executableFilePath, string arguments = "")
         {
-            var startInfo = new ProcessStartInfo
+            using var process = new Process {StartInfo = new ProcessStartInfo
             {
                 FileName = executableFilePath,
                 Arguments = arguments,
@@ -20,9 +20,8 @@ namespace DotnetRuntimeBootstrapper.Utils
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 CreateNoWindow = true
-            };
+            }};
 
-            using var process = new Process {StartInfo = startInfo};
             using var stdOutSignal = new ManualResetEvent(false);
             using var stdErrSignal = new ManualResetEvent(false);
 
@@ -69,7 +68,7 @@ namespace DotnetRuntimeBootstrapper.Utils
                 throw new InvalidOperationException(
                     $"Process returned a non-zero exit code ({process.ExitCode})." +
                     Environment.NewLine +
-                    $"Command: {startInfo.FileName} {startInfo.Arguments}" +
+                    $"Command: {process.StartInfo.FileName} {process.StartInfo.Arguments}" +
                     Environment.NewLine +
                     "Standard error:" +
                     Environment.NewLine +

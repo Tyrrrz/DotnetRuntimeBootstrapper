@@ -14,8 +14,12 @@ namespace DotnetRuntimeBootstrapper.Executable
             Path.GetDirectoryName(typeof(Program).Assembly.Location) ??
             AppDomain.CurrentDomain.BaseDirectory;
 
-        private static void ShowError(string message) =>
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        private static void ShowError(string message) => MessageBox.Show(
+            message,
+            "Error",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error
+        );
 
         private static void Init()
         {
@@ -81,6 +85,8 @@ namespace DotnetRuntimeBootstrapper.Executable
 
                 // Get config
                 var config = BootstrapperConfig.Resolve();
+
+                // Find target assembly
                 var targetFilePath = Path.Combine(ExecutingDirectoryPath, config.TargetFileName);
                 if (!File.Exists(targetFilePath))
                 {

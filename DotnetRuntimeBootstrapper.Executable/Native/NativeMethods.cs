@@ -7,7 +7,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Native
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern void GetNativeSystemInfo(ref SystemInfo lpSystemInfo);
 
-        [DllImport("ntdll.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("ntdll.dll", SetLastError = true)]
         public static extern int RtlGetVersion(ref SystemVersionInfo versionInfo);
     }
 }

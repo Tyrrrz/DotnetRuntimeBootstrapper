@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using DotnetRuntimeBootstrapper.Executable.Native;
 using DotnetRuntimeBootstrapper.Executable.Utils;
@@ -113,17 +112,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
 
         public static bool IsUpdateInstalled(string updateId) => GetInstalledUpdates().Contains(updateId);
 
-        public static void InitiateReboot()
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "shutdown",
-                Arguments = "/r /t 0"
-            };
-
-            using var process = new Process{StartInfo = startInfo};
-            process.Start();
-            process.WaitForExit();
-        }
+        public static void InitiateReboot() => CommandLine.Run("shutdown", "/r /t 0");
     }
 }

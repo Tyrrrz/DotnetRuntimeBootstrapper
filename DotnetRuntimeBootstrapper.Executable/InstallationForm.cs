@@ -33,7 +33,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             Application.Exit();
         }
 
-        private void InvokeOnUI(Action updateProgress) => Invoke(updateProgress);
+        private void InvokeOnUI(Action action) => Invoke(action);
 
         private void UpdateProgress(double progress) => InvokeOnUI(() =>
         {
