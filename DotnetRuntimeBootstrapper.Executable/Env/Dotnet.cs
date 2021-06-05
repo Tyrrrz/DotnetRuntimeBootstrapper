@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using DotnetRuntimeBootstrapper.Executable.Utils;
+using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.Executable.Env
 {
@@ -21,10 +22,10 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
 
         public static int Run(string targetExecutableFilePath, string[] arguments)
         {
-            var argumentsFormatted =
-                CommandLine.EscapeArgument(targetExecutableFilePath) +
-                " -- " +
-                string.Join(" ", arguments.Select(CommandLine.EscapeArgument).ToArray());
+            var argumentsFormatted = string.Join(
+                " ",
+                arguments.Prepend(targetExecutableFilePath).Select(CommandLine.EscapeArgument).ToArray()
+            );
 
             using var process = new Process
             {
