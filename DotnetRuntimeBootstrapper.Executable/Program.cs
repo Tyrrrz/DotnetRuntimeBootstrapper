@@ -12,24 +12,13 @@ namespace DotnetRuntimeBootstrapper.Executable
     // to properly wrap target executables which may also be console applications.
     public static class Program
     {
-        private static void DumpError(string message)
-        {
-            try
-            {
-                File.WriteAllText($"BootstrapperError_{DateTimeOffset.Now.ToFileTime()}.txt", message);
-            }
-            catch
-            {
-                // Ignore
-            }
-        }
-
-        private static void DumpError(Exception exception) => DumpError(exception.ToString());
+        private static void ShowError(string message) =>
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
         private static void Init()
         {
             // Rudimentary error logging
-            AppDomain.CurrentDomain.UnhandledException += (_, args) => DumpError((Exception) args.ExceptionObject);
+            AppDomain.CurrentDomain.UnhandledException += (_, args) => ShowError(args.ExceptionObject.ToString());
 
             // Disable certificate validation (valid certificate may fail on old operating systems).
             // Try to enable TLS1.2 if it's supported (not a requirement, at least yet).
@@ -93,7 +82,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 var config = BootstrapperConfig.Resolve();
                 if (!File.Exists(config.TargetExecutableFilePath))
                 {
-                    DumpError($"Target executable not found: '{config.TargetExecutableFilePath}'.");
+                    ShowError($"Target assembly not found: '{config.TargetExecutableFilePath}'.");
                     return 1;
                 }
 
@@ -110,7 +99,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
             catch (Exception ex)
             {
-                DumpError(ex);
+                ShowError(ex.ToString());
                 return 1;
             }
         }

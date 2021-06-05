@@ -34,31 +34,29 @@ namespace DotnetRuntimeBootstrapper
             var assembly = typeof(CreateBootstrapperTask).Assembly;
             var rootNamespace = typeof(CreateBootstrapperTask).Namespace;
 
-            // Executable file
-            var bootstrapperExecutableResourceName = $"{rootNamespace}.Bootstrapper.exe";
+            var resourceName = $"{rootNamespace}.Bootstrapper.exe";
 
+            // Executable file
             assembly.ExtractManifestResource(
-                bootstrapperExecutableResourceName,
+                resourceName,
                 BootstrapperExecutableFilePath
             );
 
             // Manifest file
-            var bootstrapperManifestResourceName = $"{rootNamespace}.Bootstrapper.exe.config";
-
             assembly.ExtractManifestResource(
-                bootstrapperManifestResourceName,
+                resourceName + ".config",
                 BootstrapperExecutableFilePath + ".config"
             );
         }
 
         private void InjectConfig()
         {
-            const string resourceName = "DotnetRuntimeBootstrapper.Executable.Config.cfg";
-
             using var assembly = AssemblyDefinition.ReadAssembly(
                 BootstrapperExecutableFilePath,
                 new ReaderParameters {ReadWrite = true}
             );
+
+            const string resourceName = "DotnetRuntimeBootstrapper.Executable.Config.cfg";
 
             // Delete existing resource if it exists
             assembly.MainModule.Resources.RemoveAll(
