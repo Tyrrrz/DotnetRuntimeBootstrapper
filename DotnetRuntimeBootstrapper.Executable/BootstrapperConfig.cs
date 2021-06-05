@@ -13,22 +13,22 @@ namespace DotnetRuntimeBootstrapper.Executable
     {
         public string TargetApplicationName { get; }
 
-        public string TargetExecutableFilePath { get; }
+        public string TargetFileName { get; }
 
-        public string TargetRuntimeName { get; }
+        public string RuntimeName { get; }
 
-        public SemanticVersion TargetRuntimeVersion { get; }
+        public SemanticVersion RuntimeVersion { get; }
 
         public BootstrapperConfig(
             string targetApplicationName,
-            string targetExecutableFilePath,
-            string targetRuntimeName,
-            SemanticVersion targetRuntimeVersion)
+            string targetFileName,
+            string runtimeName,
+            SemanticVersion runtimeVersion)
         {
             TargetApplicationName = targetApplicationName;
-            TargetExecutableFilePath = targetExecutableFilePath;
-            TargetRuntimeName = targetRuntimeName;
-            TargetRuntimeVersion = targetRuntimeVersion;
+            TargetFileName = targetFileName;
+            RuntimeName = runtimeName;
+            RuntimeVersion = runtimeVersion;
         }
     }
 
@@ -61,10 +61,10 @@ namespace DotnetRuntimeBootstrapper.Executable
             var map = ResolveMap();
 
             return new BootstrapperConfig(
-                map["TargetApplicationName"],
-                map["TargetExecutableFilePath"],
-                map["targetRuntimeName"],
-                map["TargetRuntimeVersion"].Pipe(SemanticVersion.Parse)
+                map[nameof(TargetApplicationName)],
+                map[nameof(TargetFileName)],
+                map[nameof(RuntimeName)],
+                map[nameof(RuntimeVersion)].Pipe(SemanticVersion.Parse)
             );
         }
     }

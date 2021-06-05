@@ -8,16 +8,17 @@ using DotnetRuntimeBootstrapper.Executable.RuntimeComponents;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
-    // This program is compiled as a console application in order to be able
-    // to properly wrap target executables which may also be console applications.
     public static class Program
     {
+        private static string ExecutingDirectoryPath { get; } =
+            Path.GetDirectoryName(typeof(Program).Assembly.Location) ??
+            AppDomain.CurrentDomain.BaseDirectory;
+
         private static void ShowError(string message) =>
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
         private static void Init()
         {
-            // Rudimentary error logging
             AppDomain.CurrentDomain.UnhandledException += (_, args) => ShowError(args.ExceptionObject.ToString());
 
             // Disable certificate validation (valid certificate may fail on old operating systems).
@@ -38,7 +39,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 new WindowsUpdate3063858RuntimeComponent(),
                 new WindowsUpdate3154518RuntimeComponent(),
                 new VisualCppRuntimeComponent(),
-                new DotnetRuntimeComponent(config.TargetRuntimeName, config.TargetRuntimeVersion)
+                new DotnetRuntimeComponent(config.RuntimeName, config.RuntimeVersion)
             };
 
             // Remove already installed components
@@ -62,7 +63,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             var form = new InstallationForm(config, missingRuntimeComponents);
             Application.Run(form);
 
-            // Refresh the PATH variable so that .NET CLI can be found immediately after it's installed
+            // Refresh the PATH variable so that .NET CLI can be located immediately after it's installed
             Environment.SetEnvironmentVariable(
                 "PATH",
                 Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine)
@@ -80,9 +81,10 @@ namespace DotnetRuntimeBootstrapper.Executable
 
                 // Get config
                 var config = BootstrapperConfig.Resolve();
-                if (!File.Exists(config.TargetExecutableFilePath))
+                var targetFilePath = Path.Combine(ExecutingDirectoryPath, config.TargetFileName);
+                if (!File.Exists(targetFilePath))
                 {
-                    ShowError($"Target assembly not found: '{config.TargetExecutableFilePath}'.");
+                    ShowError($"Target assembly not found: '{config.TargetFileName}'.");
                     return 1;
                 }
 
@@ -95,7 +97,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 }
 
                 // Run the target
-                return Dotnet.Run(config.TargetExecutableFilePath, args);
+                return Dotnet.Run(targetFilePath, args);
             }
             catch (Exception ex)
             {

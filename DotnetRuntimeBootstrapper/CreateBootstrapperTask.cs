@@ -15,19 +15,19 @@ namespace DotnetRuntimeBootstrapper
         public string TargetApplicationName { get; set; } = default!;
 
         [Required]
-        public string TargetExecutableFilePath { get; set; } = default!;
+        public string TargetFilePath { get; set; } = default!;
 
-        public string TargetExecutableFileName => Path.GetFileName(TargetExecutableFilePath);
-
-        [Required]
-        public string TargetRuntimeName { get; set; } = default!;
+        public string TargetFileName => Path.GetFileName(TargetFilePath);
 
         [Required]
-        public string TargetRuntimeVersion { get; set; } = default!;
+        public string RuntimeName { get; set; } = default!;
 
-        public string? ApplicationIconFilePath { get; set; }
+        [Required]
+        public string RuntimeVersion { get; set; } = default!;
 
-        private string BootstrapperExecutableFilePath => Path.ChangeExtension(TargetExecutableFilePath, "exe");
+        public string? IconFilePath { get; set; }
+
+        private string BootstrapperFilePath => Path.ChangeExtension(TargetFilePath, "exe");
 
         private void DeployExecutable()
         {
@@ -39,20 +39,20 @@ namespace DotnetRuntimeBootstrapper
             // Executable file
             assembly.ExtractManifestResource(
                 resourceName,
-                BootstrapperExecutableFilePath
+                BootstrapperFilePath
             );
 
             // Manifest file
             assembly.ExtractManifestResource(
                 resourceName + ".config",
-                BootstrapperExecutableFilePath + ".config"
+                BootstrapperFilePath + ".config"
             );
         }
 
         private void InjectConfig()
         {
             using var assembly = AssemblyDefinition.ReadAssembly(
-                BootstrapperExecutableFilePath,
+                BootstrapperFilePath,
                 new ReaderParameters {ReadWrite = true}
             );
 
@@ -66,9 +66,9 @@ namespace DotnetRuntimeBootstrapper
             // Inject new resource
             var configData = Encoding.UTF8.GetBytes(
                 $"{nameof(TargetApplicationName)}={TargetApplicationName}" + Environment.NewLine +
-                $"{nameof(TargetExecutableFilePath)}={TargetExecutableFileName}" + Environment.NewLine +
-                $"{nameof(TargetRuntimeName)}={TargetRuntimeName}" + Environment.NewLine +
-                $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}"
+                $"{nameof(TargetFileName)}={TargetFileName}" + Environment.NewLine +
+                $"{nameof(RuntimeName)}={RuntimeName}" + Environment.NewLine +
+                $"{nameof(RuntimeVersion)}={RuntimeVersion}"
             );
 
             var resource = new EmbeddedResource(resourceName, ManifestResourceAttributes.Public, configData);
@@ -80,35 +80,35 @@ namespace DotnetRuntimeBootstrapper
         private void InjectMetadata()
         {
             // Read metadata
-            var author = FileMetadata.GetAuthor(TargetExecutableFilePath);
-            var productName = FileMetadata.GetProductName(TargetExecutableFilePath);
-            var description = FileMetadata.GetDescription(TargetExecutableFilePath);
-            var fileVersion = FileMetadata.GetFileVersion(TargetExecutableFilePath);
-            var productVersion = FileMetadata.GetProductVersion(TargetExecutableFilePath);
-            var copyright = FileMetadata.GetCopyright(TargetExecutableFilePath);
+            var author = FileMetadata.GetAuthor(TargetFilePath);
+            var productName = FileMetadata.GetProductName(TargetFilePath);
+            var description = FileMetadata.GetDescription(TargetFilePath);
+            var fileVersion = FileMetadata.GetFileVersion(TargetFilePath);
+            var productVersion = FileMetadata.GetProductVersion(TargetFilePath);
+            var copyright = FileMetadata.GetCopyright(TargetFilePath);
 
             // Inject metadata
             if (!string.IsNullOrWhiteSpace(author))
-                FileMetadata.SetAuthor(BootstrapperExecutableFilePath, author);
+                FileMetadata.SetAuthor(BootstrapperFilePath, author);
 
             if (!string.IsNullOrWhiteSpace(productName))
-                FileMetadata.SetProductName(BootstrapperExecutableFilePath, productName);
+                FileMetadata.SetProductName(BootstrapperFilePath, productName);
 
             if (!string.IsNullOrEmpty(description))
-                FileMetadata.SetDescription(BootstrapperExecutableFilePath, description);
+                FileMetadata.SetDescription(BootstrapperFilePath, description);
 
             if (!string.IsNullOrWhiteSpace(fileVersion))
-                FileMetadata.SetFileVersion(BootstrapperExecutableFilePath, fileVersion);
+                FileMetadata.SetFileVersion(BootstrapperFilePath, fileVersion);
 
             if (!string.IsNullOrEmpty(productVersion))
-                FileMetadata.SetProductVersion(BootstrapperExecutableFilePath, productVersion);
+                FileMetadata.SetProductVersion(BootstrapperFilePath, productVersion);
 
             if (!string.IsNullOrWhiteSpace(copyright))
-                FileMetadata.SetCopyright(BootstrapperExecutableFilePath, copyright);
+                FileMetadata.SetCopyright(BootstrapperFilePath, copyright);
 
             // Inject icon
-            if (!string.IsNullOrWhiteSpace(ApplicationIconFilePath))
-                FileMetadata.SetIcon(BootstrapperExecutableFilePath, ApplicationIconFilePath);
+            if (!string.IsNullOrWhiteSpace(IconFilePath))
+                FileMetadata.SetIcon(BootstrapperFilePath, IconFilePath);
         }
 
         public override bool Execute()

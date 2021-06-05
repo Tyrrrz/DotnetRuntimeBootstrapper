@@ -4,10 +4,10 @@
     <!-- TODO: properly resolve runtime name/version -->
     <CreateBootstrapperTask
       TargetApplicationName="$(AssemblyName)"
-      TargetExecutableFilePath="$(OutDir)/$(AssemblyName).dll"
-      TargetRuntimeName="Microsoft.WindowsDesktop.App"
-      TargetRuntimeVersion="5.0.0"
-      ApplicationIconFilePath="$(ApplicationIcon)"
+      TargetFilePath="$(OutDir)/$(AssemblyName).dll"
+      RuntimeName="Microsoft.WindowsDesktop.App"
+      RuntimeVersion="5.0.0"
+      IconFilePath="$(ApplicationIcon)"
     />
   </Target>
 
