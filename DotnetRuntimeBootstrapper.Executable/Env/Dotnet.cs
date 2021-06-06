@@ -20,11 +20,11 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             }
         }
 
-        public static int Run(string targetExecutableFilePath, string[] arguments)
+        public static int Run(string targetFilePath, string[] arguments)
         {
             var argumentsFormatted = string.Join(
                 " ",
-                arguments.Prepend(targetExecutableFilePath).Select(CommandLine.EscapeArgument).ToArray()
+                arguments.Prepend(targetFilePath).Select(CommandLine.EscapeArgument).ToArray()
             );
 
             using var process = new Process

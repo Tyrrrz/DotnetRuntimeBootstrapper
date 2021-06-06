@@ -43,7 +43,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 new WindowsUpdate3063858RuntimeComponent(),
                 new WindowsUpdate3154518RuntimeComponent(),
                 new VisualCppRuntimeComponent(),
-                new DotnetRuntimeComponent(config.RuntimeName, config.RuntimeVersion)
+                new DotnetRuntimeComponent(config.TargetRuntimeName, config.TargetRuntimeVersion)
             };
 
             // Remove already installed components

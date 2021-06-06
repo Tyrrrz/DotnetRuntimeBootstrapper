@@ -50,6 +50,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.MainLabel);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hello world";
             this.ResumeLayout(false);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 {
@@ -20,26 +21,26 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
         {
             var extension = Path.GetExtension(FilePath).Trim('.');
 
-            // Windows update
-            if (string.Equals(extension, "msu", StringComparison.OrdinalIgnoreCase))
+            var startInfo = new ProcessStartInfo
             {
-                return new ProcessStartInfo
-                {
-                    FileName = "wusa",
-                    Arguments = $"{FilePath} /quiet /norestart",
-                    UseShellExecute = true,
-                    Verb = "runas"
-                };
-            }
-
-            // Regular executable
-            return new ProcessStartInfo
-            {
-                FileName = FilePath,
-                Arguments = "/quiet",
                 UseShellExecute = true,
                 Verb = "runas"
             };
+
+            // Windows update
+            if (string.Equals(extension, "msu", StringComparison.OrdinalIgnoreCase))
+            {
+                startInfo.FileName = "wusa";
+                startInfo.Arguments = $"{CommandLine.EscapeArgument(FilePath)} /quiet /norestart";
+            }
+            // Regular installer
+            else
+            {
+                startInfo.FileName = FilePath;
+                startInfo.Arguments = "/quiet";
+            }
+
+            return startInfo;
         }
 
         public void Run()

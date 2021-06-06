@@ -20,10 +20,10 @@ namespace DotnetRuntimeBootstrapper
         public string TargetFileName => Path.GetFileName(TargetFilePath);
 
         [Required]
-        public string RuntimeName { get; set; } = default!;
+        public string TargetRuntimeName { get; set; } = default!;
 
         [Required]
-        public string RuntimeVersion { get; set; } = default!;
+        public string TargetRuntimeVersion { get; set; } = default!;
 
         public string? IconFilePath { get; set; }
 
@@ -67,8 +67,8 @@ namespace DotnetRuntimeBootstrapper
             var configData = Encoding.UTF8.GetBytes(
                 $"{nameof(TargetApplicationName)}={TargetApplicationName}" + Environment.NewLine +
                 $"{nameof(TargetFileName)}={TargetFileName}" + Environment.NewLine +
-                $"{nameof(RuntimeName)}={RuntimeName}" + Environment.NewLine +
-                $"{nameof(RuntimeVersion)}={RuntimeVersion}"
+                $"{nameof(TargetRuntimeName)}={TargetRuntimeName}" + Environment.NewLine +
+                $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}"
             );
 
             var resource = new EmbeddedResource(resourceName, ManifestResourceAttributes.Public, configData);
