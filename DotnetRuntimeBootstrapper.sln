@@ -6,6 +6,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{ADC60863-6275-4C58-9223-C8CCDBB7D12D}"
 ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
+	Changelog.md = Changelog.md
+	License.txt = License.txt
+	Readme.md = Readme.md
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Demo", "DotnetRuntimeBootstrapper.Demo\DotnetRuntimeBootstrapper.Demo.csproj", "{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}"
