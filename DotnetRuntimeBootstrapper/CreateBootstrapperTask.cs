@@ -29,7 +29,7 @@ namespace DotnetRuntimeBootstrapper
 
         private string BootstrapperFilePath => Path.ChangeExtension(TargetFilePath, "exe");
 
-        private void DeployExecutable()
+        private void ExtractBootstrapper()
         {
             var assembly = typeof(CreateBootstrapperTask).Assembly;
             var rootNamespace = typeof(CreateBootstrapperTask).Namespace;
@@ -42,7 +42,7 @@ namespace DotnetRuntimeBootstrapper
                 BootstrapperFilePath
             );
 
-            Log.LogMessage("Extracted bootstrapper executable to {0}.", BootstrapperFilePath);
+            Log.LogMessage("Extracted bootstrapper executable to '{0}'.", BootstrapperFilePath);
 
             // Manifest file
             assembly.ExtractManifestResource(
@@ -50,10 +50,10 @@ namespace DotnetRuntimeBootstrapper
                 BootstrapperFilePath + ".config"
             );
 
-            Log.LogMessage("Extracted bootstrapper manifest to {0}.", BootstrapperFilePath + ".config");
+            Log.LogMessage("Extracted bootstrapper manifest to '{0}'.", BootstrapperFilePath + ".config");
         }
 
-        private void InjectConfig()
+        private void InjectBootstrapperConfig()
         {
             using var assembly = AssemblyDefinition.ReadAssembly(
                 BootstrapperFilePath,
@@ -84,10 +84,10 @@ namespace DotnetRuntimeBootstrapper
 
             assembly.Write();
 
-            Log.LogMessage("Injected bootstrapper config: {0}", config);
+            Log.LogMessage("Injected bootstrapper config: {0}", config.Replace(Environment.NewLine, "; "));
         }
 
-        private void InjectMetadata()
+        private void InjectBootstrapperMetadata()
         {
             // Read metadata
             var author = FileMetadata.GetAuthor(TargetFilePath);
@@ -144,17 +144,17 @@ namespace DotnetRuntimeBootstrapper
 
         public override bool Execute()
         {
-            // Deploy bootstrapper
-            Log.LogMessage("Deploying bootstrapper...");
-            DeployExecutable();
+            // Extract bootstrapper
+            Log.LogMessage("Extracting bootstrapper...");
+            ExtractBootstrapper();
 
             // Inject config in the bootstrapper
             Log.LogMessage("Injecting bootstrapper config...");
-            InjectConfig();
+            InjectBootstrapperConfig();
 
             // Inject metadata
             Log.LogMessage("Injecting metadata...");
-            InjectMetadata();
+            InjectBootstrapperMetadata();
 
             Log.LogMessage("Bootstrapper successfully created.");
             return true;
