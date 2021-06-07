@@ -76,7 +76,14 @@ namespace DotnetRuntimeBootstrapper.Utils
             SetVersionString(filePath, "FileDescription", value);
 
         public static void SetFileVersion(string filePath, string value) =>
-            SetVersionString(filePath, "FileVersion", value);
+            // This needs to use the dedicated option because otherwise the version is not written correctly
+            // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/2
+            CommandLine.Run(
+                RceditCliFilePath,
+                CommandLine.EscapeArgument(filePath) + " " +
+                "--set-file-version " +
+                CommandLine.EscapeArgument(value)
+            );
 
         public static void SetProductVersion(string filePath, string value) =>
             SetVersionString(filePath, "ProductVersion", value);
