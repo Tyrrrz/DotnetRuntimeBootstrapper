@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <Authors>$(Company)</Authors>
-    <Description>.NET runtime bootstrapper for desktop applications</Description>
+    <Description>.NET runtime bootstrapper for Windows desktop applications</Description>
     <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
