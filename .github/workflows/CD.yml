@@ -21,13 +21,6 @@ jobs:
       - name: Install MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: Install NuGet
-        uses: NuGet/setup-nuget@v1.0.5
-        with:
-          nuget-version: latest
-          nuget-api-key: ${{ secrets.NUGET_TOKEN }}
-          nuget-api-key-source: nuget.org
-
       - name: Restore packages
         run: dotnet restore
 
@@ -35,7 +28,7 @@ jobs:
         run: msbuild -p:Configuration=Release
 
       - name: Pack
-        run: nuget pack DotnetRuntimeBootstrapper.nuspec
+        run: dotnet pack DotnetRuntimeBootstrapper --configuration Release --no-build
 
       - name: Deploy
-        run: nuget push DotnetRuntimeBootstrapper.nupkg
+        run: dotnet nuget push DotnetRuntimeBootstrapper/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
