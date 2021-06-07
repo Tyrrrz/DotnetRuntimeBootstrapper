@@ -1,7 +1,6 @@
 # DotnetRuntimeBootstrapper
 
 [![Build](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/workflows/CI/badge.svg?branch=master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
-[![Coverage](https://codecov.io/gh/Tyrrrz/DotnetRuntimeBootstrapper/branch/master/graph/badge.svg)](https://codecov.io/gh/Tyrrrz/DotnetRuntimeBootstrapper)
 [![Version](https://img.shields.io/nuget/v/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Downloads](https://img.shields.io/nuget/dt/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
@@ -56,11 +55,11 @@ Bootstrapper executable may not be able to run properly without it.
 ### How it works
 
 Bootstrapper executable is a pre-compiled binary that runs on legacy .NET Framework.
-It targets .NET Framework v3.5 but can also roll over to later versions of the framework if the corresponding manifest file is present.
+It targets .NET Framework v3.5 but can also roll over to later versions of the framework as long as the corresponding manifest file is present.
 This ensures that the bootstrapper can run out-of-the-box on all systems starting with Windows 7.
 
 During build, the bootstrapper and the manifest file are copied to the output directory by a custom MSBuild task provided through the package.
 A special configuration file, instructing which assembly to run and which version of the runtime is required, is injected as an embedded resource inside the bootstrapper as part of the build process.
 
 Any file metadata present on the target assembly, such as `ProductName`, `FileDescription`, `FileVersion`, `ProductVersion`, `LegalCopyright`, etc. gets copied to the bootstrapper executable.
-If there is an icon specified on the project through the `<ApplicationIcon>` property, it is added as well.
+If there is an icon specified on the project through the `<ApplicationIcon>` property, then it is added to application resources as well.
