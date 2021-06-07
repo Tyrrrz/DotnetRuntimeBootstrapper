@@ -29,7 +29,7 @@
 
     <CreateBootstrapperTask
       TargetApplicationName="$(AssemblyTitle)"
-      TargetFilePath="$(ProjectDir)/$(PublishDir)/$(AssemblyName).dll"
+      TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))"
       TargetRuntimeName="Microsoft.WindowsDesktop.App"
       TargetRuntimeVersion="$([System.String]::Copy('$(TargetFrameworkVersion)').Trim('v'))"
       IconFilePath="$(ApplicationIconFilePath)" />
