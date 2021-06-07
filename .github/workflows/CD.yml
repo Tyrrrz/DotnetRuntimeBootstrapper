@@ -31,4 +31,4 @@ jobs:
         run: dotnet pack DotnetRuntimeBootstrapper --configuration Release --no-build
 
       - name: Deploy
-        run: dotnet nuget push DotnetRuntimeBootstrapper/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+        run: dotnet nuget push DotnetRuntimeBootstrapper\bin\Release\*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
