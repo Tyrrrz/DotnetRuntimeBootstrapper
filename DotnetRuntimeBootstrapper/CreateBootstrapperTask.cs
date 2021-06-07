@@ -42,11 +42,15 @@ namespace DotnetRuntimeBootstrapper
                 BootstrapperFilePath
             );
 
+            Log.LogMessage("Extracted bootstrapper executable to {0}.", BootstrapperFilePath);
+
             // Manifest file
             assembly.ExtractManifestResource(
                 resourceName + ".config",
                 BootstrapperFilePath + ".config"
             );
+
+            Log.LogMessage("Extracted bootstrapper manifest to {0}.", BootstrapperFilePath + ".config");
         }
 
         private void InjectConfig()
@@ -64,17 +68,23 @@ namespace DotnetRuntimeBootstrapper
             );
 
             // Inject new resource
-            var configData = Encoding.UTF8.GetBytes(
+            var config =
                 $"{nameof(TargetApplicationName)}={TargetApplicationName}" + Environment.NewLine +
                 $"{nameof(TargetFileName)}={TargetFileName}" + Environment.NewLine +
                 $"{nameof(TargetRuntimeName)}={TargetRuntimeName}" + Environment.NewLine +
-                $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}"
+                $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}";
+
+            var resource = new EmbeddedResource(
+                resourceName,
+                ManifestResourceAttributes.Public,
+                Encoding.UTF8.GetBytes(config)
             );
 
-            var resource = new EmbeddedResource(resourceName, ManifestResourceAttributes.Public, configData);
             assembly.MainModule.Resources.Add(resource);
 
             assembly.Write();
+
+            Log.LogMessage("Injected bootstrapper config: {0}", config);
         }
 
         private void InjectMetadata()
@@ -89,26 +99,47 @@ namespace DotnetRuntimeBootstrapper
 
             // Inject metadata
             if (!string.IsNullOrWhiteSpace(author))
+            {
                 FileMetadata.SetAuthor(BootstrapperFilePath, author);
+                Log.LogMessage("Injected author string '{0}'.", author);
+            }
 
             if (!string.IsNullOrWhiteSpace(productName))
+            {
                 FileMetadata.SetProductName(BootstrapperFilePath, productName);
+                Log.LogMessage("Injected product name string '{0}'.", productName);
+            }
 
             if (!string.IsNullOrEmpty(description))
+            {
                 FileMetadata.SetDescription(BootstrapperFilePath, description);
+                Log.LogMessage("Injected description string '{0}'.", description);
+            }
 
             if (!string.IsNullOrWhiteSpace(fileVersion))
+            {
                 FileMetadata.SetFileVersion(BootstrapperFilePath, fileVersion);
+                Log.LogMessage("Injected file version string '{0}'.", fileVersion);
+            }
 
             if (!string.IsNullOrEmpty(productVersion))
+            {
                 FileMetadata.SetProductVersion(BootstrapperFilePath, productVersion);
+                Log.LogMessage("Injected product version string '{0}'.", productVersion);
+            }
 
             if (!string.IsNullOrWhiteSpace(copyright))
+            {
                 FileMetadata.SetCopyright(BootstrapperFilePath, copyright);
+                Log.LogMessage("Injected copyright string '{0}'.", copyright);
+            }
 
             // Inject icon
             if (!string.IsNullOrWhiteSpace(IconFilePath))
+            {
                 FileMetadata.SetIcon(BootstrapperFilePath, IconFilePath);
+                Log.LogMessage("Injected icon resource '{0}'.", IconFilePath);
+            }
         }
 
         public override bool Execute()
