@@ -4,8 +4,8 @@
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <Authors>$(Company)</Authors>
-    <Description>Custom bootstrapper for Windows desktop applications that automatically installs .NET runtime</Description>
-    <PackageTags>windows dotnet runtime install bootstrapper</PackageTags>
+    <Description>.NET runtime bootstrapper for desktop applications</Description>
+    <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
     <PackageIcon>favicon.png</PackageIcon>
