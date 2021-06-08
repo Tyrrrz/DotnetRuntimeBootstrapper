@@ -14,9 +14,9 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             if (string.IsNullOrEmpty(commandOutput))
                 yield break;
 
-            foreach (var runtimeIdentifier in commandOutput.Split('\n'))
+            foreach (var runtimeLine in commandOutput.Split('\n'))
             {
-                yield return runtimeIdentifier.Trim();
+                yield return runtimeLine.Trim();
             }
         }
 

@@ -76,6 +76,7 @@
     <Compile Include="Utils\Extensions\CollectionExtensions.cs" />
     <Compile Include="Utils\Extensions\FunctionalExtensions.cs" />
     <Compile Include="Utils\Extensions\RegistryExtensions.cs" />
+    <Compile Include="Utils\Extensions\StringExtensions.cs" />
     <Compile Include="Utils\FileEx.cs" />
     <Compile Include="Utils\Http.cs" />
     <Compile Include="Utils\SemanticVersion.cs" />

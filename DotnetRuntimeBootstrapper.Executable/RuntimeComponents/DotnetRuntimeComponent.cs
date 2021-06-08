@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
+using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
@@ -11,7 +12,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
         private readonly string _name;
         private readonly SemanticVersion _version;
 
-        public string DisplayName => $"{_name} v{_version}";
+        private string ShortName =>
+            _name
+                .TrimStart("Microsoft.", StringComparison.OrdinalIgnoreCase)
+                .TrimEnd(".App", StringComparison.OrdinalIgnoreCase);
+
+        public string DisplayName => $".NET Runtime ({ShortName}) v{_version}";
 
         public bool IsRebootRequired => false;
 
@@ -23,9 +29,9 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public bool CheckIfInstalled()
         {
-            foreach (var runtimeIdentifier in Dotnet.ListRuntimes())
+            foreach (var runtimeLine in Dotnet.ListRuntimes())
             {
-                var match = Regex.Match(runtimeIdentifier, @"^(.*?)\s+(.*?)\s+");
+                var match = Regex.Match(runtimeLine, @"^(.*?)\s+(.*?)\s+");
 
                 var runtimeName = match.Groups[1].Value;
                 var runtimeVersion = SemanticVersion.TryParse(match.Groups[2].Value);
