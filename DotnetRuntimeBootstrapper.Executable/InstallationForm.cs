@@ -88,6 +88,8 @@ namespace DotnetRuntimeBootstrapper.Executable
             InstallButton.Enabled = false;
             ExitButton.Visible = false;
             ExitButton.Enabled = false;
+            IgnoreButton.Visible = false;
+            IgnoreButton.Enabled = false;
 
             PictureBox.Image = SystemIcons.Information.ToBitmap();
             DescriptionLabel.Text = @"Downloading files...";
