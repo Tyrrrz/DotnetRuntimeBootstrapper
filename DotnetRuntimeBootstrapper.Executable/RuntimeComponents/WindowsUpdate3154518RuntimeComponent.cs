@@ -5,6 +5,10 @@ using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 {
+    // Enables TLS1.2 protocol, which is not strictly required by .NET Runtime,
+    // but is very likely going to be needed by the actual application if it
+    // sends any HTTP requests whatsoever, as most servers currently reject
+    // clients that only support older certificate protocols.
     public class WindowsUpdate3154518RuntimeComponent : IRuntimeComponent
     {
         public string DisplayName => "Windows Update KB3154518";

@@ -5,6 +5,7 @@ using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 {
+    // Security update
     public class WindowsUpdate2999226RuntimeComponent : IRuntimeComponent
     {
         public string DisplayName => "Windows Update KB2999226";

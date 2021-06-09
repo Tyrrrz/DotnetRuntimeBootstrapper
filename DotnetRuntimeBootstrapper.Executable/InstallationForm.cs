@@ -69,7 +69,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationForm_Load(object sender, EventArgs args)
         {
-            Text = @$"{_config.TargetApplicationName} (missing dependencies)";
+            Text = @$"{_config.TargetApplicationName} (Dependencies Missing)";
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
 
             DescriptionLabel.Text =

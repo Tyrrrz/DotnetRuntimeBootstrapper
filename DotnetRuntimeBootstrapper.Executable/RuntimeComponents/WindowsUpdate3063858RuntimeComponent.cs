@@ -5,6 +5,7 @@ using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 {
+    // Security update
     public class WindowsUpdate3063858RuntimeComponent : IRuntimeComponent
     {
         public string DisplayName => "Windows Update KB3063858";
@@ -13,7 +14,9 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public bool CheckIfInstalled() =>
             OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
-            OperatingSystem.IsUpdateInstalled("KB3063858");
+            OperatingSystem.IsUpdateInstalled("KB3063858") ||
+            // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
+            OperatingSystem.IsUpdateInstalled("KB3068708");
 
         private string GetInstallerDownloadUrl() =>
             OperatingSystem.IsProcessor64Bit
