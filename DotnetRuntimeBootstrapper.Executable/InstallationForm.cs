@@ -8,8 +8,6 @@ using DotnetRuntimeBootstrapper.Executable.RuntimeComponents;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
-// ReSharper disable LocalizableElement
-
 namespace DotnetRuntimeBootstrapper.Executable
 {
     public partial class InstallationForm : Form
@@ -17,7 +15,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         private readonly BootstrapperConfig _config;
         private readonly IRuntimeComponent[] _missingRuntimeComponents;
 
-        public DialogResult Result { get; private set; } = DialogResult.None;
+        public InstallationFormResult Result { get; private set; } = InstallationFormResult.Failed;
 
         public InstallationForm(BootstrapperConfig config, IRuntimeComponent[] missingRuntimeComponents)
         {
@@ -27,7 +25,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             InitializeComponent();
         }
 
-        private void Exit(DialogResult result)
+        private void Exit(InstallationFormResult result)
         {
             Result = result;
             Application.Exit();
@@ -44,21 +42,21 @@ namespace DotnetRuntimeBootstrapper.Executable
         private void ReportError(Exception exception) => InvokeOnUI(() =>
         {
             MessageBox.Show(
-                "An error occurred:" + Environment.NewLine + exception,
-                "Error",
+                @"An error occurred:" + Environment.NewLine + exception,
+                @"Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
             );
 
-            Exit(DialogResult.No);
+            Exit(InstallationFormResult.Failed);
         });
 
         private void PromptReboot() => InvokeOnUI(() =>
         {
             var result = MessageBox.Show(
-                $"You need to restart Windows before you can run {_config.TargetApplicationName}. " +
-                "Would you like to do it now?",
-                "Restart required",
+                @$"You need to restart Windows before you can run {_config.TargetApplicationName}. " +
+                @"Would you like to do it now?",
+                @"Restart required",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning
             );
@@ -67,18 +65,16 @@ namespace DotnetRuntimeBootstrapper.Executable
             {
                 OperatingSystem.InitiateReboot();
             }
-
-            Exit(DialogResult.No);
         });
 
         private void InstallationForm_Load(object sender, EventArgs args)
         {
-            Text = $"{_config.TargetApplicationName} (missing dependencies)";
+            Text = @$"{_config.TargetApplicationName} (missing dependencies)";
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
 
             DescriptionLabel.Text =
-                $"Your system is missing runtime components required by {_config.TargetApplicationName}. " +
-                "Would you like to download and install them?" +
+                @$"Your system is missing runtime components required by {_config.TargetApplicationName}. " +
+                @"Would you like to download and install them?" +
                 Environment.NewLine +
                 Environment.NewLine +
                 string.Join(Environment.NewLine, _missingRuntimeComponents.Select(c =>
@@ -94,7 +90,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             ExitButton.Enabled = false;
 
             PictureBox.Image = SystemIcons.Information.ToBitmap();
-            DescriptionLabel.Text = "Downloading files...";
+            DescriptionLabel.Text = @"Downloading files...";
 
             new Thread(() =>
             {
@@ -107,8 +103,8 @@ namespace DotnetRuntimeBootstrapper.Executable
                         InvokeOnUI(() =>
                         {
                             DescriptionLabel.Text =
-                                $"Downloading {component.DisplayName}... " +
-                                $"({componentInstallers.Count + 1} of {_missingRuntimeComponents.Length})";
+                                @$"Downloading {component.DisplayName}... " +
+                                @$"({componentInstallers.Count + 1} of {_missingRuntimeComponents.Length})";
                         });
 
                         var progressOffset = 1.0 * componentInstallers.Count / _missingRuntimeComponents.Length;
@@ -131,8 +127,8 @@ namespace DotnetRuntimeBootstrapper.Executable
                         InvokeOnUI(() =>
                         {
                             DescriptionLabel.Text =
-                                $"Installing {componentInstaller.Component.DisplayName}... " +
-                                $"({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
+                                @$"Installing {componentInstaller.Component.DisplayName}... " +
+                                @$"({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
                         });
 
                         componentInstaller.Run();
@@ -145,10 +141,11 @@ namespace DotnetRuntimeBootstrapper.Executable
                     if (_missingRuntimeComponents.Any(c => c.IsRebootRequired))
                     {
                         PromptReboot();
+                        Exit(InstallationFormResult.CompletedAndRequiresReboot);
                     }
                     else
                     {
-                        Exit(DialogResult.OK);
+                        Exit(InstallationFormResult.CompletedAndReady);
                     }
                 }
                 catch (Exception ex)
@@ -158,6 +155,8 @@ namespace DotnetRuntimeBootstrapper.Executable
             }).Start();
         }
 
-        private void ExitButton_Click(object sender, EventArgs e) => Exit(DialogResult.Cancel);
+        private void ExitButton_Click(object sender, EventArgs e) => Exit(InstallationFormResult.Canceled);
+
+        private void IgnoreButton_Click(object sender, EventArgs e) => Exit(InstallationFormResult.Ignored);
     }
 }

@@ -37,6 +37,7 @@
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.DescriptionLabel = new System.Windows.Forms.Label();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.IgnoreButton = new System.Windows.Forms.Button();
             this.MainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.PictureBox)).BeginInit();
             this.SuspendLayout();
@@ -51,7 +52,7 @@
             this.ExitButton.Size = new System.Drawing.Size(80, 38);
             this.ExitButton.TabIndex = 1;
             this.ExitButton.Text = "Cancel";
-            this.ToolTip.SetToolTip(this.ExitButton, "Exit the application");
+            this.ToolTip.SetToolTip(this.ExitButton, "Exit without running the application");
             this.ExitButton.UseVisualStyleBackColor = true;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             //
@@ -107,6 +108,20 @@
             this.DescriptionLabel.TabIndex = 5;
             this.DescriptionLabel.Text = "Foo bar\r\n  - bar foo\r\n\r\nBaz baz";
             //
+            // IgnoreButton
+            //
+            this.IgnoreButton.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.IgnoreButton.AutoEllipsis = true;
+            this.IgnoreButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.IgnoreButton.Location = new System.Drawing.Point(9, 214);
+            this.IgnoreButton.Name = "IgnoreButton";
+            this.IgnoreButton.Size = new System.Drawing.Size(80, 38);
+            this.IgnoreButton.TabIndex = 7;
+            this.IgnoreButton.Text = "Ignore";
+            this.ToolTip.SetToolTip(this.IgnoreButton, "Ignore missing components and attempt to run the application anyway. Warning: Use this only if you believe that this message was shown in error.");
+            this.IgnoreButton.UseVisualStyleBackColor = true;
+            this.IgnoreButton.Click += new System.EventHandler(this.IgnoreButton_Click);
+            //
             // InstallationForm
             //
             this.AcceptButton = this.InstallButton;
@@ -114,6 +129,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(509, 261);
             this.Controls.Add(this.MainPanel);
+            this.Controls.Add(this.IgnoreButton);
             this.Controls.Add(this.InstallButton);
             this.Controls.Add(this.ExitButton);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
@@ -129,6 +145,8 @@
             ((System.ComponentModel.ISupportInitialize) (this.PictureBox)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Button IgnoreButton;
 
         private System.Windows.Forms.PictureBox PictureBox;
 

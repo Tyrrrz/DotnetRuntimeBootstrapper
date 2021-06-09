@@ -16,7 +16,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private static void ShowError(string message) => MessageBox.Show(
             message,
-            "Error",
+            @"Error",
             MessageBoxButtons.OK,
             MessageBoxIcon.Error
         );
@@ -73,7 +73,8 @@ namespace DotnetRuntimeBootstrapper.Executable
                 Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine)
             );
 
-            return form.Result == DialogResult.OK;
+            // Proceed to running the application only if completed successfully or ignored
+            return form.Result is InstallationFormResult.CompletedAndReady or InstallationFormResult.Ignored;
         }
 
         [STAThread]
@@ -98,7 +99,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 var missingComponents = GetMissingRuntimeComponents(config);
                 if (!PerformInstall(config, missingComponents))
                 {
-                    // Either the installation failed or requires reboot
+                    // Either the installation failed, was canceled, or still requires reboot
                     return 1;
                 }
 
