@@ -18,17 +18,11 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Install MSBuild
-        uses: microsoft/setup-msbuild@v1.0.2
-
       - name: Restore packages
         run: dotnet restore
 
-      - name: Build
-        run: msbuild -p:Configuration=Release
-
       - name: Pack
-        run: dotnet pack DotnetRuntimeBootstrapper --configuration Release --no-build
+        run: dotnet pack --configuration Release
 
       - name: Deploy
         run: dotnet nuget push DotnetRuntimeBootstrapper\bin\Release\*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
