@@ -25,13 +25,20 @@ namespace DotnetRuntimeBootstrapper.Executable
         {
             AppDomain.CurrentDomain.UnhandledException += (_, args) => ShowError(args.ExceptionObject.ToString());
 
-            // Disable certificate validation (valid certificate may fail on old operating systems).
-            // Try to enable TLS1.2 if it's supported (not a requirement, at least yet).
-            ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
-            ServicePointManager.SecurityProtocol =
-                (SecurityProtocolType) 0x00000C00 |
-                SecurityProtocolType.Tls |
-                SecurityProtocolType.Ssl3;
+            try
+            {
+                // Disable certificate validation (valid certificate may fail on old operating systems).
+                // Try to enable TLS1.2 if it's supported (not a requirement, at least yet).
+                ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
+                ServicePointManager.SecurityProtocol =
+                    (SecurityProtocolType) 0x00000C00 |
+                    SecurityProtocolType.Tls |
+                    SecurityProtocolType.Ssl3;
+            }
+            catch
+            {
+                // This can fail if the protocol is not available
+            }
         }
 
         private static IRuntimeComponent[] GetMissingRuntimeComponents(BootstrapperConfig config)
@@ -46,7 +53,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 new DotnetRuntimeComponent(config.TargetRuntimeName, config.TargetRuntimeVersion)
             };
 
-            // Remove already installed components
+            // Filter out already installed components
             foreach (var component in result.ToArray())
             {
                 if (component.CheckIfInstalled())
