@@ -86,7 +86,13 @@ namespace DotnetRuntimeBootstrapper.Utils
             );
 
         public static void SetProductVersion(string filePath, string value) =>
-            SetVersionString(filePath, "ProductVersion", value);
+            // This needs to use the dedicated option because otherwise the version is not written correctly
+            CommandLine.Run(
+                RceditCliFilePath,
+                CommandLine.EscapeArgument(filePath) + " " +
+                "--set-product-version " +
+                CommandLine.EscapeArgument(value)
+            );
 
         public static void SetCopyright(string filePath, string value) =>
             SetVersionString(filePath, "LegalCopyright", value);
