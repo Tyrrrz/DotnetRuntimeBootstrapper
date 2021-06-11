@@ -1,4 +1,4 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="ApplicationIconFilePath" ToolsVersion="4.0">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="ApplicationIconFilePath;ApplicationManifestFilePath" ToolsVersion="4.0">
 
   <Target Name="CheckBootstrapperPrerequisites" AfterTargets="Build;Publish">
     <!-- Warning: not Windows executable -->
@@ -8,10 +8,10 @@
     <Warning Text="Target platform is not Windows; boostrapper will not be created." Condition="'$(TargetPlatformIdentifier)' != 'Windows'" />
   </Target>
 
-  <!-- TODO: detect latest available runtime for a given target framework version -->
   <Target Name="CreateBootstrapperAfterBuild" AfterTargets="Build" Condition="'$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
     <PropertyGroup>
       <ApplicationIconFilePath Condition="'$(ApplicationIcon)' != ''">$([System.IO.Path]::Combine('$(ProjectDir)', '$(ApplicationIcon)'))</ApplicationIconFilePath>
+      <ApplicationManifestFilePath Condition="'$(ApplicationManifest)' != ''">$([System.IO.Path]::Combine('$(ProjectDir)', '$(ApplicationManifest)'))</ApplicationManifestFilePath>
     </PropertyGroup>
 
     <CreateBootstrapperTask
@@ -19,12 +19,14 @@
       TargetFilePath="$(TargetPath)"
       TargetRuntimeName="Microsoft.WindowsDesktop.App"
       TargetRuntimeVersion="$([System.String]::Copy('$(TargetFrameworkVersion)').Trim('v'))"
-      IconFilePath="$(ApplicationIconFilePath)" />
+      IconFilePath="$(ApplicationIconFilePath)"
+      ManifestFilePath="$(ApplicationManifestFilePath)" />
   </Target>
 
   <Target Name="CreateBootstrapperAfterPublish" AfterTargets="Publish" Condition="'$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
     <PropertyGroup>
       <ApplicationIconFilePath Condition="'$(ApplicationIcon)' != ''">$([System.IO.Path]::Combine('$(ProjectDir)', '$(ApplicationIcon)'))</ApplicationIconFilePath>
+      <ApplicationManifestFilePath Condition="'$(ApplicationManifest)' != ''">$([System.IO.Path]::Combine('$(ProjectDir)', '$(ApplicationManifest)'))</ApplicationManifestFilePath>
     </PropertyGroup>
 
     <CreateBootstrapperTask
@@ -32,7 +34,8 @@
       TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))"
       TargetRuntimeName="Microsoft.WindowsDesktop.App"
       TargetRuntimeVersion="$([System.String]::Copy('$(TargetFrameworkVersion)').Trim('v'))"
-      IconFilePath="$(ApplicationIconFilePath)" />
+      IconFilePath="$(ApplicationIconFilePath)"
+      ManifestFilePath="$(ApplicationManifestFilePath)" />
   </Target>
 
 </Project>

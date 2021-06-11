@@ -7,6 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Version>1.2.3</Version>
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <!-- Import props/targets manually (normally taken care of by NuGet) -->

@@ -9,7 +9,7 @@ namespace DotnetRuntimeBootstrapper.Executable
     // (i.e. the one being bootstrapped) is built.
     // This is performed by injecting an embedded resource inside the
     // bootstrapper assembly via an MSBuild task.
-    public partial class BootstrapperConfig
+    public partial class ExecutionParameters
     {
         public string TargetApplicationName { get; }
 
@@ -19,7 +19,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         public SemanticVersion TargetRuntimeVersion { get; }
 
-        public BootstrapperConfig(
+        public ExecutionParameters(
             string targetApplicationName,
             string targetFileName,
             string targetRuntimeName,
@@ -32,16 +32,15 @@ namespace DotnetRuntimeBootstrapper.Executable
         }
     }
 
-    public partial class BootstrapperConfig
+    public partial class ExecutionParameters
     {
         private static Dictionary<string, string> ResolveMap()
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             var assembly = typeof(Program).Assembly;
-            var rootNamespace = typeof(Program).Namespace;
 
-            foreach (var line in assembly.GetManifestResourceString($"{rootNamespace}.Config.cfg").Split('\n'))
+            foreach (var line in assembly.GetManifestResourceString("ExecutionParameters").Split('\n'))
             {
                 var equalsPos = line.IndexOf('=');
                 if (equalsPos < 0)
@@ -56,11 +55,11 @@ namespace DotnetRuntimeBootstrapper.Executable
             return result;
         }
 
-        public static BootstrapperConfig Resolve()
+        public static ExecutionParameters Resolve()
         {
             var map = ResolveMap();
 
-            return new BootstrapperConfig(
+            return new ExecutionParameters(
                 map[nameof(TargetApplicationName)],
                 map[nameof(TargetFileName)],
                 map[nameof(TargetRuntimeName)],

@@ -98,5 +98,13 @@ namespace DotnetRuntimeBootstrapper.Utils
                 "--set-icon " +
                 CommandLine.EscapeArgument(iconFilePath)
             );
+
+        public static void SetManifest(string filePath, string manifestFilePath) =>
+            CommandLine.Run(
+                RceditCliFilePath,
+                CommandLine.EscapeArgument(filePath) + " " +
+                "--application-manifest " +
+                CommandLine.EscapeArgument(manifestFilePath)
+            );
     }
 }

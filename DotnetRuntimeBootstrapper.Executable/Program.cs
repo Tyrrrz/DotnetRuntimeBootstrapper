@@ -41,7 +41,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
         }
 
-        private static IRuntimeComponent[] GetMissingRuntimeComponents(BootstrapperConfig config)
+        private static IRuntimeComponent[] GetMissingRuntimeComponents(ExecutionParameters parameters)
         {
             var result = new List<IRuntimeComponent>
             {
@@ -50,7 +50,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 new WindowsUpdate3063858RuntimeComponent(),
                 new WindowsUpdate3154518RuntimeComponent(),
                 new VisualCppRuntimeComponent(),
-                new DotnetRuntimeComponent(config.TargetRuntimeName, config.TargetRuntimeVersion)
+                new DotnetRuntimeComponent(parameters.TargetRuntimeName, parameters.TargetRuntimeVersion)
             };
 
             // Filter out already installed components
@@ -63,7 +63,9 @@ namespace DotnetRuntimeBootstrapper.Executable
             return result.ToArray();
         }
 
-        private static bool PerformInstall(BootstrapperConfig config, IRuntimeComponent[] missingRuntimeComponents)
+        private static bool PerformInstall(
+            ExecutionParameters parameters,
+            IRuntimeComponent[] missingRuntimeComponents)
         {
             if (missingRuntimeComponents.Length <= 0)
                 return true;
@@ -71,7 +73,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             // Show the installation form
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var form = new InstallationForm(config, missingRuntimeComponents);
+            var form = new InstallationForm(parameters, missingRuntimeComponents);
             Application.Run(form);
 
             // Refresh the PATH variable so that .NET CLI can be located immediately after it's installed
@@ -91,20 +93,20 @@ namespace DotnetRuntimeBootstrapper.Executable
             {
                 Init();
 
-                // Get config
-                var config = BootstrapperConfig.Resolve();
+                // Get parameters
+                var parameters = ExecutionParameters.Resolve();
 
                 // Find target assembly
-                var targetFilePath = Path.Combine(ExecutingDirectoryPath, config.TargetFileName);
+                var targetFilePath = Path.Combine(ExecutingDirectoryPath, parameters.TargetFileName);
                 if (!File.Exists(targetFilePath))
                 {
-                    ShowError($"Target assembly not found: '{config.TargetFileName}'.");
+                    ShowError($"Target assembly not found: '{parameters.TargetFileName}'.");
                     return 1;
                 }
 
                 // Install missing components
-                var missingComponents = GetMissingRuntimeComponents(config);
-                if (!PerformInstall(config, missingComponents))
+                var missingComponents = GetMissingRuntimeComponents(parameters);
+                if (!PerformInstall(parameters, missingComponents))
                 {
                     // Either the installation failed, was canceled, or still requires reboot
                     return 1;

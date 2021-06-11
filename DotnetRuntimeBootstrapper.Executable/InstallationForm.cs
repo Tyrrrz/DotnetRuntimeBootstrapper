@@ -12,14 +12,14 @@ namespace DotnetRuntimeBootstrapper.Executable
 {
     public partial class InstallationForm : Form
     {
-        private readonly BootstrapperConfig _config;
+        private readonly ExecutionParameters _parameters;
         private readonly IRuntimeComponent[] _missingRuntimeComponents;
 
         public InstallationFormResult Result { get; private set; } = InstallationFormResult.Failed;
 
-        public InstallationForm(BootstrapperConfig config, IRuntimeComponent[] missingRuntimeComponents)
+        public InstallationForm(ExecutionParameters parameters, IRuntimeComponent[] missingRuntimeComponents)
         {
-            _config = config;
+            _parameters = parameters;
             _missingRuntimeComponents = missingRuntimeComponents;
 
             InitializeComponent();
@@ -54,7 +54,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         private void PromptReboot() => InvokeOnUI(() =>
         {
             var result = MessageBox.Show(
-                @$"You need to restart Windows before you can run {_config.TargetApplicationName}. " +
+                @$"You need to restart Windows before you can run {_parameters.TargetApplicationName}. " +
                 @"Would you like to do it now?",
                 @"Restart required",
                 MessageBoxButtons.YesNo,
@@ -69,11 +69,11 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationForm_Load(object sender, EventArgs args)
         {
-            Text = @$"{_config.TargetApplicationName} (Dependencies Missing)";
+            Text = @$"{_parameters.TargetApplicationName} (Dependencies Missing)";
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
 
             DescriptionLabel.Text =
-                @$"Your system is missing runtime components required by {_config.TargetApplicationName}. " +
+                @$"Your system is missing runtime components required by {_parameters.TargetApplicationName}. " +
                 @"Would you like to download and install them?" +
                 Environment.NewLine +
                 Environment.NewLine +
