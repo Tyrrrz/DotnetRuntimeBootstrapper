@@ -102,9 +102,9 @@
             // DescriptionLabel
             //
             this.DescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.DescriptionLabel.Location = new System.Drawing.Point(59, 12);
+            this.DescriptionLabel.Location = new System.Drawing.Point(59, 16);
             this.DescriptionLabel.Name = "DescriptionLabel";
-            this.DescriptionLabel.Size = new System.Drawing.Size(440, 190);
+            this.DescriptionLabel.Size = new System.Drawing.Size(440, 186);
             this.DescriptionLabel.TabIndex = 5;
             this.DescriptionLabel.Text = "Foo bar\r\n  - bar foo\r\n\r\nBaz baz";
             //
