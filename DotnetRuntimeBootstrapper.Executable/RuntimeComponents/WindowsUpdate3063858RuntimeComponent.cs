@@ -23,12 +23,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
                 ? "https://download.microsoft.com/download/0/8/E/08E0386B-F6AF-4651-8D1B-C0A95D2731F0/Windows6.1-KB3063858-x64.msu"
                 : "https://download.microsoft.com/download/C/9/6/C96CD606-3E05-4E1C-B201-51211AE80B1E/Windows6.1-KB3063858-x86.msu";
 
-        public RuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName("KB3063858", "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-            return new RuntimeComponentInstaller(this, filePath);
+            return new WindowsUpdateRuntimeComponentInstaller(this, filePath);
         }
     }
 }

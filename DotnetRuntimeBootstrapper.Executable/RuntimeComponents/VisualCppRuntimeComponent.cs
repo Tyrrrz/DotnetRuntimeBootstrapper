@@ -25,12 +25,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             _ => "https://aka.ms/vs/16/release/VC_redist.arm64.exe"
         };
 
-        public RuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName("visual_cpp_redist", "exe");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-            return new RuntimeComponentInstaller(this, filePath);
+            return new ExecutableRuntimeComponentInstaller(this, filePath);
         }
     }
 }

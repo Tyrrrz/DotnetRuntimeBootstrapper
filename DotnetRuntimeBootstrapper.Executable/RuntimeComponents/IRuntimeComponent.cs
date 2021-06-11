@@ -10,6 +10,6 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         bool CheckIfInstalled();
 
-        RuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress);
+        IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress);
     }
 }

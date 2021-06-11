@@ -88,12 +88,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             return installerUrl;
         }
 
-        public RuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName("dotnet_runtime_installer", "exe");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-            return new RuntimeComponentInstaller(this, filePath);
+            return new ExecutableRuntimeComponentInstaller(this, filePath);
         }
     }
 }

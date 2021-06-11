@@ -99,7 +99,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 try
                 {
                     // Download
-                    var componentInstallers = new List<RuntimeComponentInstaller>();
+                    var componentInstallers = new List<IRuntimeComponentInstaller>();
                     foreach (var component in _missingRuntimeComponents)
                     {
                         InvokeOnUI(() =>

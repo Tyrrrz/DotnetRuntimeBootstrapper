@@ -40,12 +40,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
                 : "https://download.microsoft.com/download/E/4/6/E4694323-8290-4A08-82DB-81F2EB9452C2/Windows8.1-KB2999226-x86.msu";
         }
 
-        public RuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName("KB2999226", "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-            return new RuntimeComponentInstaller(this, filePath);
+            return new WindowsUpdateRuntimeComponentInstaller(this, filePath);
         }
     }
 }
