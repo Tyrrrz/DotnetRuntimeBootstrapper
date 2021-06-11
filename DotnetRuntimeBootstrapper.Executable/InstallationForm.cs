@@ -94,7 +94,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             PictureBox.Image = SystemIcons.Information.ToBitmap();
             DescriptionLabel.Text = @"Downloading files...";
 
-            new Thread(() =>
+            var thread = new Thread(() =>
             {
                 try
                 {
@@ -154,7 +154,11 @@ namespace DotnetRuntimeBootstrapper.Executable
                 {
                     ReportError(ex);
                 }
-            }).Start();
+            });
+
+            thread.Name = "InstallProcess";
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         private void ExitButton_Click(object sender, EventArgs e) => Exit(InstallationFormResult.Canceled);
