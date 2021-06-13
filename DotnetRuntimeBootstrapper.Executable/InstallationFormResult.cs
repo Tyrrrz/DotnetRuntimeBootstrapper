@@ -2,8 +2,8 @@
 {
     public enum InstallationFormResult
     {
-        CompletedAndReady,
-        CompletedAndRequiresReboot,
+        Completed,
+        PendingReboot,
         Ignored,
         Canceled,
         Failed

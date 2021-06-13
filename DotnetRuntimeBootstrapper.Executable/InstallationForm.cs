@@ -54,7 +54,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         private void PromptReboot() => InvokeOnUI(() =>
         {
             var result = MessageBox.Show(
-                @$"You need to restart Windows before you can run {_parameters.TargetApplicationName}. " +
+                @$"You need to restart Windows before you can run {_parameters.TargetTitle}. " +
                 @"Would you like to do it now?",
                 @"Restart required",
                 MessageBoxButtons.YesNo,
@@ -69,11 +69,11 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationForm_Load(object sender, EventArgs args)
         {
-            Text = @$"{_parameters.TargetApplicationName} (Dependencies Missing)";
+            Text = @$"{_parameters.TargetTitle} (Dependencies Missing)";
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
 
             DescriptionLabel.Text =
-                @$"Your system is missing runtime components required by {_parameters.TargetApplicationName}. " +
+                @$"Your system is missing runtime components required by {_parameters.TargetTitle}. " +
                 @"Would you like to download and install them?" +
                 Environment.NewLine +
                 Environment.NewLine +
@@ -143,11 +143,11 @@ namespace DotnetRuntimeBootstrapper.Executable
                     if (_missingRuntimeComponents.Any(c => c.IsRebootRequired))
                     {
                         PromptReboot();
-                        Exit(InstallationFormResult.CompletedAndRequiresReboot);
+                        Exit(InstallationFormResult.PendingReboot);
                     }
                     else
                     {
-                        Exit(InstallationFormResult.CompletedAndReady);
+                        Exit(InstallationFormResult.Completed);
                     }
                 }
                 catch (Exception ex)

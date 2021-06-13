@@ -83,7 +83,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             );
 
             // Proceed to running the application only if completed successfully or ignored
-            return form.Result is InstallationFormResult.CompletedAndReady or InstallationFormResult.Ignored;
+            return form.Result is InstallationFormResult.Completed or InstallationFormResult.Ignored;
         }
 
         [STAThread]

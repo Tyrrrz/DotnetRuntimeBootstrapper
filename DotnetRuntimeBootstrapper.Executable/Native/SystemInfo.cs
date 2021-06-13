@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace DotnetRuntimeBootstrapper.Executable.Native
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SystemInfo
+    internal readonly struct SystemInfo
     {
         public readonly ushort ProcessorArchitecture;
         public readonly ushort Reserved;

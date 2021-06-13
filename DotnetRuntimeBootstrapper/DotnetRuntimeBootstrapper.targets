@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <CreateBootstrapperTask
-      TargetApplicationName="$(AssemblyTitle)"
+      TargetTitle="$(AssemblyTitle)"
       TargetFilePath="$(TargetPath)"
       TargetRuntimeName="Microsoft.WindowsDesktop.App"
       TargetRuntimeVersion="$([System.String]::Copy('$(TargetFrameworkVersion)').Trim('v'))"
@@ -30,7 +30,7 @@
     </PropertyGroup>
 
     <CreateBootstrapperTask
-      TargetApplicationName="$(AssemblyTitle)"
+      TargetTitle="$(AssemblyTitle)"
       TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))"
       TargetRuntimeName="Microsoft.WindowsDesktop.App"
       TargetRuntimeVersion="$([System.String]::Copy('$(TargetFrameworkVersion)').Trim('v'))"

@@ -11,7 +11,7 @@ namespace DotnetRuntimeBootstrapper.Executable
     // bootstrapper assembly via an MSBuild task.
     public partial class ExecutionParameters
     {
-        public string TargetApplicationName { get; }
+        public string TargetTitle { get; }
 
         public string TargetFileName { get; }
 
@@ -20,12 +20,12 @@ namespace DotnetRuntimeBootstrapper.Executable
         public SemanticVersion TargetRuntimeVersion { get; }
 
         public ExecutionParameters(
-            string targetApplicationName,
+            string targetTitle,
             string targetFileName,
             string targetRuntimeName,
             SemanticVersion targetRuntimeVersion)
         {
-            TargetApplicationName = targetApplicationName;
+            TargetTitle = targetTitle;
             TargetFileName = targetFileName;
             TargetRuntimeName = targetRuntimeName;
             TargetRuntimeVersion = targetRuntimeVersion;
@@ -60,7 +60,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             var map = ResolveMap();
 
             return new ExecutionParameters(
-                map[nameof(TargetApplicationName)],
+                map[nameof(TargetTitle)],
                 map[nameof(TargetFileName)],
                 map[nameof(TargetRuntimeName)],
                 map[nameof(TargetRuntimeVersion)].Pipe(SemanticVersion.Parse)

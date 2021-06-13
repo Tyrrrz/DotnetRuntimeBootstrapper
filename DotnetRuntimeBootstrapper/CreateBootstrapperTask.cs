@@ -12,7 +12,7 @@ namespace DotnetRuntimeBootstrapper
     public class CreateBootstrapperTask : Task
     {
         [Required]
-        public string TargetApplicationName { get; set; } = default!;
+        public string TargetTitle { get; set; } = default!;
 
         [Required]
         public string TargetFilePath { get; set; } = default!;
@@ -69,7 +69,7 @@ namespace DotnetRuntimeBootstrapper
 
             // Inject new resource
             var parameters =
-                $"{nameof(TargetApplicationName)}={TargetApplicationName}" + Environment.NewLine +
+                $"{nameof(TargetTitle)}={TargetTitle}" + Environment.NewLine +
                 $"{nameof(TargetFileName)}={TargetFileName}" + Environment.NewLine +
                 $"{nameof(TargetRuntimeName)}={TargetRuntimeName}" + Environment.NewLine +
                 $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}";
@@ -151,15 +151,12 @@ namespace DotnetRuntimeBootstrapper
 
         public override bool Execute()
         {
-            // Extract bootstrapper
             Log.LogMessage("Extracting executable...");
             ExtractExecutable();
 
-            // Inject parameters in the bootstrapper
             Log.LogMessage("Injecting parameters...");
             InjectParameters();
 
-            // Inject metadata
             Log.LogMessage("Injecting metadata...");
             InjectMetadata();
 

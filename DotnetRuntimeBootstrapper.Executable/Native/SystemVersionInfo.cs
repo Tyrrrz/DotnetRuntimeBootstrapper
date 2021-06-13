@@ -3,7 +3,7 @@
 namespace DotnetRuntimeBootstrapper.Executable.Native
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct SystemVersionInfo
+    internal readonly struct SystemVersionInfo
     {
         public readonly int OSVersionInfoSize;
         public readonly int MajorVersion;

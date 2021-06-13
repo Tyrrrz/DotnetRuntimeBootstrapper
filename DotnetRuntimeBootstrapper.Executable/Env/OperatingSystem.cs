@@ -43,7 +43,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             if (_installedUpdates is not null)
                 return _installedUpdates;
 
-            var result = new List<string>();
+            var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             var wmicOutput = CommandLine.TryRun("wmic", "qfe list full");
 
@@ -63,7 +63,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
                 }
             }
 
-            return _installedUpdates = new HashSet<string>(result, StringComparer.OrdinalIgnoreCase);
+            return _installedUpdates = result;
         }
 
         public static OperatingSystemVersion Version
@@ -95,7 +95,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             9 => ProcessorArchitecture.X64,
             5 => ProcessorArchitecture.Arm,
             12 => ProcessorArchitecture.Arm64,
-            _ => ProcessorArchitecture.X64
+            _ => throw new InvalidOperationException("Unknown processor architecture.")
         };
 
         public static string ProcessorArchitectureMoniker => ProcessorArchitecture switch
@@ -104,11 +104,8 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             ProcessorArchitecture.X64 => "x64",
             ProcessorArchitecture.Arm => "arm",
             ProcessorArchitecture.Arm64 => "arm64",
-            _ => "x64"
+            _ => throw new InvalidOperationException("Unknown processor architecture.")
         };
-
-        public static bool IsProcessor64Bit =>
-            ProcessorArchitecture is ProcessorArchitecture.X64 or ProcessorArchitecture.Arm64;
 
         public static bool IsUpdateInstalled(string updateId) => GetInstalledUpdates().Contains(updateId);
 

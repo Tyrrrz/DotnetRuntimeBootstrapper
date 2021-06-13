@@ -19,10 +19,15 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
             OperatingSystem.IsUpdateInstalled("KB3154518");
 
-        private string GetInstallerDownloadUrl() =>
-            OperatingSystem.IsProcessor64Bit
-                ? "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x64.msu"
-                : "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x86.msu";
+        private string GetInstallerDownloadUrl() => OperatingSystem.Version switch
+        {
+            OperatingSystemVersion.Windows7 when OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64 =>
+                "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x64.msu",
+            OperatingSystemVersion.Windows7 when OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X86 =>
+                "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x86.msu",
+
+            _ => throw new InvalidOperationException("Unsupported operating system version.")
+        };
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
