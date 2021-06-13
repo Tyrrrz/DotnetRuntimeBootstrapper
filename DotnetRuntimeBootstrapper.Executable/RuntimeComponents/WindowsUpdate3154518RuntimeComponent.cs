@@ -17,7 +17,9 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public bool CheckIfInstalled() =>
             OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
-            OperatingSystem.IsUpdateInstalled("KB3154518");
+            OperatingSystem.IsUpdateInstalled("KB3154518") ||
+            // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
+            OperatingSystem.IsUpdateInstalled("KB3125574");
 
         private string GetInstallerDownloadUrl() => OperatingSystem.Version switch
         {
