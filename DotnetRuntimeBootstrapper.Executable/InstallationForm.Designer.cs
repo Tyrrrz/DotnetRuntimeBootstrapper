@@ -1,4 +1,6 @@
-﻿namespace DotnetRuntimeBootstrapper.Executable
+﻿using System;
+
+namespace DotnetRuntimeBootstrapper.Executable
 {
     partial class InstallationForm
     {
@@ -118,7 +120,7 @@
             this.IgnoreButton.Size = new System.Drawing.Size(80, 38);
             this.IgnoreButton.TabIndex = 7;
             this.IgnoreButton.Text = "Ignore";
-            this.ToolTip.SetToolTip(this.IgnoreButton, "Ignore missing components and attempt to run the application anyway. Warning: Use this only if you believe that this message was shown in error.");
+            this.ToolTip.SetToolTip(this.IgnoreButton, "Ignore missing components and attempt to run the application anyway." + Environment.NewLine + "Warning: Use this only if you believe that this message was shown in error.");
             this.IgnoreButton.UseVisualStyleBackColor = true;
             this.IgnoreButton.Click += new System.EventHandler(this.IgnoreButton_Click);
             //
