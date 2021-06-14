@@ -5,8 +5,8 @@ using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
-    // Config is provided to the bootstrapper when the target assembly
-    // (i.e. the one being bootstrapped) is built.
+    // Execution parameters are provided to the bootstrapper when the
+    // target assembly (i.e. the one being bootstrapped) is built.
     // This is performed by injecting an embedded resource inside the
     // bootstrapper assembly via an MSBuild task.
     public partial class ExecutionParameters
@@ -38,9 +38,12 @@ namespace DotnetRuntimeBootstrapper.Executable
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            var assembly = typeof(Program).Assembly;
+            var lines = typeof(Program)
+                .Assembly
+                .GetManifestResourceString("ExecutionParameters")
+                .Split('\n');
 
-            foreach (var line in assembly.GetManifestResourceString("ExecutionParameters").Split('\n'))
+            foreach (var line in lines)
             {
                 var equalsPos = line.IndexOf('=');
                 if (equalsPos < 0)
