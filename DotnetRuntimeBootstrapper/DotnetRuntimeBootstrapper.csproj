@@ -17,7 +17,6 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <NoWarn>$(NoWarn);NU5118</NoWarn>
   </PropertyGroup>
 
   <!-- Embed the bootstrapper file inside the assembly -->
@@ -40,9 +39,34 @@
     <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
     <None Include="rcedit.exe" Pack="true" PackagePath="build" />
     <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/*.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Buffers.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Collections.Immutable.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Memory.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Security.AccessControl.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Security.Permissions.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Threading.dll" Pack="true" PackagePath="build/netstandard2.0" />
     <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/*.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/Microsoft.VisualStudio.Setup.Configuration.Interop.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/System.Buffers.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/System.Collections.Immutable.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/System.Memory.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="$(OutputPath)/net472/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/net472" />
   </ItemGroup>
 
   <ItemGroup>
