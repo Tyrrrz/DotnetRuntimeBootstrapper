@@ -1,3 +1,7 @@
+### v1.1.1 (14-Jun-2021)
+
+- Fixed an issue where the package was missing some required files.
+
 ### v1.1 (14-Jun-2021)
 
 - Changed how the installation window displays .NET runtime in the list of missing components. Now it's displayed as `.NET Runtime (WindowsDesktop) v5.0.0` instead of `Microsoft.WindowsDesktop.App v5.0.0`.
