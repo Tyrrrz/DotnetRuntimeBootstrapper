@@ -1,3 +1,7 @@
+### v1.1.2 (14-Jun-2021)
+
+- Fixed an issue where the package was missing some required files. Again. I really hate MSBuild.
+
 ### v1.1.1 (14-Jun-2021)
 
 - Fixed an issue where the package was missing some required files.
