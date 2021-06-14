@@ -17,6 +17,7 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <NoWarn>$(NoWarn);NU5118</NoWarn>
   </PropertyGroup>
 
   <!-- Embed the bootstrapper file inside the assembly -->
@@ -38,7 +39,9 @@
     <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
     <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
     <None Include="rcedit.exe" Pack="true" PackagePath="build" />
+    <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" />
     <None Include="$(OutputPath)/netstandard2.0/*.dll" Pack="true" PackagePath="build/netstandard2.0" />
+    <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" />
     <None Include="$(OutputPath)/net472/*.dll" Pack="true" PackagePath="build/net472" />
   </ItemGroup>
 
