@@ -12,15 +12,18 @@ namespace DotnetRuntimeBootstrapper.Utils
 
         public static string Run(string executableFilePath, string arguments = "")
         {
-            using var process = new Process {StartInfo = new ProcessStartInfo
+            using var process = new Process
             {
-                FileName = executableFilePath,
-                Arguments = arguments,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            }};
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = executableFilePath,
+                    Arguments = arguments,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
 
             using var stdOutSignal = new ManualResetEvent(false);
             using var stdErrSignal = new ManualResetEvent(false);

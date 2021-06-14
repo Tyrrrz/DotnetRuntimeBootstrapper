@@ -12,6 +12,8 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
         private readonly string _name;
         private readonly SemanticVersion _version;
 
+        public string Id => $"{_name}_{_version}";
+
         private string ShortName =>
             _name
                 .TrimStart("Microsoft.", StringComparison.OrdinalIgnoreCase)
@@ -90,7 +92,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName("dotnet_runtime_installer", "exe");
+            var filePath = FileEx.GetTempFileName(Id, "exe");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
             return new ExecutableRuntimeComponentInstaller(this, filePath);

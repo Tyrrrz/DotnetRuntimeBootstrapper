@@ -8,6 +8,8 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 {
     public class VisualCppRuntimeComponent : IRuntimeComponent
     {
+        public string Id => "VisualCppRedist_2015_2019";
+
         public string DisplayName => "Visual C++ Redistributable 2015-2019";
 
         public bool IsRebootRequired => false;
@@ -19,7 +21,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName("visual_cpp_redist", "exe");
+            var filePath = FileEx.GetTempFileName(Id, "exe");
 
             Http.DownloadFile(
                 $"https://aka.ms/vs/16/release/VC_redist.{OperatingSystem.ProcessorArchitectureMoniker}.exe",

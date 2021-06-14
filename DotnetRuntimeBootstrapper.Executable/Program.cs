@@ -5,15 +5,12 @@ using System.Net;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.RuntimeComponents;
+using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
     public static class Program
     {
-        private static string ExecutingDirectoryPath { get; } =
-            Path.GetDirectoryName(typeof(Program).Assembly.Location) ??
-            AppDomain.CurrentDomain.BaseDirectory;
-
         private static void ShowError(string message) => MessageBox.Show(
             message,
             @"Error",
@@ -97,7 +94,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 var parameters = ExecutionParameters.Resolve();
 
                 // Find target assembly
-                var targetFilePath = Path.Combine(ExecutingDirectoryPath, parameters.TargetFileName);
+                var targetFilePath = Path.Combine(PathEx.ExecutingDirectoryPath, parameters.TargetFileName);
                 if (!File.Exists(targetFilePath))
                 {
                     ShowError($"Target assembly not found: '{parameters.TargetFileName}'.");

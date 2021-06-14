@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
@@ -30,6 +31,13 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
             process.Start();
             process.WaitForExit();
+
+            // Regardless of the outcome, record the fact that this update has been installed,
+            // so we don't attempt to install it again in the future.
+            // We need to do this because an update may fail to install if it was superseded
+            // by some other already installed update which we are not aware of.
+            // https://github.com/Tyrrrz/LightBulb/issues/209
+            InstallationHistory.Record(Component.Id);
         }
     }
 }

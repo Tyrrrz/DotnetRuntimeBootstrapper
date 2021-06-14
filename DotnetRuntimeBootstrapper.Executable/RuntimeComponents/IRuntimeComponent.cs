@@ -4,6 +4,8 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 {
     public interface IRuntimeComponent
     {
+        string Id { get; }
+
         string DisplayName { get; }
 
         bool IsRebootRequired { get; }

@@ -8,15 +8,19 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
     // Security update
     public class WindowsUpdate3063858RuntimeComponent : IRuntimeComponent
     {
-        public string DisplayName => "Windows Update KB3063858";
+        public string Id => "KB3063858";
+
+        public string DisplayName => $"Windows Update {Id}";
 
         public bool IsRebootRequired => true;
 
         public bool CheckIfInstalled() =>
             OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
-            OperatingSystem.IsUpdateInstalled("KB3063858") ||
+            OperatingSystem.IsUpdateInstalled(Id) ||
             // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
-            OperatingSystem.IsUpdateInstalled("KB3068708");
+            OperatingSystem.IsUpdateInstalled("KB3068708") ||
+            // Avoid trying to install updates that we've already tried to install before
+            InstallationHistory.Contains(Id);
 
         private string GetInstallerDownloadUrl() => OperatingSystem.Version switch
         {
@@ -30,7 +34,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName("KB3063858", "msu");
+            var filePath = FileEx.GetTempFileName(Id, "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
             return new WindowsUpdateRuntimeComponentInstaller(this, filePath);

@@ -11,15 +11,19 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
     // clients that only support older certificate protocols.
     public class WindowsUpdate3154518RuntimeComponent : IRuntimeComponent
     {
-        public string DisplayName => "Windows Update KB3154518";
+        public string Id => "KB3154518";
+
+        public string DisplayName => $"Windows Update {Id}";
 
         public bool IsRebootRequired => true;
 
         public bool CheckIfInstalled() =>
             OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
-            OperatingSystem.IsUpdateInstalled("KB3154518") ||
+            OperatingSystem.IsUpdateInstalled(Id) ||
             // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
-            OperatingSystem.IsUpdateInstalled("KB3125574");
+            OperatingSystem.IsUpdateInstalled("KB3125574") ||
+            // Avoid trying to install updates that we've already tried to install before
+            InstallationHistory.Contains(Id);
 
         private string GetInstallerDownloadUrl() => OperatingSystem.Version switch
         {
@@ -33,7 +37,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName("KB3154518", "msu");
+            var filePath = FileEx.GetTempFileName(Id, "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
             return new WindowsUpdateRuntimeComponentInstaller(this, filePath);

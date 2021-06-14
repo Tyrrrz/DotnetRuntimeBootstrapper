@@ -8,13 +8,17 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
     // Security update
     public class WindowsUpdate2999226RuntimeComponent : IRuntimeComponent
     {
-        public string DisplayName => "Windows Update KB2999226";
+        public string Id => "KB2999226";
+
+        public string DisplayName => $"Windows Update {Id}";
 
         public bool IsRebootRequired => false;
 
         public bool CheckIfInstalled() =>
             OperatingSystem.Version >= OperatingSystemVersion.Windows10 ||
-            OperatingSystem.IsUpdateInstalled("KB2999226");
+            OperatingSystem.IsUpdateInstalled(Id) ||
+            // Avoid trying to install updates that we've already tried to install before
+            InstallationHistory.Contains(Id);
 
         private string GetInstallerDownloadUrl() => OperatingSystem.Version switch
         {
@@ -38,7 +42,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName("KB2999226", "msu");
+            var filePath = FileEx.GetTempFileName(Id, "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
             return new WindowsUpdateRuntimeComponentInstaller(this, filePath);
