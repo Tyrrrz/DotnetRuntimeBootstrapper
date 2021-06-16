@@ -66,28 +66,10 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             return _installedUpdates = result;
         }
 
-        public static OperatingSystemVersion Version
-        {
-            get
-            {
-                if (GetSystemVersionInfo().MajorVersion >= 10)
-                    return OperatingSystemVersion.Windows10;
-
-                if (GetSystemVersionInfo().MajorVersion >= 6)
-                {
-                    if (GetSystemVersionInfo().MinorVersion >= 3)
-                        return OperatingSystemVersion.Windows81;
-
-                    if (GetSystemVersionInfo().MinorVersion >= 2)
-                        return OperatingSystemVersion.Windows8;
-
-                    if (GetSystemVersionInfo().MinorVersion >= 1)
-                        return OperatingSystemVersion.Windows7;
-                }
-
-                return OperatingSystemVersion.Unknown;
-            }
-        }
+        public static OperatingSystemVersion Version => new(
+            GetSystemVersionInfo().MajorVersion,
+            GetSystemVersionInfo().MinorVersion
+        );
 
         public static ProcessorArchitecture ProcessorArchitecture => GetSystemInfo().ProcessorArchitecture switch
         {

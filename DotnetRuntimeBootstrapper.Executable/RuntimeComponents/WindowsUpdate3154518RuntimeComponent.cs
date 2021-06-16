@@ -25,15 +25,24 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             // Avoid trying to install updates that we've already tried to install before
             InstallationHistory.Contains(Id);
 
-        private string GetInstallerDownloadUrl() => OperatingSystem.Version switch
+        private string GetInstallerDownloadUrl()
         {
-            OperatingSystemVersion.Windows7 when OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64 =>
-                "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x64.msu",
-            OperatingSystemVersion.Windows7 when OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X86 =>
-                "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x86.msu",
+            if (OperatingSystem.Version == OperatingSystemVersion.Windows7 &&
+                OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64)
+            {
+                return
+                    "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x64.msu";
+            }
 
-            _ => throw new InvalidOperationException("Unsupported operating system version.")
-        };
+            if (OperatingSystem.Version == OperatingSystemVersion.Windows7 &&
+                OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X86)
+            {
+                return
+                    "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x86.msu";
+            }
+
+            throw new InvalidOperationException("Unsupported operating system version.");
+        }
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
         {
