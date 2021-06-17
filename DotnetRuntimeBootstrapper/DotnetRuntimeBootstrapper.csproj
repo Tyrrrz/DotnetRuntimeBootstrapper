@@ -8,6 +8,7 @@
     <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageIcon>favicon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -34,39 +35,40 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../favicon.png" Pack="true" PackagePath="" />
+    <None Include="../Readme.md" Pack="true" PackagePath="" Visible="false" />
+    <None Include="../favicon.png" Pack="true" PackagePath="" Visible="false" />
     <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
     <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
-    <None Include="rcedit.exe" Pack="true" PackagePath="build" />
-    <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Buffers.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Collections.Immutable.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Memory.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Security.AccessControl.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Security.Permissions.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Threading.dll" Pack="true" PackagePath="build/netstandard2.0" />
-    <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/Microsoft.VisualStudio.Setup.Configuration.Interop.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/System.Buffers.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/System.Collections.Immutable.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/System.Memory.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/net472" />
-    <None Include="$(OutputPath)/net472/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/net472" />
+    <None Include="rcedit.exe" Pack="true" PackagePath="build" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Buffers.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Collections.Immutable.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Memory.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Security.AccessControl.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Security.Permissions.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Threading.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Microsoft.VisualStudio.Setup.Configuration.Interop.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Buffers.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Collections.Immutable.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Memory.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/net472" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
