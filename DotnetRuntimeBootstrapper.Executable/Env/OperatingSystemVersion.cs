@@ -65,7 +65,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             left.CompareTo(right) < 0;
 
         public static bool operator >=(OperatingSystemVersion left, OperatingSystemVersion right) =>
-            left == right || left >= right;
+            left == right || left > right;
 
         public static bool operator <=(OperatingSystemVersion left, OperatingSystemVersion right) =>
             left == right || left < right;
