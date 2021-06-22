@@ -6,6 +6,25 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
 {
     internal static class Http
     {
+        static Http()
+        {
+            try
+            {
+                // Disable certificate validation (valid certificate may fail on old operating systems)
+                ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
+
+                // Try to enable TLS1.2 if it's supported (this not a requirement yet)
+                ServicePointManager.SecurityProtocol =
+                    (SecurityProtocolType) 0x00000C00 |
+                    SecurityProtocolType.Tls |
+                    SecurityProtocolType.Ssl3;
+            }
+            catch
+            {
+                // This can fail if the protocol is not available
+            }
+        }
+
         private static HttpWebRequest CreateRequest(string url, string method = "GET")
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
