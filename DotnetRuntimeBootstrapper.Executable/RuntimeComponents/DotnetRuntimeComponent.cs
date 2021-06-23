@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
+using DotnetRuntimeBootstrapper.Executable.Utils.Json;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
@@ -64,12 +67,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
         {
             if (string.Equals(_name, "Microsoft.WindowsDesktop.App", StringComparison.OrdinalIgnoreCase))
             {
-                return "runtime-desktop";
+                return "windowsdesktop";
             }
 
             if (string.Equals(_name, "Microsoft.AspNetCore.App", StringComparison.OrdinalIgnoreCase))
             {
-                return "runtime-aspnetcore";
+                return "aspnetcore-runtime";
             }
 
             return "runtime";
@@ -77,17 +80,55 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         private string GetInstallerDownloadUrl()
         {
-            var downloadPageUrl =
-                "https://dotnet.microsoft.com/download/dotnet/thank-you/" +
-                $"{GetRuntimeMoniker()}-{_version}-windows-{OperatingSystem.ProcessorArchitectureMoniker}-installer";
+            // Get release manifest for this version
+            var manifest = Http.GetContentString(
+                "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/" +
+                $"{_version.ToString(2)}/releases.json"
+            );
 
-            var downloadPageContent = Http.GetContentString(downloadPageUrl);
+            // Find the list of files for the latest release
+            var latestRuntimeFilesJson = Json
+                .TryParse(manifest)?
+                .TryGetChild("releases")?
+                .TryGetChild(0)?
+                .TryGetChild(GetRuntimeMoniker())?
+                .TryGetChild("files")?
+                .EnumerateChildren();
 
-            var installerUrl = Regex.Match(downloadPageContent, "href=\"(.*?\\.exe)\"").Groups[1].Value;
-            if (string.IsNullOrEmpty(installerUrl))
-                throw new InvalidOperationException("Failed to extract .NET runtime installer URL.");
+            // Find the installer download URL applicable for the current system
+            foreach (var latestRuntimeFileJson in latestRuntimeFilesJson ?? Enumerable.Empty<JsonNode>())
+            {
+                var runtimeIdentifier = latestRuntimeFileJson.TryGetChild("rid")?.TryGetString();
 
-            return installerUrl;
+                // Filter by processor architecture
+                if (!string.Equals(
+                    runtimeIdentifier,
+                    "win-" + OperatingSystem.ProcessorArchitectureMoniker,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var downloadUrl = latestRuntimeFileJson.TryGetChild("url")?.TryGetString();
+
+                if (string.IsNullOrEmpty(downloadUrl))
+                {
+                    continue;
+                }
+
+                // Filter out non-installer downloads
+                if (!string.Equals(
+                    Path.GetExtension(downloadUrl),
+                    ".exe",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                return downloadUrl;
+            }
+
+            throw new InvalidOperationException("Failed to find .NET runtime installer URL.");
         }
 
         public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)

@@ -10,8 +10,17 @@ namespace DotnetRuntimeBootstrapper.Executable
 {
     public static class Program
     {
-        private static void ShowError(string message) =>
-            MessageBox.Show(message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        private static void DumpError(string message)
+        {
+            try
+            {
+                File.WriteAllText("BootstrapperErrorDump.txt", message);
+            }
+            catch
+            {
+                // Ignore
+            }
+        }
 
         private static IRuntimeComponent[] GetMissingRuntimeComponents(ExecutionParameters parameters)
         {
@@ -57,7 +66,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         [STAThread]
         public static int Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += (_, e) => ShowError(e.ExceptionObject.ToString());
+            AppDomain.CurrentDomain.UnhandledException += (_, e) => DumpError(e.ExceptionObject.ToString());
 
             try
             {
@@ -68,7 +77,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 var targetFilePath = Path.Combine(PathEx.ExecutingDirectoryPath, parameters.TargetFileName);
                 if (!File.Exists(targetFilePath))
                 {
-                    ShowError($"Target assembly not found: '{parameters.TargetFileName}'.");
+                    DumpError($"Target assembly not found: '{parameters.TargetFileName}'.");
                     return 1;
                 }
 
@@ -85,7 +94,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
             catch (Exception ex)
             {
-                ShowError(ex.ToString());
+                DumpError(ex.ToString());
                 return 1;
             }
         }

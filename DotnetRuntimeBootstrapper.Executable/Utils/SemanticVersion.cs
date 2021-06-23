@@ -19,7 +19,15 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             Patch = patch;
         }
 
-        public override string ToString() => $"{Major}.{Minor}.{Patch}";
+        public string ToString(int components) => components switch
+        {
+            1 => $"{Major}",
+            2 => $"{Major}.{Minor}",
+            3 => $"{Major}.{Minor}.{Patch}",
+            _ => throw new ArgumentOutOfRangeException(nameof(components))
+        };
+
+        public override string ToString() => ToString(3);
     }
 
     public partial class SemanticVersion

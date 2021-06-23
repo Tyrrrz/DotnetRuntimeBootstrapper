@@ -2,7 +2,7 @@
 
 namespace DotnetRuntimeBootstrapper.Executable.Env
 {
-    internal partial struct OperatingSystemVersion
+    internal readonly partial struct OperatingSystemVersion
     {
         public int Major { get; }
 
