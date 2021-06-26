@@ -139,7 +139,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(250, 200);
             this.Name = "InstallationForm";
-            this.ShowIcon = false;
+            this.ShowIcon = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = ".NET Runtime Bootstrapper";
             this.Load += new System.EventHandler(this.InstallationForm_Load);

@@ -69,7 +69,8 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationForm_Load(object sender, EventArgs args)
         {
-            Text = @$"{_parameters.TargetTitle} (Dependencies Missing)";
+            Text = @$"{_parameters.TargetTitle} (prerequisites missing)";
+            Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
 
             DescriptionLabel.Text =
