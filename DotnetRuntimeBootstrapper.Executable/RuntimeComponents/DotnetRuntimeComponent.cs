@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
-using DotnetRuntimeBootstrapper.Executable.Utils.Json;
+using QuickJson;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
@@ -93,10 +93,10 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
                 .TryGetChild(0)?
                 .TryGetChild(GetRuntimeMoniker())?
                 .TryGetChild("files")?
-                .EnumerateChildren();
+                .EnumerateChildren() ?? Enumerable.Empty<JsonNode>();
 
             // Find the installer download URL applicable for the current system
-            foreach (var latestRuntimeFileJson in latestRuntimeFilesJson ?? Enumerable.Empty<JsonNode>())
+            foreach (var latestRuntimeFileJson in latestRuntimeFilesJson)
             {
                 var runtimeIdentifier = latestRuntimeFileJson.TryGetChild("rid")?.TryGetString();
 
