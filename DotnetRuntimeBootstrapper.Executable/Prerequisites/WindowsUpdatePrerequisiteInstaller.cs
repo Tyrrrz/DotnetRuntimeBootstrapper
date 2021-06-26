@@ -2,17 +2,17 @@
 using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 
-namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
+namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class WindowsUpdateRuntimeComponentInstaller : IRuntimeComponentInstaller
+    public class WindowsUpdatePrerequisiteInstaller : IPrerequisiteInstaller
     {
-        public IRuntimeComponent Component { get; }
+        public IPrerequisite Prerequisite { get; }
 
         public string FilePath { get; }
 
-        public WindowsUpdateRuntimeComponentInstaller(IRuntimeComponent component, string filePath)
+        public WindowsUpdatePrerequisiteInstaller(IPrerequisite prerequisite, string filePath)
         {
-            Component = component;
+            Prerequisite = prerequisite;
             FilePath = filePath;
         }
 
@@ -37,7 +37,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             // We need to do this because an update may fail to install if it was superseded
             // by some other already installed update which we are not aware of.
             // https://github.com/Tyrrrz/LightBulb/issues/209
-            InstallationHistory.Record(Component.Id);
+            InstallationHistory.Record(Prerequisite.Id);
         }
     }
 }

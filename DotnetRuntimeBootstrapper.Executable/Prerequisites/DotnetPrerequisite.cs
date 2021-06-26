@@ -8,12 +8,12 @@ using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 using QuickJson;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
-namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
+namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class DotnetRuntimeComponent : IRuntimeComponent
+    public class DotnetPrerequisite : IPrerequisite
     {
         private readonly string _name;
-        private readonly SemanticVersion _version;
+        private readonly string _version;
 
         public string Id => $"{_name}_{_version}";
 
@@ -26,7 +26,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public bool IsRebootRequired => false;
 
-        public DotnetRuntimeComponent(string name, SemanticVersion version)
+        public DotnetPrerequisite(string name, string version)
         {
             _name = name;
             _version = version;
@@ -34,12 +34,14 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
         public bool CheckIfInstalled()
         {
+            var expectedRuntimeVersion = new Version(_version);
+
             foreach (var runtimeLine in Dotnet.ListRuntimes())
             {
                 var match = Regex.Match(runtimeLine, @"^(.*?)\s+(.*?)\s+");
 
                 var runtimeName = match.Groups[1].Value;
-                var runtimeVersion = SemanticVersion.TryParse(match.Groups[2].Value);
+                var runtimeVersion = new Version(match.Groups[2].Value);
 
                 // Names should match directly
                 var isNameMatch = string.Equals(runtimeName, _name, StringComparison.OrdinalIgnoreCase);
@@ -49,10 +51,9 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
 
                 // Versions should match or there should be a higher version within the same major
                 var isVersionMatch =
-                    runtimeVersion is not null &&
-                    runtimeVersion.Major == _version.Major &&
-                    runtimeVersion.Minor >= _version.Minor &&
-                    runtimeVersion.Patch >= _version.Patch;
+                    runtimeVersion.Major == expectedRuntimeVersion.Major &&
+                    runtimeVersion.Minor >= expectedRuntimeVersion.Minor &&
+                    runtimeVersion.Build >= expectedRuntimeVersion.Build;
 
                 if (!isVersionMatch)
                     continue;
@@ -83,7 +84,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             // Get release manifest for this version
             var manifest = Http.GetContentString(
                 "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/" +
-                $"{_version.ToString(2)}/releases.json"
+                $"{_version}/releases.json"
             );
 
             // Find the list of files for the latest release
@@ -131,12 +132,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             throw new InvalidOperationException("Failed to find .NET runtime installer URL.");
         }
 
-        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName(Id, "exe");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-            return new ExecutableRuntimeComponentInstaller(this, filePath);
+            return new ExecutablePrerequisiteInstaller(this, filePath);
         }
     }
 }

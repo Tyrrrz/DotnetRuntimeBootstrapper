@@ -3,15 +3,12 @@ using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
-namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
+namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    // Enables TLS1.2 protocol, which is not strictly required by .NET Runtime,
-    // but is very likely going to be needed by the actual application if it
-    // sends any HTTP requests whatsoever, as most servers currently reject
-    // clients that only support older certificate protocols.
-    public class WindowsUpdate3154518RuntimeComponent : IRuntimeComponent
+    // Security update
+    public class WindowsUpdate3063858Prerequisite : IPrerequisite
     {
-        public string Id => "KB3154518";
+        public string Id => "KB3063858";
 
         public string DisplayName => $"Windows Update {Id}";
 
@@ -21,7 +18,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
             OperatingSystem.IsUpdateInstalled(Id) ||
             // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
-            OperatingSystem.IsUpdateInstalled("KB3125574") ||
+            OperatingSystem.IsUpdateInstalled("KB3068708") ||
             // Avoid trying to install updates that we've already tried to install before
             InstallationHistory.Contains(Id);
 
@@ -31,25 +28,25 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
                 OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64)
             {
                 return
-                    "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x64.msu";
+                    "https://download.microsoft.com/download/0/8/E/08E0386B-F6AF-4651-8D1B-C0A95D2731F0/Windows6.1-KB3063858-x64.msu";
             }
 
             if (OperatingSystem.Version == OperatingSystemVersion.Windows7 &&
                 OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X86)
             {
                 return
-                    "https://download.microsoft.com/download/6/8/0/680ee424-358c-4fdf-a0de-b45dee07b711/windows6.1-kb3154518-x86.msu";
+                    "https://download.microsoft.com/download/C/9/6/C96CD606-3E05-4E1C-B201-51211AE80B1E/Windows6.1-KB3063858-x86.msu";
             }
 
             throw new InvalidOperationException("Unsupported operating system version.");
         }
 
-        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName(Id, "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-            return new WindowsUpdateRuntimeComponentInstaller(this, filePath);
+            return new WindowsUpdatePrerequisiteInstaller(this, filePath);
         }
     }
 }

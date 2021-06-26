@@ -4,9 +4,9 @@ using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 using Microsoft.Win32;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
-namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
+namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class VisualCppRuntimeComponent : IRuntimeComponent
+    public class VisualCppPrerequisite : IPrerequisite
     {
         public string Id => "VisualCppRedist_2015_2019";
 
@@ -19,7 +19,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
                 $"SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{OperatingSystem.ProcessorArchitectureMoniker}"
             );
 
-        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName(Id, "exe");
 
@@ -29,7 +29,7 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
                 handleProgress
             );
 
-            return new ExecutableRuntimeComponentInstaller(this, filePath);
+            return new ExecutablePrerequisiteInstaller(this, filePath);
         }
     }
 }

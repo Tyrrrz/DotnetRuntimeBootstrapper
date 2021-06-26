@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.Executable
@@ -17,13 +16,13 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         public string TargetRuntimeName { get; }
 
-        public SemanticVersion TargetRuntimeVersion { get; }
+        public string TargetRuntimeVersion { get; }
 
         public ExecutionParameters(
             string targetTitle,
             string targetFileName,
             string targetRuntimeName,
-            SemanticVersion targetRuntimeVersion)
+            string targetRuntimeVersion)
         {
             TargetTitle = targetTitle;
             TargetFileName = targetFileName;
@@ -66,7 +65,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 map[nameof(TargetTitle)],
                 map[nameof(TargetFileName)],
                 map[nameof(TargetRuntimeName)],
-                map[nameof(TargetRuntimeVersion)].Pipe(SemanticVersion.Parse)
+                map[nameof(TargetRuntimeVersion)]
             );
         }
     }

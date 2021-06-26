@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.Executable.Env;
-using DotnetRuntimeBootstrapper.Executable.RuntimeComponents;
+using DotnetRuntimeBootstrapper.Executable.Prerequisites;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable
@@ -22,23 +22,23 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
         }
 
-        private static IRuntimeComponent[] GetMissingRuntimeComponents(ExecutionParameters parameters)
+        private static IPrerequisite[] GetMissingPrerequisites(ExecutionParameters parameters)
         {
-            var result = new List<IRuntimeComponent>
+            var result = new List<IPrerequisite>
             {
                 // Low-level dependencies first, high-level last
-                new WindowsUpdate2999226RuntimeComponent(),
-                new WindowsUpdate3063858RuntimeComponent(),
-                new WindowsUpdate3154518RuntimeComponent(),
-                new VisualCppRuntimeComponent(),
-                new DotnetRuntimeComponent(parameters.TargetRuntimeName, parameters.TargetRuntimeVersion)
+                new WindowsUpdate2999226Prerequisite(),
+                new WindowsUpdate3063858Prerequisite(),
+                new WindowsUpdate3154518Prerequisite(),
+                new VisualCppPrerequisite(),
+                new DotnetPrerequisite(parameters.TargetRuntimeName, parameters.TargetRuntimeVersion)
             };
 
-            // Filter out already installed components
-            foreach (var component in result.ToArray())
+            // Filter out already installed prerequisites
+            foreach (var prerequisite in result.ToArray())
             {
-                if (component.CheckIfInstalled())
-                    result.Remove(component);
+                if (prerequisite.CheckIfInstalled())
+                    result.Remove(prerequisite);
             }
 
             return result.ToArray();
@@ -46,14 +46,14 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private static bool CheckPerformInstall(ExecutionParameters parameters)
         {
-            var missingRuntimeComponents = GetMissingRuntimeComponents(parameters);
-            if (missingRuntimeComponents.Length <= 0)
+            var missingPrerequisites = GetMissingPrerequisites(parameters);
+            if (missingPrerequisites.Length <= 0)
                 return true;
 
             // Show the installation form
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var form = new InstallationForm(parameters, missingRuntimeComponents);
+            var form = new InstallationForm(parameters, missingPrerequisites);
             Application.Run(form);
 
             // Reset environment variables because the installation process has most likely updated them
@@ -81,7 +81,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                     return 1;
                 }
 
-                // Check for missing components and install them if necessary
+                // Check for missing prerequisites and install them if necessary
                 var canProceed = CheckPerformInstall(parameters);
                 if (!canProceed)
                 {

@@ -3,10 +3,10 @@ using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
-namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
+namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    // Security update
-    public class WindowsUpdate2999226RuntimeComponent : IRuntimeComponent
+    // Universal C Runtime
+    public class WindowsUpdate2999226Prerequisite : IPrerequisite
     {
         public string Id => "KB2999226";
 
@@ -67,12 +67,12 @@ namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
             throw new InvalidOperationException("Unsupported operating system version.");
         }
 
-        public IRuntimeComponentInstaller DownloadInstaller(Action<double>? handleProgress)
+        public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var filePath = FileEx.GetTempFileName(Id, "msu");
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-            return new WindowsUpdateRuntimeComponentInstaller(this, filePath);
+            return new WindowsUpdatePrerequisiteInstaller(this, filePath);
         }
     }
 }

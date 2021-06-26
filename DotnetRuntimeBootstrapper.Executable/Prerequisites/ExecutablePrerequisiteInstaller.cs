@@ -1,16 +1,16 @@
 ﻿using System.Diagnostics;
 
-namespace DotnetRuntimeBootstrapper.Executable.RuntimeComponents
+namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class ExecutableRuntimeComponentInstaller : IRuntimeComponentInstaller
+    public class ExecutablePrerequisiteInstaller : IPrerequisiteInstaller
     {
-        public IRuntimeComponent Component { get; }
+        public IPrerequisite Prerequisite { get; }
 
         public string FilePath { get; }
 
-        public ExecutableRuntimeComponentInstaller(IRuntimeComponent component, string filePath)
+        public ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, string filePath)
         {
-            Component = component;
+            Prerequisite = prerequisite;
             FilePath = filePath;
         }
 

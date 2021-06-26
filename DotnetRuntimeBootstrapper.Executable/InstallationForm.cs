@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using DotnetRuntimeBootstrapper.Executable.RuntimeComponents;
+using DotnetRuntimeBootstrapper.Executable.Prerequisites;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
@@ -13,14 +13,14 @@ namespace DotnetRuntimeBootstrapper.Executable
     public partial class InstallationForm : Form
     {
         private readonly ExecutionParameters _parameters;
-        private readonly IRuntimeComponent[] _missingRuntimeComponents;
+        private readonly IPrerequisite[] _missingPrerequisites;
 
         public InstallationFormResult Result { get; private set; } = InstallationFormResult.Failed;
 
-        public InstallationForm(ExecutionParameters parameters, IRuntimeComponent[] missingRuntimeComponents)
+        public InstallationForm(ExecutionParameters parameters, IPrerequisite[] missingPrerequisites)
         {
             _parameters = parameters;
-            _missingRuntimeComponents = missingRuntimeComponents;
+            _missingPrerequisites = missingPrerequisites;
 
             InitializeComponent();
         }
@@ -67,9 +67,9 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
         });
 
-        private void InstallationForm_Load(object sender, EventArgs args)
+        private void InstallationForm_Load(object sender, EventArgs e)
         {
-            Text = @$"{_parameters.TargetTitle} (prerequisites missing)";
+            Text = @$"{_parameters.TargetTitle} (Prerequisites Missing)";
             Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
             PictureBox.Image = SystemIcons.Warning.ToBitmap();
 
@@ -78,12 +78,12 @@ namespace DotnetRuntimeBootstrapper.Executable
                 @"Would you like to download and install them?" +
                 Environment.NewLine +
                 Environment.NewLine +
-                string.Join(Environment.NewLine, _missingRuntimeComponents.Select(c =>
+                string.Join(Environment.NewLine, _missingPrerequisites.Select(c =>
                     $"• {c.DisplayName}"
                 ).ToArray());
         }
 
-        private void InstallButton_Click(object sender, EventArgs args)
+        private void InstallButton_Click(object sender, EventArgs e)
         {
             InstallButton.Visible = false;
             InstallButton.Enabled = false;
@@ -100,48 +100,49 @@ namespace DotnetRuntimeBootstrapper.Executable
                 try
                 {
                     // Download
-                    var componentInstallers = new List<IRuntimeComponentInstaller>();
-                    foreach (var component in _missingRuntimeComponents)
+                    var installers = new List<IPrerequisiteInstaller>();
+                    for (var i = 0; i < _missingPrerequisites.Length; i++)
                     {
+                        var downloadNumber = i + 1;
+                        var prerequisite = _missingPrerequisites[i];
+
                         InvokeOnUI(() =>
                         {
                             DescriptionLabel.Text =
-                                @$"Downloading {component.DisplayName}... " +
-                                @$"({componentInstallers.Count + 1} of {_missingRuntimeComponents.Length})";
+                                @$"[{downloadNumber} of {_missingPrerequisites.Length}] " +
+                                @$"Downloading {prerequisite.DisplayName}";
                         });
 
-                        var progressOffset = 1.0 * componentInstallers.Count / _missingRuntimeComponents.Length;
+                        var progressOffset = 1.0 * installers.Count / _missingPrerequisites.Length;
 
-                        var installer = component.DownloadInstaller(p =>
-                            UpdateProgress(progressOffset + p * 1.0 / _missingRuntimeComponents.Length)
+                        var installer = prerequisite.DownloadInstaller(p =>
+                            UpdateProgress(progressOffset + p * 1.0 / _missingPrerequisites.Length)
                         );
 
-                        componentInstallers.Add(installer);
+                        installers.Add(installer);
                     }
 
                     InvokeOnUI(() => ProgressBar.Style = ProgressBarStyle.Marquee);
 
                     // Install
-                    var componentsInstalledCount = 0;
-                    foreach (var componentInstaller in componentInstallers)
+                    for (var i = 0; i < installers.Count; i++)
                     {
-                        var currentComponentsInstalledCount = componentsInstalledCount;
+                        var installNumber = i + 1;
+                        var installer = installers[i];
 
                         InvokeOnUI(() =>
                         {
                             DescriptionLabel.Text =
-                                @$"Installing {componentInstaller.Component.DisplayName}... " +
-                                @$"({currentComponentsInstalledCount + 1} of {_missingRuntimeComponents.Length})";
+                                @$"[{installNumber} of {_missingPrerequisites.Length}] " +
+                                @$"Installing {installer.Prerequisite.DisplayName}";
                         });
 
-                        componentInstaller.Run();
-                        componentsInstalledCount++;
-
-                        FileEx.TryDelete(componentInstaller.FilePath);
+                        installer.Run();
+                        FileEx.TryDelete(installer.FilePath);
                     }
 
                     // Finalize
-                    if (_missingRuntimeComponents.Any(c => c.IsRebootRequired))
+                    if (_missingPrerequisites.Any(c => c.IsRebootRequired))
                     {
                         PromptReboot();
                         Exit(InstallationFormResult.PendingReboot);

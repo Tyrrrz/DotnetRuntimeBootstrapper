@@ -10,12 +10,14 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
         {
             var machineEnvironmentVariables = Environment
                 .GetEnvironmentVariables(EnvironmentVariableTarget.Machine)
-                .Cast<DictionaryEntry>()
-                .ToDictionary(e => (string) e.Key, e => (string?) e.Value);
+                .Cast<DictionaryEntry>();
 
             foreach (var environmentVariable in machineEnvironmentVariables)
             {
-                Environment.SetEnvironmentVariable(environmentVariable.Key, environmentVariable.Value);
+                var key = (string) environmentVariable.Key;
+                var value = (string?) environmentVariable.Value;
+
+                Environment.SetEnvironmentVariable(key, value);
             }
         }
     }
