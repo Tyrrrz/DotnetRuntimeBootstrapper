@@ -27,7 +27,7 @@ Using it with projects of other types (i.e. console or web) is possible but not 
 
 ## Video
 
-https://user-images.githubusercontent.com/1935960/120946093-1dd6d000-c6f0-11eb-9cfe-a373a00b4888.mp4
+https://user-images.githubusercontent.com/1935960/123711355-346ed380-d825-11eb-982f-6272a9e55ebd.mp4
 
 ## Usage
 
