@@ -15,7 +15,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         private readonly ExecutionParameters _parameters;
         private readonly IPrerequisite[] _missingPrerequisites;
 
-        public InstallationFormResult Result { get; private set; } = InstallationFormResult.Failed;
+        private InstallationResult _result = InstallationResult.Failure;
 
         public InstallationForm(ExecutionParameters parameters, IPrerequisite[] missingPrerequisites)
         {
@@ -25,18 +25,41 @@ namespace DotnetRuntimeBootstrapper.Executable
             InitializeComponent();
         }
 
-        private void Exit(InstallationFormResult result)
+        private void Close(InstallationResult result)
         {
-            Result = result;
-            Application.Exit();
+            _result = result;
+            Close();
         }
 
         private void InvokeOnUI(Action action) => Invoke(action);
 
-        private void UpdateProgress(double progress) => InvokeOnUI(() =>
+        private void UpdateStatus(string status) => InvokeOnUI(() => StatusLabel.Text = status);
+
+        private void UpdateCurrentProgress(double progress) => InvokeOnUI(() =>
         {
-            ProgressBar.Value = (int) (progress * 100);
-            ProgressBar.Visible = true;
+            if (progress >= 0)
+            {
+                CurrentProgressBar.Style = ProgressBarStyle.Continuous;
+                CurrentProgressBar.Value = (int) (progress * 100);
+            }
+            else
+            {
+                CurrentProgressBar.Style = ProgressBarStyle.Marquee;
+            }
+        });
+
+        private void UpdateTotalProgress(double totalProgress) => InvokeOnUI(() =>
+        {
+            if (totalProgress >= 0)
+            {
+                TotalProgressBar.Style = ProgressBarStyle.Continuous;
+                TotalProgressBar.Value = (int) (totalProgress * 100);
+                TotalProgressLabel.Text = @$"Total progress: {totalProgress:P0}";
+            }
+            else
+            {
+                TotalProgressBar.Style = ProgressBarStyle.Marquee;
+            }
         });
 
         private void ReportError(Exception exception) => InvokeOnUI(() =>
@@ -48,7 +71,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 MessageBoxIcon.Error
             );
 
-            Exit(InstallationFormResult.Failed);
+            Close(InstallationResult.Failure);
         });
 
         private void PromptReboot() => InvokeOnUI(() =>
@@ -69,31 +92,9 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationForm_Load(object sender, EventArgs e)
         {
-            Text = @$"{_parameters.TargetTitle} (Prerequisites Missing)";
+            Text = @$"{_parameters.TargetTitle} (installing prerequisites)";
             Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
-            PictureBox.Image = SystemIcons.Warning.ToBitmap();
-
-            DescriptionLabel.Text =
-                @$"Your system is missing runtime components required by {_parameters.TargetTitle}. " +
-                @"Would you like to download and install them?" +
-                Environment.NewLine +
-                Environment.NewLine +
-                string.Join(Environment.NewLine, _missingPrerequisites.Select(c =>
-                    $"• {c.DisplayName}"
-                ).ToArray());
-        }
-
-        private void InstallButton_Click(object sender, EventArgs e)
-        {
-            InstallButton.Visible = false;
-            InstallButton.Enabled = false;
-            ExitButton.Visible = false;
-            ExitButton.Enabled = false;
-            IgnoreButton.Visible = false;
-            IgnoreButton.Enabled = false;
-
-            PictureBox.Image = SystemIcons.Information.ToBitmap();
-            DescriptionLabel.Text = @"Downloading files...";
+            UpdateStatus(@"Downloading files...");
 
             var thread = new Thread(() =>
             {
@@ -101,55 +102,42 @@ namespace DotnetRuntimeBootstrapper.Executable
                 {
                     // Download
                     var installers = new List<IPrerequisiteInstaller>();
-                    for (var i = 0; i < _missingPrerequisites.Length; i++)
+                    foreach (var prerequisite in _missingPrerequisites)
                     {
-                        var downloadNumber = i + 1;
-                        var prerequisite = _missingPrerequisites[i];
-
-                        InvokeOnUI(() =>
-                        {
-                            DescriptionLabel.Text =
-                                @$"[{downloadNumber} of {_missingPrerequisites.Length}] " +
-                                @$"Downloading {prerequisite.DisplayName}";
-                        });
-
-                        var progressOffset = 1.0 * installers.Count / _missingPrerequisites.Length;
+                        UpdateStatus(@$"Downloading {prerequisite.DisplayName}");
+                        UpdateCurrentProgress(0);
 
                         var installer = prerequisite.DownloadInstaller(p =>
-                            UpdateProgress(progressOffset + p * 1.0 / _missingPrerequisites.Length)
-                        );
+                        {
+                            UpdateCurrentProgress(p);
+                            UpdateTotalProgress((installers.Count + p) / (2.0 * _missingPrerequisites.Length));
+                        });
 
                         installers.Add(installer);
                     }
 
-                    InvokeOnUI(() => ProgressBar.Style = ProgressBarStyle.Marquee);
-
                     // Install
-                    for (var i = 0; i < installers.Count; i++)
+                    var installersFinishedCount = 0;
+                    foreach (var installer in installers)
                     {
-                        var installNumber = i + 1;
-                        var installer = installers[i];
-
-                        InvokeOnUI(() =>
-                        {
-                            DescriptionLabel.Text =
-                                @$"[{installNumber} of {_missingPrerequisites.Length}] " +
-                                @$"Installing {installer.Prerequisite.DisplayName}";
-                        });
+                        UpdateStatus(@$"Installing {installer.Prerequisite.DisplayName}");
+                        UpdateCurrentProgress(-1);
 
                         installer.Run();
                         FileEx.TryDelete(installer.FilePath);
+
+                        UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
                     }
 
                     // Finalize
                     if (_missingPrerequisites.Any(c => c.IsRebootRequired))
                     {
                         PromptReboot();
-                        Exit(InstallationFormResult.PendingReboot);
+                        Close(InstallationResult.Reboot);
                     }
                     else
                     {
-                        Exit(InstallationFormResult.Completed);
+                        Close(InstallationResult.Ready);
                     }
                 }
                 catch (Exception ex)
@@ -162,9 +150,17 @@ namespace DotnetRuntimeBootstrapper.Executable
             thread.IsBackground = true;
             thread.Start();
         }
+    }
 
-        private void ExitButton_Click(object sender, EventArgs e) => Exit(InstallationFormResult.Canceled);
-
-        private void IgnoreButton_Click(object sender, EventArgs e) => Exit(InstallationFormResult.Ignored);
+    public partial class InstallationForm
+    {
+        public static InstallationResult Run(
+            ExecutionParameters parameters,
+            IPrerequisite[] missingPrerequisites)
+        {
+            using var form = new InstallationForm(parameters, missingPrerequisites);
+            Application.Run(form);
+            return form._result;
+        }
     }
 }

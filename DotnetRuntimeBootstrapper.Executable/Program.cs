@@ -50,17 +50,32 @@ namespace DotnetRuntimeBootstrapper.Executable
             if (missingPrerequisites.Length <= 0)
                 return true;
 
-            // Show the installation form
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var form = new InstallationForm(parameters, missingPrerequisites);
-            Application.Run(form);
 
-            // Reset environment variables because the installation process has most likely updated them
-            EnvironmentEx.ResetEnvironmentVariables();
+            // Show the installation prompt
+            var installationPromptResult = InstallationPromptForm.Run(parameters, missingPrerequisites);
 
-            // Proceed to running the application only if completed successfully or ignored
-            return form.Result is InstallationFormResult.Completed or InstallationFormResult.Ignored;
+            // User chose to install
+            if (installationPromptResult == InstallationPromptResult.Install)
+            {
+                // Start the installation process
+                var installationResult = InstallationForm.Run(parameters, missingPrerequisites);
+
+                // Reset environment variables because the installation process has most likely updated them
+                EnvironmentEx.ResetEnvironmentVariables();
+
+                return installationResult == InstallationResult.Ready;
+            }
+
+            // User chose to ignore
+            if (installationPromptResult == InstallationPromptResult.Ignore)
+            {
+                return true;
+            }
+
+            // User chose to cancel
+            return false;
         }
 
         [STAThread]
