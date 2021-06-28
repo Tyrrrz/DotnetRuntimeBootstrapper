@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using DotnetRuntimeBootstrapper.Executable.Env;
+﻿using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
@@ -18,19 +17,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public void Run()
         {
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "wusa",
-                    Arguments = $"{CommandLine.EscapeArgument(FilePath)} /quiet /norestart",
-                    UseShellExecute = true,
-                    Verb = "runas"
-                }
-            };
-
-            process.Start();
-            process.WaitForExit();
+            CommandLine.Run("wusa", new[] {FilePath, "/quiet", "/norestart"}, true);
 
             // Regardless of the outcome, record the fact that this update has been installed,
             // so we don't attempt to install it again in the future.

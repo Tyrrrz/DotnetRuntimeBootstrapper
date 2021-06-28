@@ -32,20 +32,15 @@ namespace DotnetRuntimeBootstrapper.Utils
         private static string RceditCliFilePath => RceditCliFilePathLazy.Value;
 
         private static string? GetVersionString(string filePath, string name) =>
-            CommandLine.TryRun(
+            CommandLine.TryRunWithOutput(
                 RceditCliFilePath,
-                CommandLine.EscapeArgument(filePath) + " " +
-                "--get-version-string " +
-                CommandLine.EscapeArgument(name)
+                new[] {filePath, "--get-version-string", name}
             )?.Trim();
 
         private static void SetVersionString(string filePath, string name, string value) =>
-            CommandLine.Run(
+            CommandLine.RunWithOutput(
                 RceditCliFilePath,
-                CommandLine.EscapeArgument(filePath) + " " +
-                "--set-version-string " +
-                CommandLine.EscapeArgument(name) + " " +
-                CommandLine.EscapeArgument(value)
+                new[] {filePath, "--set-version-string", name, value}
             );
 
         public static string? GetAuthor(string filePath) =>
@@ -78,39 +73,31 @@ namespace DotnetRuntimeBootstrapper.Utils
         public static void SetFileVersion(string filePath, string value) =>
             // This needs to use the dedicated option because otherwise the version is not written correctly
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/2
-            CommandLine.Run(
+            CommandLine.RunWithOutput(
                 RceditCliFilePath,
-                CommandLine.EscapeArgument(filePath) + " " +
-                "--set-file-version " +
-                CommandLine.EscapeArgument(value)
+                new[] {filePath, "--set-file-version", value}
             );
 
         public static void SetProductVersion(string filePath, string value) =>
             // This needs to use the dedicated option because otherwise the version is not written correctly
-            CommandLine.Run(
+            CommandLine.RunWithOutput(
                 RceditCliFilePath,
-                CommandLine.EscapeArgument(filePath) + " " +
-                "--set-product-version " +
-                CommandLine.EscapeArgument(value)
+                new[] {filePath, "--set-product-version", value}
             );
 
         public static void SetCopyright(string filePath, string value) =>
             SetVersionString(filePath, "LegalCopyright", value);
 
         public static void SetIcon(string filePath, string iconFilePath) =>
-            CommandLine.Run(
+            CommandLine.RunWithOutput(
                 RceditCliFilePath,
-                CommandLine.EscapeArgument(filePath) + " " +
-                "--set-icon " +
-                CommandLine.EscapeArgument(iconFilePath)
+                new[] {filePath, "--set-icon", iconFilePath}
             );
 
         public static void SetManifest(string filePath, string manifestFilePath) =>
-            CommandLine.Run(
+            CommandLine.RunWithOutput(
                 RceditCliFilePath,
-                CommandLine.EscapeArgument(filePath) + " " +
-                "--application-manifest " +
-                CommandLine.EscapeArgument(manifestFilePath)
+                new[] {filePath, "--application-manifest", manifestFilePath}
             );
     }
 }

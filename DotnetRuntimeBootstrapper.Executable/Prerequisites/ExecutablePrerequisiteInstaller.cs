@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
@@ -14,21 +14,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
             FilePath = filePath;
         }
 
-        public void Run()
-        {
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = FilePath,
-                    Arguments = "/install /quiet /norestart",
-                    UseShellExecute = true,
-                    Verb = "runas"
-                }
-            };
-
-            process.Start();
-            process.WaitForExit();
-        }
+        public void Run() => CommandLine.Run(FilePath, new[] {"/install", "/quiet", "/norestart"}, true);
     }
 }

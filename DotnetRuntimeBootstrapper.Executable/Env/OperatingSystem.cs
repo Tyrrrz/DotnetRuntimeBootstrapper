@@ -45,7 +45,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
 
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            var wmicOutput = CommandLine.TryRun("wmic", "qfe list full");
+            var wmicOutput = CommandLine.TryRunWithOutput("wmic", new[] {"qfe", "list", "full"});
 
             if (!string.IsNullOrEmpty(wmicOutput))
             {
@@ -91,6 +91,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
 
         public static bool IsUpdateInstalled(string updateId) => GetInstalledUpdates().Contains(updateId);
 
-        public static void InitiateReboot() => CommandLine.Run("shutdown", "/r /t 0");
+        public static void InitiateReboot() => CommandLine.Run("shutdown", new[] {"/r", "/t", "0"});
     }
 }

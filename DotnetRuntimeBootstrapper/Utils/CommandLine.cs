@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -7,17 +9,17 @@ namespace DotnetRuntimeBootstrapper.Utils
 {
     internal static class CommandLine
     {
-        public static string EscapeArgument(string argument) =>
+        private static string EscapeArgument(string argument) =>
             '"' + argument.Replace("\"", "\\\"") + '"';
 
-        public static string Run(string executableFilePath, string arguments = "")
+        public static string RunWithOutput(string executableFilePath, IReadOnlyList<string> arguments)
         {
             using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = executableFilePath,
-                    Arguments = arguments,
+                    Arguments = string.Join(" ", arguments.Select(EscapeArgument)),
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -82,11 +84,11 @@ namespace DotnetRuntimeBootstrapper.Utils
             return stdOutBuffer.ToString();
         }
 
-        public static string? TryRun(string executableFilePath, string arguments = "")
+        public static string? TryRunWithOutput(string executableFilePath, IReadOnlyList<string> arguments)
         {
             try
             {
-                return Run(executableFilePath, arguments);
+                return RunWithOutput(executableFilePath, arguments);
             }
             catch
             {

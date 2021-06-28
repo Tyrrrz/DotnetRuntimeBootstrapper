@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -7,23 +8,53 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
 {
     internal static class CommandLine
     {
-        public static string EscapeArgument(string argument) =>
+        // Group all spawned processes in a single job so that they all
+        // get terminated when the parent process get exits.
+        private static readonly ProcessJob? Job = ProcessJob.TryCreate();
+
+        private static string EscapeArgument(string argument) =>
             '"' + argument.Replace("\"", "\\\"") + '"';
 
-        public static string Run(string executableFilePath, string arguments = "")
+        private static Process CreateProcess(string executableFilePath, string[] arguments, bool isElevated = false)
         {
-            using var process = new Process
+            var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = executableFilePath,
-                    Arguments = arguments,
+                    Arguments = string.Join(" ", arguments.Select(EscapeArgument).ToArray()),
                     UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
                     CreateNoWindow = true
                 }
             };
+
+            if (isElevated)
+            {
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.Verb = "runas";
+            }
+
+            return process;
+        }
+
+        public static int Run(string executableFilePath, string[] arguments, bool isElevated = false)
+        {
+            using var process = CreateProcess(executableFilePath, arguments, isElevated);
+
+            process.Start();
+            Job?.AddProcess(process);
+
+            process.WaitForExit();
+
+            return process.ExitCode;
+        }
+
+        public static string RunWithOutput(string executableFilePath, string[] arguments)
+        {
+            using var process = CreateProcess(executableFilePath, arguments);
+
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
 
             using var stdOutSignal = new ManualResetEvent(false);
             using var stdErrSignal = new ManualResetEvent(false);
@@ -58,6 +89,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             };
 
             process.Start();
+            Job?.AddProcess(process);
 
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
@@ -82,11 +114,11 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             return stdOutBuffer.ToString();
         }
 
-        public static string? TryRun(string executableFilePath, string arguments = "")
+        public static string? TryRunWithOutput(string executableFilePath, string[] arguments)
         {
             try
             {
-                return Run(executableFilePath, arguments);
+                return RunWithOutput(executableFilePath, arguments);
             }
             catch
             {

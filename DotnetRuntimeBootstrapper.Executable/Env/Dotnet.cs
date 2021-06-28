@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
@@ -10,7 +9,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
     {
         public static IEnumerable<string> ListRuntimes()
         {
-            var commandOutput = CommandLine.TryRun("dotnet", "--list-runtimes");
+            var commandOutput = CommandLine.TryRunWithOutput("dotnet", new[] {"--list-runtimes"});
             if (string.IsNullOrEmpty(commandOutput))
                 yield break;
 
@@ -20,28 +19,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             }
         }
 
-        public static int Run(string targetFilePath, string[] arguments)
-        {
-            var argumentsFormatted = string.Join(
-                " ",
-                arguments.Prepend(targetFilePath).Select(CommandLine.EscapeArgument).ToArray()
-            );
-
-            using var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "dotnet",
-                    Arguments = argumentsFormatted,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            process.Start();
-            process.WaitForExit();
-
-            return process.ExitCode;
-        }
+        public static int Run(string targetFilePath, string[] arguments) =>
+            CommandLine.Run("dotnet", arguments.Prepend(targetFilePath).ToArray());
     }
 }
