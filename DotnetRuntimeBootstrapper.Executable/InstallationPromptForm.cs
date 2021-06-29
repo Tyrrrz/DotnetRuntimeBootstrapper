@@ -11,7 +11,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         private readonly ExecutionParameters _parameters;
         private readonly IPrerequisite[] _missingPrerequisites;
 
-        private InstallationPromptResult _result = InstallationPromptResult.Cancel;
+        public InstallationPromptResult Result { get; private set; } = InstallationPromptResult.Cancel;
 
         public InstallationPromptForm(ExecutionParameters parameters, IPrerequisite[] missingPrerequisites)
         {
@@ -23,7 +23,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void Close(InstallationPromptResult result)
         {
-            _result = result;
+            Result = result;
             Close();
         }
 
@@ -40,17 +40,5 @@ namespace DotnetRuntimeBootstrapper.Executable
         private void ExitButton_Click(object sender, EventArgs e) => Close(InstallationPromptResult.Cancel);
 
         private void IgnoreButton_Click(object sender, EventArgs e) => Close(InstallationPromptResult.Ignore);
-    }
-
-    public partial class InstallationPromptForm
-    {
-        public static InstallationPromptResult Run(
-            ExecutionParameters parameters,
-            IPrerequisite[] missingPrerequisites)
-        {
-            using var form = new InstallationPromptForm(parameters, missingPrerequisites);
-            Application.Run(form);
-            return form._result;
-        }
     }
 }

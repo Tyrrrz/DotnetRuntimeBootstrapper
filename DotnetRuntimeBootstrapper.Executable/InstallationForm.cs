@@ -15,7 +15,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         private readonly ExecutionParameters _parameters;
         private readonly IPrerequisite[] _missingPrerequisites;
 
-        private InstallationResult _result = InstallationResult.Failure;
+        public InstallationResult Result { get; private set; } = InstallationResult.Failure;
 
         public InstallationForm(ExecutionParameters parameters, IPrerequisite[] missingPrerequisites)
         {
@@ -27,7 +27,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void Close(InstallationResult result)
         {
-            _result = result;
+            Result = result;
             Close();
         }
 
@@ -149,18 +149,6 @@ namespace DotnetRuntimeBootstrapper.Executable
             thread.Name = "InstallProcess";
             thread.IsBackground = true;
             thread.Start();
-        }
-    }
-
-    public partial class InstallationForm
-    {
-        public static InstallationResult Run(
-            ExecutionParameters parameters,
-            IPrerequisite[] missingPrerequisites)
-        {
-            using var form = new InstallationForm(parameters, missingPrerequisites);
-            Application.Run(form);
-            return form._result;
         }
     }
 }

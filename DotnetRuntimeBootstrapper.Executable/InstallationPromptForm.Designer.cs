@@ -50,7 +50,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             this.IgnoreButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.IgnoreButton.AutoEllipsis = true;
             this.IgnoreButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.IgnoreButton.Location = new System.Drawing.Point(10, 227);
+            this.IgnoreButton.Location = new System.Drawing.Point(10, 230);
             this.IgnoreButton.Name = "IgnoreButton";
             this.IgnoreButton.Size = new System.Drawing.Size(90, 42);
             this.IgnoreButton.TabIndex = 10;
@@ -65,7 +65,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             this.InstallButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.InstallButton.AutoEllipsis = true;
             this.InstallButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InstallButton.Location = new System.Drawing.Point(305, 227);
+            this.InstallButton.Location = new System.Drawing.Point(307, 230);
             this.InstallButton.Name = "InstallButton";
             this.InstallButton.Size = new System.Drawing.Size(90, 42);
             this.InstallButton.TabIndex = 8;
@@ -79,7 +79,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             this.ExitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ExitButton.AutoEllipsis = true;
             this.ExitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ExitButton.Location = new System.Drawing.Point(400, 227);
+            this.ExitButton.Location = new System.Drawing.Point(402, 230);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(90, 42);
             this.ExitButton.TabIndex = 9;
@@ -107,7 +107,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             // 
             this.MissingComponentsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.MissingComponentsLabel.Location = new System.Drawing.Point(8, 65);
+            this.MissingComponentsLabel.Location = new System.Drawing.Point(8, 75);
             this.MissingComponentsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.MissingComponentsLabel.Name = "MissingComponentsLabel";
             this.MissingComponentsLabel.Size = new System.Drawing.Size(484, 20);
@@ -120,12 +120,12 @@ namespace DotnetRuntimeBootstrapper.Executable
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MissingPrerequisitesTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.MissingPrerequisitesTextBox.Location = new System.Drawing.Point(12, 90);
+            this.MissingPrerequisitesTextBox.Location = new System.Drawing.Point(12, 100);
             this.MissingPrerequisitesTextBox.Multiline = true;
             this.MissingPrerequisitesTextBox.Name = "MissingPrerequisitesTextBox";
             this.MissingPrerequisitesTextBox.ReadOnly = true;
             this.MissingPrerequisitesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.MissingPrerequisitesTextBox.Size = new System.Drawing.Size(480, 115);
+            this.MissingPrerequisitesTextBox.Size = new System.Drawing.Size(480, 105);
             this.MissingPrerequisitesTextBox.TabIndex = 7;
             this.MissingPrerequisitesTextBox.TabStop = false;
             // 
@@ -133,10 +133,10 @@ namespace DotnetRuntimeBootstrapper.Executable
             // 
             this.DescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DescriptionLabel.Location = new System.Drawing.Point(52, 13);
+            this.DescriptionLabel.Location = new System.Drawing.Point(56, 13);
             this.DescriptionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.DescriptionLabel.Name = "DescriptionLabel";
-            this.DescriptionLabel.Size = new System.Drawing.Size(440, 45);
+            this.DescriptionLabel.Size = new System.Drawing.Size(436, 45);
             this.DescriptionLabel.TabIndex = 6;
             this.DescriptionLabel.Text = "Your system is missing runtime components required by this application. Would you" +
     " like to download and install them now?";
