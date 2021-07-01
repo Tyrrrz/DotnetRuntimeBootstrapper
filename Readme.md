@@ -19,6 +19,7 @@ Using it with projects of other types (i.e. console or web) is possible but not 
 ## Features
 
 - Acts as a tight wrapper around the target assembly
+- Single executable for all CPU architectures
 - Installs .NET runtime version required by the application
 - Installs Visual C++ redistributable binaries, if missing
 - Installs required Windows updates, if missing
