@@ -1,4 +1,5 @@
 ﻿using System;
+using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 using Microsoft.Win32;
@@ -14,10 +15,19 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public bool IsRebootRequired => false;
 
-        public bool CheckIfInstalled() =>
-            Registry.LocalMachine.ContainsSubKey(
-                $"SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{OperatingSystem.ProcessorArchitectureMoniker}"
+        public bool CheckIfInstalled()
+        {
+            if (OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64)
+            {
+                return Registry.LocalMachine.ContainsSubKey(
+                    $"SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{OperatingSystem.ProcessorArchitectureMoniker}"
+                );
+            }
+
+            return Registry.LocalMachine.ContainsSubKey(
+                $"SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{OperatingSystem.ProcessorArchitectureMoniker}"
             );
+        }
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
