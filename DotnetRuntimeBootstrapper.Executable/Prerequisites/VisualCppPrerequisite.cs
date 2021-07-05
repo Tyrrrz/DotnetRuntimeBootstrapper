@@ -15,16 +15,12 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public bool IsRebootRequired => false;
 
-        public bool CheckIfInstalled()
-        {
-            var registryPath = OperatingSystem.ProcessorArchitecture switch
-            {
-                ProcessorArchitecture.X64 => "SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\X64",
-                _ => $"SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\{OperatingSystem.ProcessorArchitectureMoniker.ToUpperInvariant()}"
-            };
-
-            return Registry.LocalMachine.ContainsSubKey(registryPath);
-        }
+        public bool CheckIfInstalled() => Registry.LocalMachine.ContainsSubKey(
+            OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64
+                ? "SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\X64"
+                : "SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\" +
+                  OperatingSystem.ProcessorArchitectureMoniker.ToUpperInvariant()
+        );
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {

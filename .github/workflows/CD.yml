@@ -18,9 +18,6 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Restore packages
-        run: dotnet restore
-
       - name: Pack
         run: dotnet pack --configuration Release
 
