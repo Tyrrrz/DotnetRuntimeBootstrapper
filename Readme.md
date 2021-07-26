@@ -3,6 +3,7 @@
 [![Build](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/workflows/CI/badge.svg?branch=master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
 [![Version](https://img.shields.io/nuget/v/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Downloads](https://img.shields.io/nuget/dt/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
+[![Discord](https://img.shields.io/discord/869237470565392384?label=discord)](https://discord.gg/2SUWKFnHSm)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
 
 ✅ **Project status: active**.
@@ -11,6 +12,8 @@ DotnetRuntimeBootstrapper replaces the default application host `exe` file gener
 
 > ⚠️ Currently, bootstrapper's user experience is optimized for desktop applications.
 Using it with projects of other types (i.e. console or web) is possible but not recommended.
+
+💬 **If you want to chat, join my [Discord server](https://discord.gg/2SUWKFnHSm)**.
 
 ## Download
 
