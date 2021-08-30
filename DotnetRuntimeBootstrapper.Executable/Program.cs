@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
@@ -7,10 +8,22 @@ namespace DotnetRuntimeBootstrapper.Executable
     {
         private static void DumpError(string message)
         {
-            // Write to a file because it might not always be possible to show an error dialog
+            // Report errors by writing them to a file and showing a dialog.
+            // Either one of the two can fail for various reasons, which
+            // is why we use two approaches for redundancy.
+
             try
             {
                 File.WriteAllText("BootstrapperErrorDump.txt", message);
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            try
+            {
+                MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch
             {
