@@ -21,7 +21,6 @@ namespace DotnetRuntimeBootstrapper.Executable
                 // Low-level dependencies first, high-level last
                 new WindowsUpdate2999226Prerequisite(),
                 new WindowsUpdate3063858Prerequisite(),
-                new WindowsUpdate3154518Prerequisite(),
                 new VisualCppPrerequisite(),
                 new DotnetPrerequisite(_parameters.TargetRuntimeName, _parameters.TargetRuntimeVersion)
             }.Where(p => !p.CheckIfInstalled()).ToArray();
