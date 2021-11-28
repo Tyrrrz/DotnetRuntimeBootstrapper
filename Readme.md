@@ -85,3 +85,29 @@ It's deployed during build by a custom MSBuild task in a series of steps:
 
 When the end-user runs `MyApp.exe`, the bootstrapper executable will first ensure that the required version of .NET runtime is available and then delegate execution to the target assembly.
 In case the runtime or any of its prerequisites are missing, the user is prompted with an option to download and install them automatically.
+
+### Troubleshooting
+
+If the build process does not seem to produce the bootstrapper executable, you may get more information by running build (or publish) with higher verbosity.
+For example, running `dotnet run --verbosity normal` on `DotnetRuntimeBootstrapper.Demo` project should produce output that contains the following section:
+
+```txt
+CreateBootstrapperAfterBuild:
+ Extracting bootstrapper...
+ Extracted bootstrapper executable to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe'.
+ Extracted bootstrapper config to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe.config'.
+ Injecting execution parameters...
+ Injected execution parameters to 'DotnetRuntimeBootstrapper.Demo.exe': [
+  TargetTitle=DotnetRuntimeBootstrapper.Demo,
+  TargetFileName=DotnetRuntimeBootstrapper.Demo.dll,
+  TargetRuntimeName=Microsoft.WindowsDesktop.App,
+  TargetRuntimeVersion=6.0
+ ]
+ Injecting manifest...
+ Injected manifest from 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\app.manifest' to 'DotnetRuntimeBootstrapper.Demo.exe'.
+ Injecting icon...
+ Injected icon from 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\../favicon.ico' to 'DotnetRuntimeBootstrapper.Demo.exe'.
+ Injecting version info...
+ Injected version info to 'DotnetRuntimeBootstrapper.Demo.exe'.
+ Bootstrapper successfully created.
+```
