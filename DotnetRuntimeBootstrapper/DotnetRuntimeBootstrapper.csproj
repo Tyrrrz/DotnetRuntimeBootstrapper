@@ -39,7 +39,6 @@
     <None Include="../favicon.png" Pack="true" PackagePath="" Visible="false" />
     <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
     <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
-    <None Include="rcedit.exe" Pack="true" PackagePath="build" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
@@ -75,6 +74,7 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="16.11.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.11.0" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Ressy" Version="1.0.0" />
   </ItemGroup>
 
   <!-- Non-linking dependency on the bootstrapper executable project (to ensure build order) -->
@@ -87,12 +87,9 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
-
-  <!-- Download RCEdit CLI -->
-  <Target Name="DownloadRCEdit" BeforeTargets="Build">
-    <Exec Command="powershell -ExecutionPolicy Bypass -File ./Download-RCEdit.ps1" />
-    <Copy SourceFiles="$(ProjectDir)/rcedit.exe" DestinationFiles="$(OutDir)/rcedit.exe" SkipUnchangedFiles="true" />
-  </Target>
+  <ItemGroup>
+    <Compile Remove="Utils\Polyfills.cs" />
+  </ItemGroup>
 
   <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
      (i.e. only for DotnetRuntimeBootstrapper.Demo; shouldn't be required when referenced as NuGet package) -->

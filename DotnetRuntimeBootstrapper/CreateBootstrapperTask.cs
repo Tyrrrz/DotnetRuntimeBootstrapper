@@ -1,16 +1,21 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using DotnetRuntimeBootstrapper.Utils;
 using DotnetRuntimeBootstrapper.Utils.Extensions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
+using Ressy;
+using Ressy.HighLevel.Icons;
+using Ressy.HighLevel.Manifests;
+using Ressy.HighLevel.Versions;
 
 namespace DotnetRuntimeBootstrapper
 {
     public class CreateBootstrapperTask : Task
     {
+        private static string Version { get; } = typeof(CreateBootstrapperTask).Assembly.GetName().Version.ToString(3);
+
         [Required]
         public string TargetTitle { get; set; } = default!;
 
@@ -87,66 +92,55 @@ namespace DotnetRuntimeBootstrapper
             Log.LogMessage("Injected execution parameters: {0}", parameters.Replace(Environment.NewLine, "; "));
         }
 
-        private void InjectMetadata()
+        private void InjectManifest()
         {
-            // Read metadata
-            var author = FileMetadata.GetAuthor(TargetFilePath);
-            var productName = FileMetadata.GetProductName(TargetFilePath);
-            var description = FileMetadata.GetDescription(TargetFilePath);
-            var fileVersion = FileMetadata.GetFileVersion(TargetFilePath);
-            var productVersion = FileMetadata.GetProductVersion(TargetFilePath);
-            var copyright = FileMetadata.GetCopyright(TargetFilePath);
-
-            // Inject metadata
-            if (!string.IsNullOrWhiteSpace(author))
+            if (string.IsNullOrWhiteSpace(ManifestFilePath))
             {
-                FileMetadata.SetAuthor(TargetExecutableFilePath, author);
-                Log.LogMessage("Injected author string '{0}'.", author);
+                Log.LogMessage("No manifest file specified.");
+                return;
             }
 
-            if (!string.IsNullOrWhiteSpace(productName))
+            var outputPortableExecutable = new PortableExecutable(TargetExecutableFilePath);
+            outputPortableExecutable.RemoveManifest();
+            outputPortableExecutable.SetManifest(File.ReadAllText(ManifestFilePath));
+        }
+
+        private void InjectIcon()
+        {
+            if (string.IsNullOrWhiteSpace(IconFilePath))
             {
-                FileMetadata.SetProductName(TargetExecutableFilePath, productName);
-                Log.LogMessage("Injected product name string '{0}'.", productName);
+                Log.LogMessage("No icon file specified.");
+                return;
             }
 
-            if (!string.IsNullOrEmpty(description))
+            var outputPortableExecutable = new PortableExecutable(TargetExecutableFilePath);
+            outputPortableExecutable.RemoveIcon();
+            outputPortableExecutable.SetIcon(IconFilePath);
+        }
+
+        private void InjectVersionInfo()
+        {
+            var targetPortableExecutable = new PortableExecutable(TargetFilePath);
+            var outputPortableExecutable = new PortableExecutable(TargetExecutableFilePath);
+
+            var versionInfo = targetPortableExecutable.TryGetVersionInfo();
+            if (versionInfo is null)
             {
-                FileMetadata.SetDescription(TargetExecutableFilePath, description);
-                Log.LogMessage("Injected description string '{0}'.", description);
+                Log.LogWarning("Could not read version info from '{0}'.", TargetFilePath);
+                return;
             }
 
-            if (!string.IsNullOrWhiteSpace(fileVersion))
-            {
-                FileMetadata.SetFileVersion(TargetExecutableFilePath, fileVersion);
-                Log.LogMessage("Injected file version string '{0}'.", fileVersion);
-            }
-
-            if (!string.IsNullOrEmpty(productVersion))
-            {
-                FileMetadata.SetProductVersion(TargetExecutableFilePath, productVersion);
-                Log.LogMessage("Injected product version string '{0}'.", productVersion);
-            }
-
-            if (!string.IsNullOrWhiteSpace(copyright))
-            {
-                FileMetadata.SetCopyright(TargetExecutableFilePath, copyright);
-                Log.LogMessage("Injected copyright string '{0}'.", copyright);
-            }
-
-            // Inject icon
-            if (!string.IsNullOrWhiteSpace(IconFilePath))
-            {
-                FileMetadata.SetIcon(TargetExecutableFilePath, IconFilePath);
-                Log.LogMessage("Injected icon resource '{0}'.", IconFilePath);
-            }
-
-            // Inject manifest
-            if (!string.IsNullOrWhiteSpace(ManifestFilePath))
-            {
-                FileMetadata.SetManifest(TargetExecutableFilePath, ManifestFilePath);
-                Log.LogMessage("Injected manifest resource '{0}'.", ManifestFilePath);
-            }
+            outputPortableExecutable.RemoveVersionInfo();
+            outputPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
+                .SetAll(versionInfo)
+                .SetFileFlags(FileFlags.None)
+                .SetFileType(FileType.Application)
+                .SetFileSubType(FileSubType.Unknown)
+                .SetAttribute(VersionAttributeName.InternalName, Path.ChangeExtension(TargetFileName, "exe"))
+                .SetAttribute(VersionAttributeName.OriginalFilename, Path.ChangeExtension(TargetFileName, "exe"))
+                .SetAttribute("Bootstrapper", $".NET Runtime Bootstrapper (v{Version})")
+                .Build()
+            );
         }
 
         public override bool Execute()
@@ -157,8 +151,14 @@ namespace DotnetRuntimeBootstrapper
             Log.LogMessage("Injecting parameters...");
             InjectParameters();
 
-            Log.LogMessage("Injecting metadata...");
-            InjectMetadata();
+            Log.LogMessage("Injecting manifest...");
+            InjectManifest();
+
+            Log.LogMessage("Injecting icon...");
+            InjectIcon();
+
+            Log.LogMessage("Injecting version info...");
+            InjectVersionInfo();
 
             Log.LogMessage("Bootstrapper successfully created.");
             return true;
