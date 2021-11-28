@@ -20,7 +20,7 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <!-- Embed the bootstrapper file inside the assembly -->
+  <!-- Embed the base bootstrapper executable inside the assembly -->
   <ItemGroup>
     <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.Executable.exe">
       <Link>Bootstrapper.exe</Link>
@@ -46,6 +46,7 @@
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Ressy.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Buffers.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Collections.Immutable.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Memory.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
@@ -63,6 +64,7 @@
     <None Include="$(OutputPath)/net472/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Ressy.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Buffers.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Collections.Immutable.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Memory.dll" Pack="true" PackagePath="build/net472" Visible="false" />
@@ -74,10 +76,10 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="16.11.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.11.0" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Ressy" Version="1.0.0" />
+    <PackageReference Include="Ressy" Version="1.0.0" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
-  <!-- Non-linking dependency on the bootstrapper executable project (to ensure build order) -->
+  <!-- Non-linking dependency on the bootstrapper executable project (to ensure correct build order) -->
   <ItemGroup>
     <ProjectReference Include="..\DotnetRuntimeBootstrapper.Executable\DotnetRuntimeBootstrapper.Executable.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
@@ -100,6 +102,7 @@
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
       <TargetPathWithTargetPlatformMoniker Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGRessy)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 
