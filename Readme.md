@@ -40,6 +40,17 @@ https://user-images.githubusercontent.com/1935960/123711355-346ed380-d825-11eb-9
 To add DotnetRuntimeBootstrapper to your project, simply install the corresponding [NuGet package](https://nuget.org/packages/DotnetRuntimeBootstrapper).
 MSBuild will automatically pick up the `props` and `targets` files provided by the package and integrate them inside the build process.
 
+It is highly recommended to edit your project file afterwards to make sure that the bootstrapper package is only referenced in the `Release` configuration.
+Without this, you may not be able to run your application with a debugger because that relies on the original executable file being present.
+
+```xml
+<!-- Only use the bootstrapper for the release builds -->
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+  <PackageReference Include="DotnetRuntimeBootstrapper" Version="x.y.z" PrivateAssets="all" />
+</ItemGroup>
+```
+
+
 Once that's done, building or publishing the project should produce two additional files in the output directory:
 
 ```ini
