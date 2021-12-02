@@ -3,7 +3,6 @@
     public enum InstallationPromptResult
     {
         Confirmed,
-        Canceled,
-        Ignored
+        Canceled
     }
 }

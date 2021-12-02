@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
+namespace DotnetRuntimeBootstrapper.Executable.Native
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal readonly struct SystemVersionInfo
+    internal readonly partial struct SystemVersionInfo
     {
         public readonly int OSVersionInfoSize;
         public readonly int MajorVersion;
@@ -19,5 +19,18 @@ namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
         public readonly short SuiteMask;
         public readonly byte ProductType;
         public readonly byte Reserved;
+    }
+
+    internal partial struct SystemVersionInfo
+    {
+        public static SystemVersionInfo Instance { get; } = Resolve();
+
+        private static SystemVersionInfo Resolve()
+        {
+            var systemVersionInfo = default(SystemVersionInfo);
+            NativeMethods.RtlGetVersion(ref systemVersionInfo);
+
+            return systemVersionInfo;
+        }
     }
 }

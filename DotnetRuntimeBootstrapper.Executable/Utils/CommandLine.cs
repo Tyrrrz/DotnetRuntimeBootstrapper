@@ -4,12 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using DotnetRuntimeBootstrapper.Executable.Native;
-using DotnetRuntimeBootstrapper.Executable.Native.Windows;
 
 namespace DotnetRuntimeBootstrapper.Executable.Utils
 {
     internal static class CommandLine
     {
+        private static ProcessJob? ProcessJob { get; } = TryCreateProcessJob();
+
+        private static ProcessJob? TryCreateProcessJob()
+        {
+            try
+            {
+                var processJob = ProcessJob.Create();
+
+                processJob.Configure(new JobObjectExtendedLimitInformation
+                {
+                    BasicLimitInformation = new JobObjectBasicLimitInformation
+                    {
+                        // JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+                        LimitFlags = 0x2000
+                    }
+                });
+
+                return processJob;
+            }
+            catch
+            {
+                // Not critical, ignore errors
+                return null;
+            }
+        }
+
         private static string EscapeArgument(string argument) =>
             '"' + argument.Replace("\"", "\\\"") + '"';
 
@@ -40,7 +65,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             using var process = CreateProcess(executableFilePath, arguments, isElevated);
 
             process.Start();
-            ProcessJob.Default?.AddProcess(process);
+            ProcessJob?.AddProcess(process);
 
             process.WaitForExit();
 
@@ -87,7 +112,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             };
 
             process.Start();
-            ProcessJob.Default?.AddProcess(process);
+            ProcessJob?.AddProcess(process);
 
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();

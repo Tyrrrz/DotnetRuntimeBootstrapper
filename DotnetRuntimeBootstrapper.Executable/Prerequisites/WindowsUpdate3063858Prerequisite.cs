@@ -1,12 +1,11 @@
 ﻿using System;
-using DotnetRuntimeBootstrapper.Executable.Env;
+using DotnetRuntimeBootstrapper.Executable.Platform;
 using DotnetRuntimeBootstrapper.Executable.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
     // Security update
-    public class WindowsUpdate3063858Prerequisite : IPrerequisite
+    internal class WindowsUpdate3063858Prerequisite : IPrerequisite
     {
         public string Id => "KB3063858";
 
@@ -15,24 +14,20 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
         public bool IsRebootRequired => true;
 
         public bool CheckIfInstalled() =>
-            OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
-            OperatingSystem.IsUpdateInstalled(Id) ||
+            PlatformInfo.IsWindows8OrHigher ||
+            PlatformInfo.IsUpdateInstalled(Id) ||
             // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
-            OperatingSystem.IsUpdateInstalled("KB3068708") ||
-            // Avoid trying to install updates that we've already tried to install before
-            InstallationHistory.Contains(Id);
+            PlatformInfo.IsUpdateInstalled("KB3068708");
 
         private string GetInstallerDownloadUrl()
         {
-            if (OperatingSystem.Version == OperatingSystemVersion.Windows7 &&
-                OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64)
+            if (PlatformInfo.IsWindows7 && PlatformInfo.ProcessorArchitecture == ProcessorArchitecture.X64)
             {
                 return
                     "https://download.microsoft.com/download/0/8/E/08E0386B-F6AF-4651-8D1B-C0A95D2731F0/Windows6.1-KB3063858-x64.msu";
             }
 
-            if (OperatingSystem.Version == OperatingSystemVersion.Windows7 &&
-                OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X86)
+            if (PlatformInfo.IsWindows7 && PlatformInfo.ProcessorArchitecture == ProcessorArchitecture.X86)
             {
                 return
                     "https://download.microsoft.com/download/C/9/6/C96CD606-3E05-4E1C-B201-51211AE80B1E/Windows6.1-KB3063858-x86.msu";

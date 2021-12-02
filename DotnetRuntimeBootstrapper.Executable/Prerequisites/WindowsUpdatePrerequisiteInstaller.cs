@@ -1,9 +1,8 @@
-﻿using DotnetRuntimeBootstrapper.Executable.Env;
-using DotnetRuntimeBootstrapper.Executable.Utils;
+﻿using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class WindowsUpdatePrerequisiteInstaller : IPrerequisiteInstaller
+    internal class WindowsUpdatePrerequisiteInstaller : IPrerequisiteInstaller
     {
         public IPrerequisite Prerequisite { get; }
 
@@ -15,16 +14,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
             FilePath = filePath;
         }
 
-        public void Run()
-        {
-            CommandLine.Run("wusa", new[] {FilePath, "/quiet", "/norestart"}, true);
-
-            // Regardless of the outcome, record the fact that this update has been installed,
-            // so we don't attempt to install it again in the future.
-            // We need to do this because an update may fail to install if it was superseded
-            // by some other already installed update which we are not aware of.
-            // https://github.com/Tyrrrz/LightBulb/issues/209
-            InstallationHistory.Record(Prerequisite.Id);
-        }
+        public void Run() => CommandLine.Run("wusa", new[] {FilePath, "/quiet", "/norestart"}, true);
     }
 }

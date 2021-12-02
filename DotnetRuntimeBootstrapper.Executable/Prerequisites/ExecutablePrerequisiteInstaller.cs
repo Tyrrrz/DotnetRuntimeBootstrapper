@@ -2,7 +2,7 @@
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class ExecutablePrerequisiteInstaller : IPrerequisiteInstaller
+    internal class ExecutablePrerequisiteInstaller : IPrerequisiteInstaller
     {
         public IPrerequisite Prerequisite { get; }
 

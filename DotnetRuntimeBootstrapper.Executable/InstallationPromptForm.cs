@@ -40,8 +40,5 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void ExitButton_Click(object sender, EventArgs e) =>
             Close(InstallationPromptResult.Canceled);
-
-        private void IgnoreButton_Click(object sender, EventArgs e) =>
-            Close(InstallationPromptResult.Ignored);
     }
 }

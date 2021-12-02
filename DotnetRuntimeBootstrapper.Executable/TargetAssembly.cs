@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using DotnetRuntimeBootstrapper.Executable.Dotnet;
 using DotnetRuntimeBootstrapper.Executable.Prerequisites;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
-using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
@@ -21,53 +21,13 @@ namespace DotnetRuntimeBootstrapper.Executable
             Title = title;
         }
 
-        private TargetRuntimeInfo GetRuntimeInfo()
-        {
-            var runtimeConfigFilePath = Path.ChangeExtension(FilePath, "runtimeconfig.json");
-
-            var runtimeConfigJson = Json.TryParse(File.ReadAllText(runtimeConfigFilePath));
-            if (runtimeConfigJson is null)
-            {
-                throw new InvalidOperationException(
-                    $"Could not parse runtime config file '{runtimeConfigFilePath}'."
-                );
-            }
-
-            var framework =
-                runtimeConfigJson
-                    .TryGetChild("runtimeOptions")?
-                    .TryGetChild("framework") ??
-
-                // When there are multiple frameworks, take the one that
-                // isn't the base framework (i.e. not "Microsoft.NETCore.App").
-                runtimeConfigJson
-                    .TryGetChild("runtimeOptions")?
-                    .TryGetChild("frameworks")?
-                    .EnumerateChildren()
-                    .FirstOrDefault(j =>
-                        !string.Equals(
-                            j.TryGetChild("name")?.TryGetString(),
-                            "Microsoft.NETCore.App",
-                            StringComparison.OrdinalIgnoreCase
-                        )
-                    );
-
-            var name = framework?.TryGetChild("name")?.TryGetString();
-            var version = framework?.TryGetChild("version")?.TryGetString()?.Pipe(VersionEx.TryParse);
-
-            if (string.IsNullOrEmpty(name) || version is null)
-            {
-                throw new InvalidOperationException(
-                    $"Could not resolve target runtime from runtime config file '{runtimeConfigFilePath}'."
-                );
-            }
-
-            return new TargetRuntimeInfo(name, version);
-        }
-
         public IPrerequisite[] GetMissingPrerequisites()
         {
-            var runtime = GetRuntimeInfo();
+            var runtimeConfig = DotnetRuntimeConfig.Load(Path.ChangeExtension(FilePath, "runtimeconfig.json"));
+
+            var targetRuntimeInfo =
+                runtimeConfig.Runtimes.OrderBy(r => !r.IsBase).LastOrDefault() ??
+                throw new InvalidOperationException("Could not resolve target runtime from runtime config.");
 
             return new IPrerequisite[]
             {
@@ -75,9 +35,11 @@ namespace DotnetRuntimeBootstrapper.Executable
                 new WindowsUpdate2999226Prerequisite(),
                 new WindowsUpdate3063858Prerequisite(),
                 new VisualCppPrerequisite(),
-                new DotnetPrerequisite(runtime.Name, runtime.Version)
+                new DotnetPrerequisite(targetRuntimeInfo)
             }.Where(p => !p.CheckIfInstalled()).ToArray();
         }
+
+        public int Run(string[] args) => DotnetHost.Initialize().Run(FilePath, args);
     }
 
     public partial class TargetAssembly
@@ -100,22 +62,6 @@ namespace DotnetRuntimeBootstrapper.Executable
                 Path.GetFileNameWithoutExtension(filePath);
 
             return new TargetAssembly(filePath, title);
-        }
-    }
-
-    public partial class TargetAssembly
-    {
-        private class TargetRuntimeInfo
-        {
-            public string Name { get; }
-
-            public Version Version { get; }
-
-            public TargetRuntimeInfo(string name, Version version)
-            {
-                Name = name;
-                Version = version;
-            }
         }
     }
 }

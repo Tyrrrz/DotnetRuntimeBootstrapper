@@ -1,89 +1,47 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using DotnetRuntimeBootstrapper.Executable.Env;
+using DotnetRuntimeBootstrapper.Executable.Dotnet;
+using DotnetRuntimeBootstrapper.Executable.Platform;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 using QuickJson;
-using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class DotnetPrerequisite : IPrerequisite
+    internal class DotnetPrerequisite : IPrerequisite
     {
-        private readonly string _name;
-        private readonly Version _version;
+        private readonly DotnetRuntimeInfo _runtimeInfo;
 
-        public string Id => $"{_name}_{_version}";
+        public string Id => $"{_runtimeInfo.Name}_{_runtimeInfo.Version}";
 
         private string ShortName =>
-            _name
+            _runtimeInfo.Name
                 .TrimStart("Microsoft.", StringComparison.OrdinalIgnoreCase)
                 .TrimEnd(".App", StringComparison.OrdinalIgnoreCase);
 
-        public string DisplayName => $".NET Runtime ({ShortName}) v{_version}";
+        public string DisplayName => $".NET Runtime ({ShortName}) v{_runtimeInfo.Version}";
 
         public bool IsRebootRequired => false;
 
-        public DotnetPrerequisite(string name, Version version)
-        {
-            _name = name;
-            _version = version;
-        }
+        public DotnetPrerequisite(DotnetRuntimeInfo runtimeInfo) =>
+            _runtimeInfo = runtimeInfo;
 
-        public bool CheckIfInstalled()
-        {
-            var expectedRuntimeVersion = new Version(_version);
-
-            foreach (var runtimeLine in Dotnet.ListRuntimes())
-            {
-                var match = Regex.Match(runtimeLine, @"^(.*?)\s+(.*?)\s+");
-
-                var runtimeName = match.Groups[1].Value;
-                var runtimeVersion = new Version(match.Groups[2].Value);
-
-                // Names should match directly
-                var isNameMatch = string.Equals(runtimeName, _name, StringComparison.OrdinalIgnoreCase);
-
-                if (!isNameMatch)
-                    continue;
-
-                // Versions should match or there should be a higher version within the same major
-                var isVersionMatch =
-                    runtimeVersion.Major == expectedRuntimeVersion.Major &&
-                    runtimeVersion.Minor >= expectedRuntimeVersion.Minor &&
-                    runtimeVersion.Build >= expectedRuntimeVersion.Build;
-
-                if (!isVersionMatch)
-                    continue;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private string GetRuntimeMoniker()
-        {
-            if (string.Equals(_name, "Microsoft.WindowsDesktop.App", StringComparison.OrdinalIgnoreCase))
-            {
-                return "windowsdesktop";
-            }
-
-            if (string.Equals(_name, "Microsoft.AspNetCore.App", StringComparison.OrdinalIgnoreCase))
-            {
-                return "aspnetcore-runtime";
-            }
-
-            return "runtime";
-        }
+        // We are looking for a runtime with the same name and the same major version.
+        // Installed runtime may have higher minor version than the target runtime, but not lower.
+        public bool CheckIfInstalled() => DotnetRuntimeInfo
+            .GetInstalled()
+            .Any(r =>
+                string.Equals(r.Name, _runtimeInfo.Name, StringComparison.OrdinalIgnoreCase) &&
+                r.Version.Major == _runtimeInfo.Version.Major &&
+                r.Version >= _runtimeInfo.Version
+            );
 
         private string GetInstallerDownloadUrl()
         {
             var manifest = Http.GetContentString(
                 "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/" +
-                $"{_version}/releases.json"
+                $"{_runtimeInfo.Version}/releases.json"
             );
 
             // Find the list of files for the latest release
@@ -91,7 +49,12 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
                 .TryParse(manifest)?
                 .TryGetChild("releases")?
                 .TryGetChild(0)?
-                .TryGetChild(GetRuntimeMoniker())?
+                .TryGetChild(_runtimeInfo switch
+                {
+                    { IsWindowsDesktop: true } => "windowsdesktop",
+                    { IsAspNet: true } => "aspnetcore-runtime",
+                    _ => "runtime"
+                })?
                 .TryGetChild("files")?
                 .EnumerateChildren() ?? Enumerable.Empty<JsonNode>();
 
@@ -103,35 +66,28 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
                 // Filter by processor architecture
                 if (!string.Equals(
                     runtimeIdentifier,
-                    "win-" + OperatingSystem.ProcessorArchitectureMoniker,
+                    "win-" + PlatformInfo.ProcessorArchitecture.GetMoniker(),
                     StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
                 var downloadUrl = latestRuntimeFileJson.TryGetChild("url")?.TryGetString();
-
                 if (string.IsNullOrEmpty(downloadUrl))
-                {
                     continue;
-                }
 
                 // Filter out non-installer downloads
-                if (!string.Equals(
-                    Path.GetExtension(downloadUrl),
-                    ".exe",
-                    StringComparison.OrdinalIgnoreCase))
-                {
+                if (!string.Equals(Path.GetExtension(downloadUrl), ".exe", StringComparison.OrdinalIgnoreCase))
                     continue;
-                }
 
                 return downloadUrl;
             }
 
             throw new InvalidOperationException(
                 "Failed to resolve download URL for the required .NET runtime. " +
-                $"Please try to download ${DisplayName} manually from https://dotnet.microsoft.com/download/dotnet/{_version} or from https://get.dot.net. " +
-                $"After that, try running the application again."
+                $"Please try to download ${DisplayName} manually from " +
+                $"https://dotnet.microsoft.com/download/dotnet/{_runtimeInfo.Version} or from https://get.dot.net, " +
+                "then run the application again."
             );
         }
 

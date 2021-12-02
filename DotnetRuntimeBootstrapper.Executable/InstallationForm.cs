@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using DotnetRuntimeBootstrapper.Executable.Platform;
 using DotnetRuntimeBootstrapper.Executable.Prerequisites;
 using DotnetRuntimeBootstrapper.Executable.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
@@ -82,7 +82,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             );
 
             if (result == DialogResult.Yes)
-                OperatingSystem.InitiateReboot();
+                PlatformInfo.InitiateReboot();
         });
 
         private void PerformInstall()

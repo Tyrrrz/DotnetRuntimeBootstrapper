@@ -1,13 +1,12 @@
 ﻿using System;
-using DotnetRuntimeBootstrapper.Executable.Env;
+using DotnetRuntimeBootstrapper.Executable.Platform;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 using Microsoft.Win32;
-using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Env.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
-    public class VisualCppPrerequisite : IPrerequisite
+    internal class VisualCppPrerequisite : IPrerequisite
     {
         public string Id => "VisualCppRedist_2015_2019";
 
@@ -16,10 +15,10 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
         public bool IsRebootRequired => false;
 
         public bool CheckIfInstalled() => Registry.LocalMachine.ContainsSubKey(
-            OperatingSystem.ProcessorArchitecture == ProcessorArchitecture.X64
+            PlatformInfo.ProcessorArchitecture == ProcessorArchitecture.X64
                 ? "SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\X64"
                 : "SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\" +
-                  OperatingSystem.ProcessorArchitectureMoniker.ToUpperInvariant()
+                  PlatformInfo.ProcessorArchitecture.GetMoniker().ToUpperInvariant()
         );
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
@@ -27,7 +26,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
             var filePath = FileEx.GetTempFileName(Id, "exe");
 
             Http.DownloadFile(
-                $"https://aka.ms/vs/16/release/VC_redist.{OperatingSystem.ProcessorArchitectureMoniker}.exe",
+                $"https://aka.ms/vs/16/release/VC_redist.{PlatformInfo.ProcessorArchitecture.GetMoniker()}.exe",
                 filePath,
                 handleProgress
             );

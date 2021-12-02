@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using DotnetRuntimeBootstrapper.Executable.Env;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable
@@ -49,9 +48,6 @@ namespace DotnetRuntimeBootstrapper.Executable
                     _ => false
                 },
 
-                // When ignored, return as if the installation has already completed successfully
-                InstallationPromptResult.Ignored => true,
-
                 // Canceled
                 _ => false
             };
@@ -66,7 +62,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 // and other variables that may have been changed by the installation process.
                 EnvironmentEx.ResetEnvironmentVariables();
 
-                return Dotnet.Run(TargetAssembly.FilePath, args);
+                return TargetAssembly.Run(args);
             }
 
             // Installation failed, was canceled, or still requires reboot

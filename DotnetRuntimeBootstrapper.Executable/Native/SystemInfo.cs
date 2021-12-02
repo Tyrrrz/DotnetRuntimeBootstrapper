@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
+namespace DotnetRuntimeBootstrapper.Executable.Native
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal readonly struct SystemInfo
+    internal readonly partial struct SystemInfo
     {
         public readonly ushort ProcessorArchitecture;
         public readonly ushort Reserved;
@@ -17,5 +17,18 @@ namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
         public readonly uint AllocationGranularity;
         public readonly ushort ProcessorLevel;
         public readonly ushort ProcessorRevision;
+    }
+
+    internal partial struct SystemInfo
+    {
+        public static SystemInfo Instance { get; } = Resolve();
+
+        private static SystemInfo Resolve()
+        {
+            var systemInfo = default(SystemInfo);
+            NativeMethods.GetNativeSystemInfo(ref systemInfo);
+
+            return systemInfo;
+        }
     }
 }
