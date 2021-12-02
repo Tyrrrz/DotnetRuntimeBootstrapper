@@ -36,43 +36,43 @@ namespace DotnetRuntimeBootstrapper.Executable
             this.CurrentProgressBar = new System.Windows.Forms.ProgressBar();
             this.TotalProgressLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
+            //
             // TotalProgressBar
-            // 
+            //
             this.TotalProgressBar.Location = new System.Drawing.Point(12, 110);
             this.TotalProgressBar.Name = "TotalProgressBar";
             this.TotalProgressBar.Size = new System.Drawing.Size(489, 30);
             this.TotalProgressBar.TabIndex = 0;
-            // 
+            //
             // StatusLabel
-            // 
-            this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.StatusLabel.Location = new System.Drawing.Point(8, 10);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(490, 20);
             this.StatusLabel.TabIndex = 1;
             this.StatusLabel.Text = "Preparing...";
-            // 
+            //
             // CurrentProgressBar
-            // 
+            //
             this.CurrentProgressBar.Location = new System.Drawing.Point(12, 40);
             this.CurrentProgressBar.Name = "CurrentProgressBar";
             this.CurrentProgressBar.Size = new System.Drawing.Size(489, 30);
             this.CurrentProgressBar.TabIndex = 2;
-            // 
+            //
             // TotalProgressLabel
-            // 
-            this.TotalProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.TotalProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TotalProgressLabel.Location = new System.Drawing.Point(8, 80);
             this.TotalProgressLabel.Name = "TotalProgressLabel";
             this.TotalProgressLabel.Size = new System.Drawing.Size(490, 20);
             this.TotalProgressLabel.TabIndex = 3;
             this.TotalProgressLabel.Text = "Total progress: ...";
-            // 
+            //
             // InstallationForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;

@@ -55,18 +55,27 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private static int Run(string[] args)
         {
-            var canRunTarget = EnsurePrerequisitesInstalled();
-            if (canRunTarget)
+            try
             {
-                // Reset environment variables after the installation process to update PATH
-                // and other variables that may have been changed by the installation process.
-                EnvironmentEx.ResetEnvironmentVariables();
-
+                // Attempt to run the target first without any checks (hot path)
                 return TargetAssembly.Run(args);
             }
+            catch
+            {
+                // Resolve missing prerequisites and try again
+                var canRunTarget = EnsurePrerequisitesInstalled();
+                if (canRunTarget)
+                {
+                    // Reset environment variables after the installation process to update PATH
+                    // and other variables that may have been changed by the installation process.
+                    EnvironmentEx.ResetEnvironmentVariables();
 
-            // Installation failed, was canceled, or still requires reboot
-            return 1;
+                    return TargetAssembly.Run(args);
+                }
+
+                // Installation failed, was canceled, or still requires reboot
+                return 1;
+            }
         }
 
         [STAThread]

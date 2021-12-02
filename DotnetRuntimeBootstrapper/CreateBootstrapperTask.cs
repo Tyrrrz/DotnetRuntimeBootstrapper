@@ -21,8 +21,6 @@ namespace DotnetRuntimeBootstrapper
 
         public string TargetFileName => Path.GetFileName(TargetFilePath);
 
-        public string TargetName => Path.GetFileNameWithoutExtension(TargetFilePath);
-
         public string BootstrapperFilePath => Path.ChangeExtension(TargetFilePath, "exe");
 
         public string BootstrapperFileName => Path.GetFileName(BootstrapperFilePath);

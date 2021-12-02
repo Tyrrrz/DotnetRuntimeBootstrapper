@@ -7,7 +7,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
     // Security update
     internal class WindowsUpdate3063858Prerequisite : IPrerequisite
     {
-        public string Id => "KB3063858";
+        private const string Id = "KB3063858";
 
         public string DisplayName => $"Windows Update {Id}";
 
@@ -38,7 +38,8 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName(Id, "msu");
+            var filePath = FileEx.GenerateTempFilePath($"{Id}.msu");
+
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
             return new WindowsUpdatePrerequisiteInstaller(this, filePath);

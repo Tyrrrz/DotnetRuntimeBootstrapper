@@ -8,8 +8,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
     internal class VisualCppPrerequisite : IPrerequisite
     {
-        public string Id => "VisualCppRedist_2015_2019";
-
         public string DisplayName => "Visual C++ Redistributable 2015-2019";
 
         public bool IsRebootRequired => false;
@@ -23,13 +21,10 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName(Id, "exe");
+            var fileName = $"VC_redist.{PlatformInfo.ProcessorArchitecture.GetMoniker()}.exe";
+            var filePath = FileEx.GenerateTempFilePath(fileName);
 
-            Http.DownloadFile(
-                $"https://aka.ms/vs/16/release/VC_redist.{PlatformInfo.ProcessorArchitecture.GetMoniker()}.exe",
-                filePath,
-                handleProgress
-            );
+            Http.DownloadFile($"https://aka.ms/vs/16/release/{fileName}", filePath, handleProgress);
 
             return new ExecutablePrerequisiteInstaller(this, filePath);
         }

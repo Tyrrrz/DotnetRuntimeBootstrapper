@@ -13,8 +13,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
     {
         private readonly DotnetRuntimeInfo _runtimeInfo;
 
-        public string Id => $"{_runtimeInfo.Name}_{_runtimeInfo.Version}";
-
         private string ShortName =>
             _runtimeInfo.Name
                 .TrimStart("Microsoft.", StringComparison.OrdinalIgnoreCase)
@@ -93,8 +91,13 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName(Id, "exe");
-            Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
+            var downloadUrl = GetInstallerDownloadUrl();
+
+            var filePath = FileEx.GenerateTempFilePath(
+                Url.TryExtractFileName(downloadUrl) ?? "installer.exe"
+            );
+
+            Http.DownloadFile(downloadUrl, filePath, handleProgress);
 
             return new ExecutablePrerequisiteInstaller(this, filePath);
         }

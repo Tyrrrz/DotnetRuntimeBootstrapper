@@ -7,7 +7,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
     // Universal C Runtime
     internal class WindowsUpdate2999226Prerequisite : IPrerequisite
     {
-        public string Id => "KB2999226";
+        private const string Id = "KB2999226";
 
         public string DisplayName => $"Windows Update {Id}";
 
@@ -58,7 +58,8 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
-            var filePath = FileEx.GetTempFileName(Id, "msu");
+            var filePath = FileEx.GenerateTempFilePath($"{Id}.msu");
+
             Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
             return new WindowsUpdatePrerequisiteInstaller(this, filePath);
