@@ -4,6 +4,11 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils.Extensions
 {
     internal static class StringExtensions
     {
+        public static string? NullIfEmptyOrWhiteSpace(this string str) =>
+            str.Trim().Length != 0
+                ? str
+                : null;
+
         public static string TrimStart(
             this string str,
             string sub,

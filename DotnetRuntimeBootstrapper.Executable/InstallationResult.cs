@@ -2,8 +2,8 @@
 {
     public enum InstallationResult
     {
-        Ready,
-        Reboot,
-        Failure
+        Succeeded,
+        RebootRequired,
+        Failed
     }
 }

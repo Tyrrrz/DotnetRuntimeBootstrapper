@@ -3,15 +3,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using DotnetRuntimeBootstrapper.Executable.Native;
+using DotnetRuntimeBootstrapper.Executable.Native.Windows;
 
 namespace DotnetRuntimeBootstrapper.Executable.Utils
 {
     internal static class CommandLine
     {
-        // Group all spawned processes in a single job so that they all
-        // get terminated when the parent process get exits.
-        private static readonly ProcessJob? Job = ProcessJob.TryCreate();
-
         private static string EscapeArgument(string argument) =>
             '"' + argument.Replace("\"", "\\\"") + '"';
 
@@ -42,7 +40,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             using var process = CreateProcess(executableFilePath, arguments, isElevated);
 
             process.Start();
-            Job?.AddProcess(process);
+            ProcessJob.Default?.AddProcess(process);
 
             process.WaitForExit();
 
@@ -89,7 +87,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             };
 
             process.Start();
-            Job?.AddProcess(process);
+            ProcessJob.Default?.AddProcess(process);
 
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();

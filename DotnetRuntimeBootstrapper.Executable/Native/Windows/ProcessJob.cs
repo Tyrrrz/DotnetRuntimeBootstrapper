@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using DotnetRuntimeBootstrapper.Executable.Native;
 
-namespace DotnetRuntimeBootstrapper.Executable.Utils
+namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
 {
     internal partial class ProcessJob : IDisposable
     {
@@ -33,6 +32,8 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
 
     internal partial class ProcessJob
     {
+        public static ProcessJob? Default { get; } = TryCreate();
+
         public static ProcessJob? TryCreate()
         {
             var handle = NativeMethods.CreateJobObject(IntPtr.Zero, null);

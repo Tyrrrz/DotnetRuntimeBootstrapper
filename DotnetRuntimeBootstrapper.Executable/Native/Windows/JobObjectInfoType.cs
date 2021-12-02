@@ -1,4 +1,4 @@
-﻿namespace DotnetRuntimeBootstrapper.Executable.Native
+﻿namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
 {
     // ReSharper disable InconsistentNaming
     internal enum JobObjectInfoType

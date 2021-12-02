@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using DotnetRuntimeBootstrapper.Executable.Native;
+using DotnetRuntimeBootstrapper.Executable.Native.Windows;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable.Env

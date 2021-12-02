@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using DotnetRuntimeBootstrapper.Utils.Extensions;
 using Microsoft.Build.Framework;
@@ -9,32 +10,22 @@ using Ressy;
 using Ressy.HighLevel.Icons;
 using Ressy.HighLevel.Manifests;
 using Ressy.HighLevel.Versions;
+using ResourceType = Ressy.ResourceType;
 
 namespace DotnetRuntimeBootstrapper
 {
     public class CreateBootstrapperTask : Task
     {
         [Required]
-        public string TargetTitle { get; set; } = default!;
-
-        [Required]
         public string TargetFilePath { get; set; } = default!;
 
         public string TargetFileName => Path.GetFileName(TargetFilePath);
 
+        public string TargetName => Path.GetFileNameWithoutExtension(TargetFilePath);
+
         public string BootstrapperFilePath => Path.ChangeExtension(TargetFilePath, "exe");
 
         public string BootstrapperFileName => Path.GetFileName(BootstrapperFilePath);
-
-        [Required]
-        public string TargetRuntimeName { get; set; } = default!;
-
-        [Required]
-        public string TargetRuntimeVersion { get; set; } = default!;
-
-        public string? IconFilePath { get; set; }
-
-        public string? ManifestFilePath { get; set; }
 
         private void ExtractBootstrapper()
         {
@@ -58,97 +49,106 @@ namespace DotnetRuntimeBootstrapper
             Log.LogMessage("Extracted bootstrapper config to '{0}'.", BootstrapperFilePath + ".config");
         }
 
-        private void InjectParameters()
+        private void InjectTargetBinding()
         {
             using var assembly = AssemblyDefinition.ReadAssembly(
                 BootstrapperFilePath,
                 new ReaderParameters {ReadWrite = true}
             );
 
-            assembly.MainModule.Resources.RemoveAll(
-                r => string.Equals(r.Name, "ExecutionParameters", StringComparison.OrdinalIgnoreCase)
+            assembly.MainModule.Resources.RemoveAll(r =>
+                string.Equals(r.Name, "TargetAssembly", StringComparison.OrdinalIgnoreCase)
             );
 
-            var parameters = new[]
-            {
-                $"{nameof(TargetTitle)}={TargetTitle}",
-                $"{nameof(TargetFileName)}={TargetFileName}",
-                $"{nameof(TargetRuntimeName)}={TargetRuntimeName}",
-                $"{nameof(TargetRuntimeVersion)}={TargetRuntimeVersion}"
-            };
-
             assembly.MainModule.Resources.Add(new EmbeddedResource(
-                "ExecutionParameters",
+                "TargetAssembly",
                 ManifestResourceAttributes.Public,
-                Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, parameters))
+                Encoding.UTF8.GetBytes(TargetFileName)
             ));
 
             assembly.Write();
 
-            Log.LogMessage(
-                "Injected execution parameters to '{0}': [{1}]",
-                BootstrapperFileName,
-                string.Join(", ", parameters)
-            );
+            Log.LogMessage("Injected target assembly binding to '{0}'.", BootstrapperFileName);
         }
 
         private void InjectManifest()
         {
-            if (string.IsNullOrWhiteSpace(ManifestFilePath))
-            {
-                Log.LogMessage("No manifest file specified.");
-                return;
-            }
+            var targetPortableExecutable = new PortableExecutable(TargetFilePath);
+            var targetManifest = targetPortableExecutable.TryGetManifest();
 
             var bootstrapperPortableExecutable = new PortableExecutable(BootstrapperFilePath);
             bootstrapperPortableExecutable.RemoveManifest();
-            bootstrapperPortableExecutable.SetManifest(File.ReadAllText(ManifestFilePath));
 
-            Log.LogMessage("Injected manifest from '{0}' to '{1}'.", ManifestFilePath, BootstrapperFileName);
+            if (!string.IsNullOrWhiteSpace(targetManifest))
+            {
+                bootstrapperPortableExecutable.SetManifest(targetManifest);
+                Log.LogMessage("Injected manifest to '{0}'.", BootstrapperFileName);
+            }
+            else
+            {
+                Log.LogMessage("Could not find manifest resource in '{0}'.", TargetFileName);
+            }
         }
 
         private void InjectIcon()
         {
-            if (string.IsNullOrWhiteSpace(IconFilePath))
-            {
-                Log.LogMessage("No icon file specified.");
-                return;
-            }
+            var targetPortableExecutable = new PortableExecutable(TargetFilePath);
+
+            var targetIconResourceIdentifiers = targetPortableExecutable.GetResourceIdentifiers()
+                .Where(r => r.Type.Code == ResourceType.Icon.Code || r.Type.Code == ResourceType.IconGroup.Code)
+                .ToArray();
 
             var bootstrapperPortableExecutable = new PortableExecutable(BootstrapperFilePath);
             bootstrapperPortableExecutable.RemoveIcon();
-            bootstrapperPortableExecutable.SetIcon(IconFilePath);
 
-            Log.LogMessage("Injected icon from '{0}' to '{1}'.", IconFilePath, BootstrapperFileName);
+            if (targetIconResourceIdentifiers.Any())
+            {
+                foreach (var identifier in targetIconResourceIdentifiers)
+                {
+                    bootstrapperPortableExecutable.SetResource(
+                        identifier,
+                        targetPortableExecutable.GetResource(identifier).Data
+                    );
+                }
+
+                Log.LogMessage("Injected icon to '{0}'.", BootstrapperFileName);
+            }
+            else
+            {
+                Log.LogMessage("Could not find icon resources in '{0}'.", TargetFileName);
+            }
         }
 
         private void InjectVersionInfo()
         {
             var targetPortableExecutable = new PortableExecutable(TargetFilePath);
+            var targetVersionInfo = targetPortableExecutable.TryGetVersionInfo();
+
             var bootstrapperPortableExecutable = new PortableExecutable(BootstrapperFilePath);
-
-            var versionInfo = targetPortableExecutable.TryGetVersionInfo();
-            if (versionInfo is null)
-            {
-                Log.LogWarning("Could not read version info from '{0}'.", TargetFilePath);
-                return;
-            }
-
-            var bootstrapperVersion = typeof(CreateBootstrapperTask).Assembly.GetName().Version.ToString(3);
-
             bootstrapperPortableExecutable.RemoveVersionInfo();
-            bootstrapperPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
-                .SetAll(versionInfo)
-                .SetFileFlags(FileFlags.None)
-                .SetFileType(FileType.Application)
-                .SetFileSubType(FileSubType.Unknown)
-                .SetAttribute(VersionAttributeName.InternalName, BootstrapperFileName)
-                .SetAttribute(VersionAttributeName.OriginalFilename, BootstrapperFileName)
-                .SetAttribute("Bootstrapper", $".NET Runtime Bootstrapper (v{bootstrapperVersion})")
-                .Build()
-            );
 
-            Log.LogMessage("Injected version info to '{0}'.", BootstrapperFileName);
+            if (targetVersionInfo is not null)
+            {
+                var bootstrapperVersion = typeof(CreateBootstrapperTask).Assembly.GetName().Version.ToString(3);
+
+                bootstrapperPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
+                    .SetAll(targetVersionInfo)
+                    .SetFileFlags(FileFlags.None)
+                    .SetFileType(FileType.Application)
+                    .SetFileSubType(FileSubType.Unknown)
+                    .SetAttribute(VersionAttributeName.InternalName, BootstrapperFileName)
+                    .SetAttribute(VersionAttributeName.OriginalFilename, BootstrapperFileName)
+                    .SetAttribute("Bootstrapper", $".NET Runtime Bootstrapper (v{bootstrapperVersion})")
+                    .Build()
+                );
+
+                Log.LogMessage("Injected version info to '{0}'.", BootstrapperFileName);
+            }
+            else
+            {
+                // This is very unusual, so log a warning instead of info
+                Log.LogWarning("Could not read version info from '{0}'.", TargetFileName);
+            }
         }
 
         public override bool Execute()
@@ -156,8 +156,8 @@ namespace DotnetRuntimeBootstrapper
             Log.LogMessage("Extracting bootstrapper...");
             ExtractBootstrapper();
 
-            Log.LogMessage("Injecting execution parameters...");
-            InjectParameters();
+            Log.LogMessage("Injecting target binding...");
+            InjectTargetBinding();
 
             Log.LogMessage("Injecting manifest...");
             InjectManifest();

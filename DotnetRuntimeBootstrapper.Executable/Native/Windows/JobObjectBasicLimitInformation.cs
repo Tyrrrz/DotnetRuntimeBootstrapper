@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.Executable.Native
+namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct JobObjectBasicLimitInformation

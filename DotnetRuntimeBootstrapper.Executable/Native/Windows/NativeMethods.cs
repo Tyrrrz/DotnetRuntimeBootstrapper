@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.Executable.Native
+namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
 {
     internal static class NativeMethods
     {
@@ -9,9 +9,9 @@ namespace DotnetRuntimeBootstrapper.Executable.Native
         public static extern void GetNativeSystemInfo(ref SystemInfo lpSystemInfo);
 
         [DllImport("ntdll.dll", SetLastError = true)]
-        public static extern int RtlGetVersion(ref SystemVersionInfo versionInfo);
+        public static extern void RtlGetVersion(ref SystemVersionInfo versionInfo);
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr CreateJobObject(IntPtr hAttributes, string? lpName);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -27,5 +27,15 @@ namespace DotnetRuntimeBootstrapper.Executable.Native
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool CloseHandle(IntPtr hObject);
+
+        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr LoadLibrary(string lpFileName);
+
+        [DllImport("Kernel32.dll", SetLastError = true)]
+        public static extern bool FreeLibrary(IntPtr hModule);
+
+        // This function doesn't come in the Unicode variant
+        [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
     }
 }

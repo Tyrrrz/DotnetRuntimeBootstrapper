@@ -12,7 +12,7 @@ namespace DotnetRuntimeBootstrapper.Demo
             // Show routed command line arguments
             if (args.Any())
             {
-                MessageBox.Show(string.Join(" ", args));
+                MessageBox.Show(string.Join(" ", args), "Routed command line arguments");
             }
 
             // Show form

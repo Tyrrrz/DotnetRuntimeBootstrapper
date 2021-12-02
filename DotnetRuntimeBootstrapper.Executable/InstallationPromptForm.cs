@@ -8,14 +8,14 @@ namespace DotnetRuntimeBootstrapper.Executable
 {
     public partial class InstallationPromptForm : Form
     {
-        private readonly ExecutionParameters _parameters;
+        private readonly TargetAssembly _targetAssembly;
         private readonly IPrerequisite[] _missingPrerequisites;
 
-        public InstallationPromptResult Result { get; private set; } = InstallationPromptResult.Cancel;
+        public InstallationPromptResult Result { get; private set; } = InstallationPromptResult.Canceled;
 
-        public InstallationPromptForm(ExecutionParameters parameters, IPrerequisite[] missingPrerequisites)
+        public InstallationPromptForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
         {
-            _parameters = parameters;
+            _targetAssembly = targetAssembly;
             _missingPrerequisites = missingPrerequisites;
 
             InitializeComponent();
@@ -29,16 +29,19 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationPromptForm_Load(object sender, EventArgs e)
         {
-            Text = @$"{_parameters.TargetTitle} (missing prerequisites)";
+            Text = @$"{_targetAssembly.Title} (missing prerequisites)";
             Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
             IconPictureBox.Image = SystemIcons.Warning.ToBitmap();
             MissingPrerequisitesTextBox.Lines = _missingPrerequisites.Select(c => $"• {c.DisplayName}").ToArray();
         }
 
-        private void InstallButton_Click(object sender, EventArgs e) => Close(InstallationPromptResult.Install);
+        private void InstallButton_Click(object sender, EventArgs e) =>
+            Close(InstallationPromptResult.Confirmed);
 
-        private void ExitButton_Click(object sender, EventArgs e) => Close(InstallationPromptResult.Cancel);
+        private void ExitButton_Click(object sender, EventArgs e) =>
+            Close(InstallationPromptResult.Canceled);
 
-        private void IgnoreButton_Click(object sender, EventArgs e) => Close(InstallationPromptResult.Ignore);
+        private void IgnoreButton_Click(object sender, EventArgs e) =>
+            Close(InstallationPromptResult.Ignored);
     }
 }

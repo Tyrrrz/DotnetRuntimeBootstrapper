@@ -12,14 +12,14 @@ namespace DotnetRuntimeBootstrapper.Executable
 {
     public partial class InstallationForm : Form
     {
-        private readonly ExecutionParameters _parameters;
+        private readonly TargetAssembly _targetAssembly;
         private readonly IPrerequisite[] _missingPrerequisites;
 
-        public InstallationResult Result { get; private set; } = InstallationResult.Failure;
+        public InstallationResult Result { get; private set; } = InstallationResult.Failed;
 
-        public InstallationForm(ExecutionParameters parameters, IPrerequisite[] missingPrerequisites)
+        public InstallationForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
         {
-            _parameters = parameters;
+            _targetAssembly = targetAssembly;
             _missingPrerequisites = missingPrerequisites;
 
             InitializeComponent();
@@ -63,21 +63,18 @@ namespace DotnetRuntimeBootstrapper.Executable
         });
 
         private void ReportError(Exception exception) => InvokeOnUI(() =>
-        {
             MessageBox.Show(
                 @"An error occurred:" + Environment.NewLine + exception,
                 @"Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
-            );
-
-            Close(InstallationResult.Failure);
-        });
+            )
+        );
 
         private void PromptReboot() => InvokeOnUI(() =>
         {
             var result = MessageBox.Show(
-                @$"You need to restart Windows before you can run {_parameters.TargetTitle}. " +
+                @$"You need to restart Windows before you can run {_targetAssembly.Title}. " +
                 @"Would you like to do it now?",
                 @"Restart required",
                 MessageBoxButtons.YesNo,
@@ -85,70 +82,71 @@ namespace DotnetRuntimeBootstrapper.Executable
             );
 
             if (result == DialogResult.Yes)
-            {
                 OperatingSystem.InitiateReboot();
-            }
         });
+
+        private void PerformInstall()
+        {
+            try
+            {
+                // Download
+                var installers = new List<IPrerequisiteInstaller>();
+                foreach (var prerequisite in _missingPrerequisites)
+                {
+                    UpdateStatus(@$"Downloading {prerequisite.DisplayName}");
+                    UpdateCurrentProgress(0);
+
+                    var installer = prerequisite.DownloadInstaller(p =>
+                    {
+                        UpdateCurrentProgress(p);
+                        UpdateTotalProgress((installers.Count + p) / (2.0 * _missingPrerequisites.Length));
+                    });
+
+                    installers.Add(installer);
+                }
+
+                // Install
+                var installersFinishedCount = 0;
+                foreach (var installer in installers)
+                {
+                    UpdateStatus(@$"Installing {installer.Prerequisite.DisplayName}");
+                    UpdateCurrentProgress(-1);
+
+                    installer.Run();
+                    FileEx.TryDelete(installer.FilePath);
+
+                    UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
+                }
+
+                // Finalize
+                if (_missingPrerequisites.Any(c => c.IsRebootRequired))
+                {
+                    PromptReboot();
+                    Close(InstallationResult.RebootRequired);
+                }
+                else
+                {
+                    Close(InstallationResult.Succeeded);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReportError(ex);
+                Close(InstallationResult.Failed);
+            }
+        }
 
         private void InstallationForm_Load(object sender, EventArgs e)
         {
-            Text = @$"{_parameters.TargetTitle} (installing prerequisites)";
+            Text = @$"{_targetAssembly.Title} (installing prerequisites)";
             Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
             UpdateStatus(@"Downloading files...");
 
-            var thread = new Thread(() =>
+            new Thread(PerformInstall)
             {
-                try
-                {
-                    // Download
-                    var installers = new List<IPrerequisiteInstaller>();
-                    foreach (var prerequisite in _missingPrerequisites)
-                    {
-                        UpdateStatus(@$"Downloading {prerequisite.DisplayName}");
-                        UpdateCurrentProgress(0);
-
-                        var installer = prerequisite.DownloadInstaller(p =>
-                        {
-                            UpdateCurrentProgress(p);
-                            UpdateTotalProgress((installers.Count + p) / (2.0 * _missingPrerequisites.Length));
-                        });
-
-                        installers.Add(installer);
-                    }
-
-                    // Install
-                    var installersFinishedCount = 0;
-                    foreach (var installer in installers)
-                    {
-                        UpdateStatus(@$"Installing {installer.Prerequisite.DisplayName}");
-                        UpdateCurrentProgress(-1);
-
-                        installer.Run();
-                        FileEx.TryDelete(installer.FilePath);
-
-                        UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
-                    }
-
-                    // Finalize
-                    if (_missingPrerequisites.Any(c => c.IsRebootRequired))
-                    {
-                        PromptReboot();
-                        Close(InstallationResult.Reboot);
-                    }
-                    else
-                    {
-                        Close(InstallationResult.Ready);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ReportError(ex);
-                }
-            });
-
-            thread.Name = "InstallProcess";
-            thread.IsBackground = true;
-            thread.Start();
+                Name = nameof(PerformInstall),
+                IsBackground = true
+            }.Start();
         }
     }
 }

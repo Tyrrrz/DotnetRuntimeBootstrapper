@@ -13,7 +13,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
     public class DotnetPrerequisite : IPrerequisite
     {
         private readonly string _name;
-        private readonly string _version;
+        private readonly Version _version;
 
         public string Id => $"{_name}_{_version}";
 
@@ -26,7 +26,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         public bool IsRebootRequired => false;
 
-        public DotnetPrerequisite(string name, string version)
+        public DotnetPrerequisite(string name, Version version)
         {
             _name = name;
             _version = version;
@@ -81,7 +81,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 
         private string GetInstallerDownloadUrl()
         {
-            // Get release manifest for this version
             var manifest = Http.GetContentString(
                 "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/" +
                 $"{_version}/releases.json"
@@ -129,7 +128,11 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
                 return downloadUrl;
             }
 
-            throw new InvalidOperationException("Failed to find .NET runtime installer URL.");
+            throw new InvalidOperationException(
+                "Failed to resolve download URL for the required .NET runtime. " +
+                $"Please try to download ${DisplayName} manually from https://dotnet.microsoft.com/download/dotnet/{_version} or from https://get.dot.net. " +
+                $"After that, try running the application again."
+            );
         }
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)

@@ -2,8 +2,8 @@
 {
     public enum InstallationPromptResult
     {
-        Install,
-        Cancel,
-        Ignore
+        Confirmed,
+        Canceled,
+        Ignored
     }
 }

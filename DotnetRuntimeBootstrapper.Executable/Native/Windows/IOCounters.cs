@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.Executable.Native
+namespace DotnetRuntimeBootstrapper.Executable.Native.Windows
 {
     // ReSharper disable InconsistentNaming
     [StructLayout(LayoutKind.Sequential)]

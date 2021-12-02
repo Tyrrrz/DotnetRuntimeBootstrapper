@@ -13,7 +13,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
                 // Disable certificate validation (valid certificate may fail on old operating systems)
                 ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
 
-                // Try to enable TLS1.2 if it's supported (this not a requirement yet)
+                // Try to enable TLS1.2 if it's supported (not required by any of the requests we're sending)
                 ServicePointManager.SecurityProtocol =
                     (SecurityProtocolType) 0x00000C00 |
                     SecurityProtocolType.Tls |
@@ -53,7 +53,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             return reader.ReadToEnd();
         }
 
-        public static void DownloadFile(string url, string outputFilePath, Action<double>? handleProgress)
+        public static void DownloadFile(string url, string outputFilePath, Action<double>? handleProgress = null)
         {
             using var source = GetContentStream(url, out var contentLength);
             using var destination = File.Create(outputFilePath);

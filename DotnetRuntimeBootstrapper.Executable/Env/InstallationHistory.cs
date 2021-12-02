@@ -23,8 +23,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Env
             // invalid if the operating system is reset or reinstalled.
             try
             {
-                var machineId = (string) Registry
-                    .LocalMachine
+                var machineId = (string) Registry.LocalMachine
                     .OpenSubKey("SOFTWARE\\Microsoft\\SQMClient")?
                     .GetValue("MachineId");
 

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Resources;
+using System.Text;
 
 namespace DotnetRuntimeBootstrapper.Executable.Utils.Extensions
 {
@@ -8,13 +9,13 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils.Extensions
     {
         public static string GetManifestResourceString(this Assembly assembly, string resourceName)
         {
-            var resourceStream =
+            using var stream =
                 assembly.GetManifestResourceStream(resourceName) ??
-                throw new MissingManifestResourceException($"Could not find resource '{resourceName}'.");
+                throw new MissingManifestResourceException($"Could not resolve resource '{resourceName}'.");
 
-            using (resourceStream)
-            using (var resourceReader = new StreamReader(resourceStream))
-                return resourceReader.ReadToEnd();
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+
+            return reader.ReadToEnd();
         }
     }
 }
