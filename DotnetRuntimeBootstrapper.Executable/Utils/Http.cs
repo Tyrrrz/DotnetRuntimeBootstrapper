@@ -13,7 +13,13 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
                 // Disable certificate validation (valid certificate may fail on old operating systems)
                 ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
 
-                // Try to enable TLS1.2 if it's supported (not required by any of the requests we're sending)
+                // Try to enable TLS1.2 if it's supported.
+                // This is not required now, but may be in the future if one of the CDNs we rely on
+                // decides to limit traffic to TLS1.2+ only.
+                // Windows 7 doesn't have support for TLS1.2 out of the box, so this will always fail
+                // unless the user has installed the corresponding Windows update (we can't install
+                // it ourselves because it would require a reboot in the middle of installation).
+                // On Windows 8 and higher this should succeed.
                 ServicePointManager.SecurityProtocol =
                     (SecurityProtocolType) 0x00000C00 |
                     SecurityProtocolType.Tls |

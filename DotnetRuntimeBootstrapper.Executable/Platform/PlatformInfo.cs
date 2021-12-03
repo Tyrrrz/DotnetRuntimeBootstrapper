@@ -8,28 +8,10 @@ namespace DotnetRuntimeBootstrapper.Executable.Platform
 {
     internal static class PlatformInfo
     {
-        public static bool IsWindows7 =>
-            SystemVersionInfo.Instance.MajorVersion == 6 &&
-            SystemVersionInfo.Instance.MinorVersion == 1;
-
-        public static bool IsWindows8 =>
-            SystemVersionInfo.Instance.MajorVersion == 6 &&
-            SystemVersionInfo.Instance.MinorVersion == 2;
-
-        public static bool IsWindows8OrHigher =>
-            SystemVersionInfo.Instance.MajorVersion > 6 ||
-            SystemVersionInfo.Instance.MajorVersion == 6 &&
-            SystemVersionInfo.Instance.MinorVersion >= 2;
-
-        public static bool IsWindows81 =>
-            SystemVersionInfo.Instance.MajorVersion == 6 &&
-            SystemVersionInfo.Instance.MinorVersion == 3;
-
-        public static bool IsWindows10 =>
-            SystemVersionInfo.Instance.MajorVersion == 10;
-
-        public static bool IsWindows10OrHigher =>
-            SystemVersionInfo.Instance.MajorVersion >= 10;
+        public static Version Version { get; } = new(
+            SystemVersionInfo.Instance.MajorVersion,
+            SystemVersionInfo.Instance.MinorVersion
+        );
 
         public static ProcessorArchitecture ProcessorArchitecture => SystemInfo.Instance.ProcessorArchitecture switch
         {
@@ -40,7 +22,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Platform
             _ => throw new InvalidOperationException("Unknown processor architecture.")
         };
 
-        // TODO: refactor
+        // TODO: refactor (find a way to get this info without CLI?)
         private static HashSet<string>? _installedUpdates;
         private static HashSet<string> GetInstalledUpdates()
         {

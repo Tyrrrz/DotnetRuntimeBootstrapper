@@ -6,9 +6,9 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
     {
         string DisplayName { get; }
 
-        bool IsRebootRequired { get; }
+        bool IsInstalled { get; }
 
-        bool CheckIfInstalled();
+        bool IsRebootRequired { get; }
 
         IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress);
     }

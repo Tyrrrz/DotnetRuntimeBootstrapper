@@ -18,7 +18,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Platform
             ProcessorArchitecture.X64 => "x64",
             ProcessorArchitecture.Arm => "arm",
             ProcessorArchitecture.Arm64 => "arm64",
-            _ => throw new InvalidOperationException("Unknown processor architecture.")
+            _ => throw new ArgumentOutOfRangeException(nameof(arch), "Unknown processor architecture.")
         };
     }
 }

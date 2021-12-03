@@ -123,7 +123,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
 
             if (process.ExitCode != 0)
             {
-                throw new InvalidOperationException(
+                throw new ApplicationException(
                     $"Process returned a non-zero exit code ({process.ExitCode})." +
                     Environment.NewLine +
                     $"Command: {process.StartInfo.FileName} {process.StartInfo.Arguments}" +

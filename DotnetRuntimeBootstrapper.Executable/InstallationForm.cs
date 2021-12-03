@@ -131,6 +131,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
             catch (Exception ex)
             {
+                // TODO: do we need this? can we just let the exception bubble up?
                 ReportError(ex);
                 Close(InstallationResult.Failed);
             }

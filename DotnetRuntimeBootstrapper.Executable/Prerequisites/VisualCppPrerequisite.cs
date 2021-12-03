@@ -10,14 +10,14 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
     {
         public string DisplayName => "Visual C++ Redistributable 2015-2019";
 
-        public bool IsRebootRequired => false;
-
-        public bool CheckIfInstalled() => Registry.LocalMachine.ContainsSubKey(
+        public bool IsInstalled => Registry.LocalMachine.ContainsSubKey(
             PlatformInfo.ProcessorArchitecture == ProcessorArchitecture.X64
                 ? "SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\X64"
                 : "SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\" +
                   PlatformInfo.ProcessorArchitecture.GetMoniker().ToUpperInvariant()
         );
+
+        public bool IsRebootRequired => false;
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {

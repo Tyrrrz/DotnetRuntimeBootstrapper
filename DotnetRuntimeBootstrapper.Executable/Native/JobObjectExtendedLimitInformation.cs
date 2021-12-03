@@ -8,9 +8,9 @@ namespace DotnetRuntimeBootstrapper.Executable.Native
     {
         public JobObjectBasicLimitInformation BasicLimitInformation;
         public IOCounters IOInfo;
-        public UIntPtr ProcessMemoryLimit;
-        public UIntPtr JobMemoryLimit;
-        public UIntPtr PeakProcessMemoryUsed;
-        public UIntPtr PeakJobMemoryUsed;
+        public IntPtr ProcessMemoryLimit;
+        public IntPtr JobMemoryLimit;
+        public IntPtr PeakProcessMemoryUsed;
+        public IntPtr PeakJobMemoryUsed;
     }
 }

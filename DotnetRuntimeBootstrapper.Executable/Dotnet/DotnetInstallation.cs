@@ -11,14 +11,14 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
         {
             // .NET installation location design docs:
             // https://github.com/dotnet/designs/blob/main/accepted/2020/install-locations.md
-            // 1. Try to find the .NET Core installation directory by looking in the registry
-            // 2. Otherwise, try to find it by looking in the default install location
+            // - try to find the .NET Core installation directory by looking in the registry
+            // - otherwise, try to find it by checking the default install location
 
             // Try to resolve location from registry (covers both custom and default locations)
             {
                 var archMoniker = PlatformInfo.ProcessorArchitecture.GetMoniker();
 
-                // Installation information is only available in 32-bit view of the registry
+                // Installation information is only available in the 32-bit view of the registry
                 var dotnetRegistryKey =
                     Registry.LocalMachine.OpenSubKey(
                         "SOFTWARE\\Wow6432Node\\dotnet\\Setup\\InstalledVersions\\" + archMoniker,

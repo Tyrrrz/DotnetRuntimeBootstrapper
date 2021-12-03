@@ -11,35 +11,49 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
     internal class DotnetPrerequisite : IPrerequisite
     {
-        private readonly DotnetRuntimeInfo _runtimeInfo;
+        private readonly DotnetRuntime _runtime;
 
         private string ShortName =>
-            _runtimeInfo.Name
+            _runtime.Name
                 .TrimStart("Microsoft.", StringComparison.OrdinalIgnoreCase)
                 .TrimEnd(".App", StringComparison.OrdinalIgnoreCase);
 
-        public string DisplayName => $".NET Runtime ({ShortName}) v{_runtimeInfo.Version}";
-
-        public bool IsRebootRequired => false;
-
-        public DotnetPrerequisite(DotnetRuntimeInfo runtimeInfo) =>
-            _runtimeInfo = runtimeInfo;
+        public string DisplayName => $".NET Runtime ({ShortName}) v{_runtime.Version}";
 
         // We are looking for a runtime with the same name and the same major version.
         // Installed runtime may have higher minor version than the target runtime, but not lower.
-        public bool CheckIfInstalled() => DotnetRuntimeInfo
-            .GetInstalled()
-            .Any(r =>
-                string.Equals(r.Name, _runtimeInfo.Name, StringComparison.OrdinalIgnoreCase) &&
-                r.Version.Major == _runtimeInfo.Version.Major &&
-                r.Version >= _runtimeInfo.Version
-            );
+        public bool IsInstalled
+        {
+            get
+            {
+                try
+                {
+                    return DotnetRuntime
+                        .GetAllInstalled()
+                        .Any(r =>
+                            string.Equals(r.Name, _runtime.Name, StringComparison.OrdinalIgnoreCase) &&
+                            r.Version.Major == _runtime.Version.Major &&
+                            r.Version >= _runtime.Version
+                        );
+                }
+                catch (Exception ex) when (ex is DirectoryNotFoundException or FileNotFoundException)
+                {
+                    // .NET is likely not installed altogether
+                    return false;
+                }
+            }
+        }
+
+        public bool IsRebootRequired => false;
+
+        public DotnetPrerequisite(DotnetRuntime runtime) =>
+            _runtime = runtime;
 
         private string GetInstallerDownloadUrl()
         {
             var manifest = Http.GetContentString(
                 "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/" +
-                $"{_runtimeInfo.Version}/releases.json"
+                $"{_runtime.Version}/releases.json"
             );
 
             // Find the list of files for the latest release
@@ -47,7 +61,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
                 .TryParse(manifest)?
                 .TryGetChild("releases")?
                 .TryGetChild(0)?
-                .TryGetChild(_runtimeInfo switch
+                .TryGetChild(_runtime switch
                 {
                     { IsWindowsDesktop: true } => "windowsdesktop",
                     { IsAspNet: true } => "aspnetcore-runtime",
@@ -81,10 +95,10 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
                 return downloadUrl;
             }
 
-            throw new InvalidOperationException(
+            throw new ApplicationException(
                 "Failed to resolve download URL for the required .NET runtime. " +
                 $"Please try to download ${DisplayName} manually from " +
-                $"https://dotnet.microsoft.com/download/dotnet/{_runtimeInfo.Version} or from https://get.dot.net, " +
+                $"https://dotnet.microsoft.com/download/dotnet/{_runtime.Version} or from https://get.dot.net, " +
                 "then run the application again."
             );
         }

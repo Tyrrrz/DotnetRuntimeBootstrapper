@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 
@@ -21,39 +22,51 @@ namespace DotnetRuntimeBootstrapper.Executable
             if (missingPrerequisites.Length <= 0)
                 return true;
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
-            // Form to show the missing prerequisites and ask if the user wants to install them
-            InstallationPromptResult ShowInstallationPrompt()
+            try
             {
-                using var form = new InstallationPromptForm(_targetAssembly, missingPrerequisites);
-                Application.Run(form);
-                return form.Result;
-            }
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
-            // Form to show installation progress
-            InstallationResult ShowInstallation()
-            {
-                using var form = new InstallationForm(_targetAssembly, missingPrerequisites);
-                Application.Run(form);
-                return form.Result;
-            }
-
-            return ShowInstallationPrompt() switch
-            {
-                InstallationPromptResult.Confirmed => ShowInstallation() switch
+                // Form to show the missing prerequisites and ask if the user wants to install them
+                InstallationPromptResult ShowInstallationPrompt()
                 {
-                    // Ready to run the target application
-                    InstallationResult.Succeeded => true,
+                    using var form = new InstallationPromptForm(_targetAssembly, missingPrerequisites);
+                    Application.Run(form);
+                    return form.Result;
+                }
 
-                    // Failed or requires reboot
+                // Form to show installation progress
+                InstallationResult ShowInstallation()
+                {
+                    using var form = new InstallationForm(_targetAssembly, missingPrerequisites);
+                    Application.Run(form);
+                    return form.Result;
+                }
+
+                return ShowInstallationPrompt() switch
+                {
+                    InstallationPromptResult.Confirmed => ShowInstallation() switch
+                    {
+                        // Ready to run the target application
+                        InstallationResult.Succeeded => true,
+
+                        // Failed or requires reboot
+                        _ => false
+                    },
+
+                    // Canceled
                     _ => false
-                },
-
-                // Canceled
-                _ => false
-            };
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(
+                    "Bootstrapping failed. Please try to install the following missing prerequisites manually:" +
+                    Environment.NewLine +
+                    string.Join(Environment.NewLine, missingPrerequisites.Select(p => p.DisplayName).ToArray()),
+                    ex
+                );
+            }
         }
 
         private int Run(string[] args)
@@ -63,21 +76,23 @@ namespace DotnetRuntimeBootstrapper.Executable
                 // Attempt to run the target first without any checks (hot path)
                 return _targetAssembly.Run(args);
             }
+            // If execution failed, check if any prerequisites are missing
             catch
             {
-                // Resolve missing prerequisites and try again
-                var canRunTarget = EnsurePrerequisitesInstalled();
-                if (canRunTarget)
+                // Go through the prompt/installation flow
+                if (EnsurePrerequisitesInstalled())
                 {
-                    // Reset environment variables after the installation process to update PATH
-                    // and other variables that may have been changed by the installation process.
+                    // Reset environment variables to update PATH and other variables
+                    // that may have been changed by the installation process.
                     EnvironmentEx.ResetEnvironmentVariables();
 
+                    // This can fail again, in case the prerequisites weren't the (only) issue.
+                    // If that happens, we just let the exception bubble up to the user.
                     return _targetAssembly.Run(args);
                 }
 
                 // Installation failed, was canceled, or still requires reboot
-                return 1;
+                return 101;
             }
         }
     }
@@ -87,6 +102,7 @@ namespace DotnetRuntimeBootstrapper.Executable
         [STAThread]
         public static int Main(string[] args)
         {
+            // Global error sink
             static void HandleError(string message)
             {
                 // Report the error by writing it to a file and showing in a dialog.
@@ -95,7 +111,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
                 try
                 {
-                    var timestamp = DateTimeOffset.Now.ToString("yyyyMMddTHHmmss", CultureInfo.InvariantCulture);
+                    var timestamp = DateTimeOffset.Now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture);
                     var filePath = Path.Combine(PathEx.ExecutingDirectoryPath, $"Bootstrapper_Error_{timestamp}.txt");
                     File.WriteAllText(filePath, message);
                 }
@@ -123,7 +139,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             catch (Exception ex)
             {
                 HandleError(ex.ToString());
-                return 1;
+                return 100;
             }
         }
     }

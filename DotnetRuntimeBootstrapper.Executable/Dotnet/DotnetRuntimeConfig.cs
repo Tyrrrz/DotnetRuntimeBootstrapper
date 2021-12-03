@@ -9,52 +9,52 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
 {
     internal partial class DotnetRuntimeConfig
     {
-        public DotnetRuntimeInfo[] Runtimes { get; }
+        public DotnetRuntime[] Runtimes { get; }
 
-        public DotnetRuntimeConfig(DotnetRuntimeInfo[] runtimes) =>
+        public DotnetRuntimeConfig(DotnetRuntime[] runtimes) =>
             Runtimes = runtimes;
     }
 
     internal partial class DotnetRuntimeConfig
     {
-        private static DotnetRuntimeInfo ParseRuntimeInfo(JsonNode json)
+        private static DotnetRuntime ParseRuntime(JsonNode json)
         {
             var name = json.TryGetChild("name")?.TryGetString();
             var version = json.TryGetChild("version")?.TryGetString()?.Pipe(VersionEx.TryParse);
 
             if (string.IsNullOrEmpty(name) || version is null)
-                throw new InvalidOperationException("Could not parse runtime info.");
+                throw new ApplicationException("Could not parse runtime info from runtime config.");
 
-            return new DotnetRuntimeInfo(name, version);
+            return new DotnetRuntime(name, version);
         }
 
         public static DotnetRuntimeConfig Parse(string json)
         {
             var runtimeConfigJson =
                 Json.TryParse(json) ??
-                throw new InvalidOperationException("Could not parse runtime config.");
+                throw new ApplicationException("Could not parse runtime config.");
 
             // .NET 6 and higher
-            var runtimeInfos = runtimeConfigJson
+            var runtimes = runtimeConfigJson
                 .TryGetChild("runtimeOptions")?
                 .TryGetChild("frameworks")?
                 .EnumerateChildren()
-                .Select(ParseRuntimeInfo)
+                .Select(ParseRuntime)
                 .ToArray();
 
-            if (runtimeInfos is not null)
-                return new DotnetRuntimeConfig(runtimeInfos);
+            if (runtimes is not null)
+                return new DotnetRuntimeConfig(runtimes);
 
             // .NET 5 and lower
-            var runtimeInfo = runtimeConfigJson
+            var runtime = runtimeConfigJson
                 .TryGetChild("runtimeOptions")?
                 .TryGetChild("framework")?
-                .Pipe(ParseRuntimeInfo);
+                .Pipe(ParseRuntime);
 
-            if (runtimeInfo is not null)
-                return new DotnetRuntimeConfig(new[] {runtimeInfo});
+            if (runtime is not null)
+                return new DotnetRuntimeConfig(new[] {runtime});
 
-            throw new InvalidOperationException("Could not parse runtime config.");
+            throw new ApplicationException("Could not parse runtime infos from runtime config.");
         }
 
         public static DotnetRuntimeConfig Load(string filePath) => Parse(File.ReadAllText(filePath));

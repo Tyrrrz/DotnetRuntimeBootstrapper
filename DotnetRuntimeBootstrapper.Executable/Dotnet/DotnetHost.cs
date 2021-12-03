@@ -44,17 +44,17 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
 
             if (GetInitializeForCommandLineFn()(argsCombined.Length, argsCombined, IntPtr.Zero, out var handle) != 0)
             {
-                throw new DotnetHostException(
+                throw new ApplicationException(
                     $"Failed to initialize .NET host with arguments [{string.Join(", ", argsCombined)}]."
                 );
             }
 
             try
             {
-                // Note: this returns program's exit code, but may also return codes corresponding to
-                // .NET host errors. We can't discern them, but we shouldn't need to care because
-                // the previous step already covers most of the erroneous states.
-
+                // This returns program's exit code, but may also return codes corresponding to
+                // .NET host errors. We can't discern between them, but we probably don't need
+                // to worry about it since the majority of errors are already filtered out by
+                // the previous step.
                 return GetRunAppFn()(handle);
             }
             finally
@@ -73,7 +73,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
         {
             // hostfxr.dll resolution strategy:
             // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/fxr_resolver.cpp#L55-L135
-            // 1. Find the root directory containing versioned subdirectories
+            // 1. Find the fxr directory containing versioned subdirectories
             // 2. Get the hostfxr.dll from the subdirectory with the highest version number
 
             var fxrRootDirPath = Path.Combine(Path.Combine(DotnetInstallation.GetDirectoryPath(), "host"), "fxr");
