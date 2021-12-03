@@ -16,8 +16,8 @@ namespace DotnetRuntimeBootstrapper.Executable.Native
 
         public TDelegate GetFunction<TDelegate>(string functionName) where TDelegate : Delegate
         {
-            if (_functionTable.TryGetValue(functionName, out var delCached))
-                return (TDelegate)delCached;
+            if (_functionTable.TryGetValue(functionName, out var funcCached))
+                return (TDelegate)funcCached;
 
             var address = NativeMethods.GetProcAddress(_handle, functionName);
             if (address == IntPtr.Zero)

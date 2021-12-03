@@ -66,7 +66,7 @@ namespace DotnetRuntimeBootstrapper
 
             assembly.Write();
 
-            Log.LogMessage("Injected target assembly binding to '{0}'.", BootstrapperFileName);
+            Log.LogMessage("Injected target binding to '{0}'.", BootstrapperFileName);
         }
 
         private void InjectManifest()
@@ -136,7 +136,7 @@ namespace DotnetRuntimeBootstrapper
                     .SetFileSubType(FileSubType.Unknown)
                     .SetAttribute(VersionAttributeName.InternalName, BootstrapperFileName)
                     .SetAttribute(VersionAttributeName.OriginalFilename, BootstrapperFileName)
-                    .SetAttribute("Bootstrapper", $".NET Runtime Bootstrapper (v{bootstrapperVersion})")
+                    .SetAttribute("Bootstrapper", $".NET Runtime Bootstrapper v{bootstrapperVersion}")
                     .Build()
                 );
 

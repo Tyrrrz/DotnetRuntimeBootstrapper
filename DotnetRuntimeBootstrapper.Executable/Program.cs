@@ -6,13 +6,16 @@ using DotnetRuntimeBootstrapper.Executable.Utils;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
-    public static class Program
+    public partial class Program
     {
-        private static TargetAssembly TargetAssembly { get; } = TargetAssembly.Resolve();
+        private readonly TargetAssembly _targetAssembly;
 
-        private static bool EnsurePrerequisitesInstalled()
+        public Program(TargetAssembly targetAssembly) =>
+            _targetAssembly = targetAssembly;
+
+        private bool EnsurePrerequisitesInstalled()
         {
-            var missingPrerequisites = TargetAssembly.GetMissingPrerequisites();
+            var missingPrerequisites = _targetAssembly.GetMissingPrerequisites();
 
             // Nothing to install
             if (missingPrerequisites.Length <= 0)
@@ -24,7 +27,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             // Form to show the missing prerequisites and ask if the user wants to install them
             InstallationPromptResult ShowInstallationPrompt()
             {
-                using var form = new InstallationPromptForm(TargetAssembly, missingPrerequisites);
+                using var form = new InstallationPromptForm(_targetAssembly, missingPrerequisites);
                 Application.Run(form);
                 return form.Result;
             }
@@ -32,7 +35,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             // Form to show installation progress
             InstallationResult ShowInstallation()
             {
-                using var form = new InstallationForm(TargetAssembly, missingPrerequisites);
+                using var form = new InstallationForm(_targetAssembly, missingPrerequisites);
                 Application.Run(form);
                 return form.Result;
             }
@@ -53,12 +56,12 @@ namespace DotnetRuntimeBootstrapper.Executable
             };
         }
 
-        private static int Run(string[] args)
+        private int Run(string[] args)
         {
             try
             {
                 // Attempt to run the target first without any checks (hot path)
-                return TargetAssembly.Run(args);
+                return _targetAssembly.Run(args);
             }
             catch
             {
@@ -70,14 +73,17 @@ namespace DotnetRuntimeBootstrapper.Executable
                     // and other variables that may have been changed by the installation process.
                     EnvironmentEx.ResetEnvironmentVariables();
 
-                    return TargetAssembly.Run(args);
+                    return _targetAssembly.Run(args);
                 }
 
                 // Installation failed, was canceled, or still requires reboot
                 return 1;
             }
         }
+    }
 
+    public partial class Program
+    {
         [STAThread]
         public static int Main(string[] args)
         {
@@ -90,7 +96,8 @@ namespace DotnetRuntimeBootstrapper.Executable
                 try
                 {
                     var timestamp = DateTimeOffset.Now.ToString("yyyyMMddTHHmmss", CultureInfo.InvariantCulture);
-                    File.WriteAllText($"Bootstrapper_Error_{timestamp}.txt", message);
+                    var filePath = Path.Combine(PathEx.ExecutingDirectoryPath, $"Bootstrapper_Error_{timestamp}.txt");
+                    File.WriteAllText(filePath, message);
                 }
                 catch
                 {
@@ -111,7 +118,7 @@ namespace DotnetRuntimeBootstrapper.Executable
 
             try
             {
-                return Run(args);
+                return new Program(TargetAssembly.Resolve()).Run(args);
             }
             catch (Exception ex)
             {

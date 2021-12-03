@@ -17,7 +17,8 @@ namespace DotnetRuntimeBootstrapper.Executable.Platform
             SystemVersionInfo.Instance.MinorVersion == 2;
 
         public static bool IsWindows8OrHigher =>
-            SystemVersionInfo.Instance.MajorVersion >= 6 &&
+            SystemVersionInfo.Instance.MajorVersion > 6 ||
+            SystemVersionInfo.Instance.MajorVersion == 6 &&
             SystemVersionInfo.Instance.MinorVersion >= 2;
 
         public static bool IsWindows81 =>

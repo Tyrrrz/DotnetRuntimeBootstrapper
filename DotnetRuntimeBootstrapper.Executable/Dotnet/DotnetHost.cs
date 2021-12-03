@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DotnetRuntimeBootstrapper.Executable.Native;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
@@ -14,6 +15,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
         public DotnetHost(NativeLibrary hostfxrLib) =>
             _hostfxrLib = hostfxrLib;
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
         private delegate int HostfxrInitializeForCommandLineFn(
             int argc,
             string[] argv,
@@ -24,11 +26,13 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
         private HostfxrInitializeForCommandLineFn GetInitializeForCommandLineFn() =>
             _hostfxrLib.GetFunction<HostfxrInitializeForCommandLineFn>("hostfxr_initialize_for_dotnet_command_line");
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
         private delegate int HostfxrRunAppFn(IntPtr handle);
 
         private HostfxrRunAppFn GetRunAppFn() =>
             _hostfxrLib.GetFunction<HostfxrRunAppFn>("hostfxr_run_app");
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
         private delegate int HostfxrCloseFn(IntPtr handle);
 
         private HostfxrCloseFn GetCloseFn() =>
