@@ -12,7 +12,7 @@ DotnetRuntimeBootstrapper replaces the default application host `exe` file gener
 
 > ⚠ Bootstrapper only supports applications targeting .NET Core 3.0 or higher.
 
-> ⚠️ Bootstrapper's user experience is optimized for **desktop applications**.
+> ⚠ Bootstrapper's user experience is optimized for **desktop applications**.
 Other application platforms are supported in theory but not necessarily in practice.
 
 💬 **If you want to chat, join my [Discord server](https://discord.gg/2SUWKFnHSm)**.
