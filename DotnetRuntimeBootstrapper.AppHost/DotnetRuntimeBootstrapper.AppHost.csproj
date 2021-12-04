@@ -14,9 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Management, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>C:\Users\Tyrrr\.nuget\packages\microsoft.netframework.referenceassemblies.net35\1.0.2\build\.NETFramework\v3.5\System.Management.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Management" />
   </ItemGroup>
 
 </Project>
