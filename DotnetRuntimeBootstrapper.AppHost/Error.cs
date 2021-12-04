@@ -41,7 +41,10 @@ namespace DotnetRuntimeBootstrapper.AppHost
 
                     var filePath = Path.Combine(
                         Path.Combine(
-                            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                            Path.Combine(
+                                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                                "Tyrrrz"
+                            ),
                             "DotnetRuntimeBootstrapper"
                         ),
                         $"AppHost_{title}_Error_{timestampFileSafe}.txt"
