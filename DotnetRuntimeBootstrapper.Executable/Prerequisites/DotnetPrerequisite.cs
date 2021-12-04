@@ -6,6 +6,7 @@ using DotnetRuntimeBootstrapper.Executable.Platform;
 using DotnetRuntimeBootstrapper.Executable.Utils;
 using DotnetRuntimeBootstrapper.Executable.Utils.Extensions;
 using QuickJson;
+using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
 {
@@ -78,7 +79,7 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
                 // Filter by processor architecture
                 if (!string.Equals(
                     runtimeIdentifier,
-                    "win-" + PlatformInfo.ProcessorArchitecture.GetMoniker(),
+                    "win-" + OperatingSystem.ProcessorArchitecture.GetMoniker(),
                     StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
@@ -98,18 +99,14 @@ namespace DotnetRuntimeBootstrapper.Executable.Prerequisites
             throw new ApplicationException(
                 "Failed to resolve download URL for the required .NET runtime. " +
                 $"Please try to download ${DisplayName} manually from " +
-                $"https://dotnet.microsoft.com/download/dotnet/{_runtime.Version} or from https://get.dot.net, " +
-                "then run the application again."
+                $"https://dotnet.microsoft.com/download/dotnet/{_runtime.Version} or from https://get.dot.net."
             );
         }
 
         public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
         {
             var downloadUrl = GetInstallerDownloadUrl();
-
-            var filePath = FileEx.GenerateTempFilePath(
-                Url.TryExtractFileName(downloadUrl) ?? "installer.exe"
-            );
+            var filePath = FileEx.GenerateTempFilePath(Url.TryExtractFileName(downloadUrl) ?? "installer.exe");
 
             Http.DownloadFile(downloadUrl, filePath, handleProgress);
 

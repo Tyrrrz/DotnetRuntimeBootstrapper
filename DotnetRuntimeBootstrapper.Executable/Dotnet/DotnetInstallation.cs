@@ -2,6 +2,7 @@
 using System.IO;
 using DotnetRuntimeBootstrapper.Executable.Platform;
 using Microsoft.Win32;
+using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable.Dotnet
 {
@@ -16,16 +17,15 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
 
             // Try to resolve location from registry (covers both custom and default locations)
             {
-                var archMoniker = PlatformInfo.ProcessorArchitecture.GetMoniker();
+                var archMoniker = OperatingSystem.ProcessorArchitecture.GetMoniker();
 
                 // Installation information is only available in the 32-bit view of the registry
-                var dotnetRegistryKey =
-                    Registry.LocalMachine.OpenSubKey(
+                var dotnetRegistryKey = OperatingSystem.ProcessorArchitecture.Is64Bit()
+                    ? Registry.LocalMachine.OpenSubKey(
                         "SOFTWARE\\Wow6432Node\\dotnet\\Setup\\InstalledVersions\\" + archMoniker,
                         false
-                    ) ??
-
-                    Registry.LocalMachine.OpenSubKey(
+                    )
+                    : Registry.LocalMachine.OpenSubKey(
                         "SOFTWARE\\dotnet\\Setup\\InstalledVersions\\" + archMoniker,
                         false
                     );

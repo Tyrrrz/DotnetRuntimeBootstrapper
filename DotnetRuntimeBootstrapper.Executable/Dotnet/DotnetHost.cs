@@ -73,16 +73,16 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
         {
             // hostfxr.dll resolution strategy:
             // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/fxr_resolver.cpp#L55-L135
-            // 1. Find the fxr directory containing versioned subdirectories
+            // 1. Find the hostfxr directory containing versioned subdirectories
             // 2. Get the hostfxr.dll from the subdirectory with the highest version number
 
-            var fxrRootDirPath = Path.Combine(Path.Combine(DotnetInstallation.GetDirectoryPath(), "host"), "fxr");
-            if (!Directory.Exists(fxrRootDirPath))
+            var hostfxrRootDirPath = Path.Combine(Path.Combine(DotnetInstallation.GetDirectoryPath(), "host"), "fxr");
+            if (!Directory.Exists(hostfxrRootDirPath))
                 throw new DirectoryNotFoundException("Could not find directory containing hostfxr.dll.");
 
             var highestVersion = default(Version);
             var highestVersionFilePath = default(string);
-            foreach (var dirPath in Directory.GetDirectories(fxrRootDirPath))
+            foreach (var dirPath in Directory.GetDirectories(hostfxrRootDirPath))
             {
                 var version = VersionEx.TryParse(Path.GetFileName(dirPath));
                 if (version is null)

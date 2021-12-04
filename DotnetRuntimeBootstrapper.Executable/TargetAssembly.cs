@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.Executable.Dotnet;
@@ -25,17 +24,13 @@ namespace DotnetRuntimeBootstrapper.Executable
         {
             var runtimeConfig = DotnetRuntimeConfig.Load(Path.ChangeExtension(FilePath, "runtimeconfig.json"));
 
-            var targetRuntime =
-                runtimeConfig.Runtimes.OrderBy(r => !r.IsBase).FirstOrDefault() ??
-                throw new ApplicationException("Could not resolve target runtime from runtime config.");
-
             return new IPrerequisite[]
             {
                 // Low-level dependencies first, high-level last
                 new WindowsUpdate2999226Prerequisite(),
                 new WindowsUpdate3063858Prerequisite(),
                 new VisualCppPrerequisite(),
-                new DotnetPrerequisite(targetRuntime)
+                new DotnetPrerequisite(runtimeConfig.Runtime)
             }.Where(p => !p.IsInstalled).ToArray();
         }
 

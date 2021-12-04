@@ -9,10 +9,10 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
 {
     internal partial class DotnetRuntimeConfig
     {
-        public DotnetRuntime[] Runtimes { get; }
+        public DotnetRuntime Runtime { get; }
 
-        public DotnetRuntimeConfig(DotnetRuntime[] runtimes) =>
-            Runtimes = runtimes;
+        public DotnetRuntimeConfig(DotnetRuntime runtime) =>
+            Runtime = runtime;
     }
 
     internal partial class DotnetRuntimeConfig
@@ -35,24 +35,32 @@ namespace DotnetRuntimeBootstrapper.Executable.Dotnet
                 throw new ApplicationException("Could not parse runtime config.");
 
             // .NET 6 and higher
-            var runtimes = runtimeConfigJson
-                .TryGetChild("runtimeOptions")?
-                .TryGetChild("frameworks")?
-                .EnumerateChildren()
-                .Select(ParseRuntime)
-                .ToArray();
+            {
+                // Config lists multiple frameworks, usually the base and the app-specific one,
+                // for example: Microsoft.NETCore.App and Microsoft.WindowsDesktop.App.
+                // We only care about the app-specific one.
+                var runtime = runtimeConfigJson
+                    .TryGetChild("runtimeOptions")?
+                    .TryGetChild("frameworks")?
+                    .EnumerateChildren()
+                    .Select(ParseRuntime)
+                    .OrderBy(r => !r.IsBase)
+                    .FirstOrDefault();
 
-            if (runtimes is not null)
-                return new DotnetRuntimeConfig(runtimes);
+                if (runtime is not null)
+                    return new DotnetRuntimeConfig(runtime);
+            }
 
             // .NET 5 and lower
-            var runtime = runtimeConfigJson
-                .TryGetChild("runtimeOptions")?
-                .TryGetChild("framework")?
-                .Pipe(ParseRuntime);
+            {
+                var runtime = runtimeConfigJson
+                    .TryGetChild("runtimeOptions")?
+                    .TryGetChild("framework")?
+                    .Pipe(ParseRuntime);
 
-            if (runtime is not null)
-                return new DotnetRuntimeConfig(new[] {runtime});
+                if (runtime is not null)
+                    return new DotnetRuntimeConfig(runtime);
+            }
 
             throw new ApplicationException("Could not parse runtime infos from runtime config.");
         }

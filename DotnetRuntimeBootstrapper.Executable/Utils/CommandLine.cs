@@ -1,14 +1,15 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using DotnetRuntimeBootstrapper.Executable.Native;
 
 namespace DotnetRuntimeBootstrapper.Executable.Utils
 {
     internal static class CommandLine
     {
+        // Process job that will ensure that all child processes will be killed
+        // when the parent process terminates.
+        // Ensures we don't leave installers or other executables running if the
+        // user decides to cancel or force exit.
         private static ProcessJob? ProcessJob { get; } = TryCreateProcessJob();
 
         private static ProcessJob? TryCreateProcessJob()
@@ -70,83 +71,6 @@ namespace DotnetRuntimeBootstrapper.Executable.Utils
             process.WaitForExit();
 
             return process.ExitCode;
-        }
-
-        public static string RunWithOutput(string executableFilePath, string[] arguments)
-        {
-            using var process = CreateProcess(executableFilePath, arguments);
-
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-
-            using var stdOutSignal = new ManualResetEvent(false);
-            using var stdErrSignal = new ManualResetEvent(false);
-
-            var stdOutBuffer = new StringBuilder();
-            var stdErrBuffer = new StringBuilder();
-
-            process.EnableRaisingEvents = true;
-
-            process.OutputDataReceived += (_, args) =>
-            {
-                if (args.Data is not null)
-                {
-                    stdOutBuffer.AppendLine(args.Data);
-                }
-                else
-                {
-                    stdOutSignal.Set();
-                }
-            };
-
-            process.ErrorDataReceived += (_, args) =>
-            {
-                if (args.Data is not null)
-                {
-                    stdErrBuffer.AppendLine(args.Data);
-                }
-                else
-                {
-                    stdErrSignal.Set();
-                }
-            };
-
-            process.Start();
-            ProcessJob?.AddProcess(process);
-
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            process.WaitForExit();
-            stdOutSignal.WaitOne();
-            stdErrSignal.WaitOne();
-
-            if (process.ExitCode != 0)
-            {
-                throw new ApplicationException(
-                    $"Process returned a non-zero exit code ({process.ExitCode})." +
-                    Environment.NewLine +
-                    $"Command: {process.StartInfo.FileName} {process.StartInfo.Arguments}" +
-                    Environment.NewLine +
-                    "Standard error:" +
-                    Environment.NewLine +
-                    stdOutBuffer
-                );
-            }
-
-            return stdOutBuffer.ToString();
-        }
-
-        public static string? TryRunWithOutput(string executableFilePath, string[] arguments)
-        {
-            try
-            {
-                return RunWithOutput(executableFilePath, arguments);
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 }

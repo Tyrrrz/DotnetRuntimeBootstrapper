@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using DotnetRuntimeBootstrapper.Executable.Platform;
 using DotnetRuntimeBootstrapper.Executable.Prerequisites;
 using DotnetRuntimeBootstrapper.Executable.Utils;
+using OperatingSystem = DotnetRuntimeBootstrapper.Executable.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.Executable
 {
@@ -62,15 +62,6 @@ namespace DotnetRuntimeBootstrapper.Executable
             }
         });
 
-        private void ReportError(Exception exception) => InvokeOnUI(() =>
-            MessageBox.Show(
-                @"An error occurred:" + Environment.NewLine + exception,
-                @"Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            )
-        );
-
         private void PromptReboot() => InvokeOnUI(() =>
         {
             var result = MessageBox.Show(
@@ -82,7 +73,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             );
 
             if (result == DialogResult.Yes)
-                PlatformInfo.InitiateReboot();
+                OperatingSystem.Reboot();
         });
 
         private void PerformInstall()
@@ -129,11 +120,10 @@ namespace DotnetRuntimeBootstrapper.Executable
                     Close(InstallationResult.Succeeded);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: do we need this? can we just let the exception bubble up?
-                ReportError(ex);
                 Close(InstallationResult.Failed);
+                throw;
             }
         }
 
@@ -141,6 +131,8 @@ namespace DotnetRuntimeBootstrapper.Executable
         {
             Text = @$"{_targetAssembly.Title} (installing prerequisites)";
             Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
+            ControlBox = false;
+
             UpdateStatus(@"Downloading files...");
 
             new Thread(PerformInstall)

@@ -2,7 +2,7 @@
 
 namespace DotnetRuntimeBootstrapper.Executable.Platform
 {
-    internal static class PlatformVersion
+    internal static class OperatingSystemVersion
     {
         public static Version Windows7 { get; } = new(6, 1);
 

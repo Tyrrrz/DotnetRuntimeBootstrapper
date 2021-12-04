@@ -92,7 +92,7 @@ namespace DotnetRuntimeBootstrapper.Executable
                 }
 
                 // Installation failed, was canceled, or still requires reboot
-                return 101;
+                return 0xBAD;
             }
         }
     }
@@ -139,7 +139,7 @@ namespace DotnetRuntimeBootstrapper.Executable
             catch (Exception ex)
             {
                 HandleError(ex.ToString());
-                return 100;
+                return 0xDEAD;
             }
         }
     }

@@ -29,8 +29,8 @@ namespace DotnetRuntimeBootstrapper.Executable
 
         private void InstallationPromptForm_Load(object sender, EventArgs e)
         {
-            Text = @$"{_targetAssembly.Title} (missing prerequisites)";
-            Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
+            Text = @$"{_targetAssembly.Title}: Missing Prerequisites";
+            Icon = Icon.ExtractAssociatedIcon(typeof(InstallationPromptForm).Assembly.Location);
             IconPictureBox.Image = SystemIcons.Warning.ToBitmap();
             MissingPrerequisitesTextBox.Lines = _missingPrerequisites.Select(c => $"• {c.DisplayName}").ToArray();
         }
