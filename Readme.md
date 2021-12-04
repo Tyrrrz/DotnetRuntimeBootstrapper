@@ -68,18 +68,18 @@ Make sure to include all marked files in your application distribution.
 The client-facing side of DotnetRuntimeBootstrapper is implemented as a [custom .NET runtime host](https://docs.microsoft.com/en-us/dotnet/core/tutorials/netcore-hosting).
 Internally, it's a pre-compiled managed executable built against legacy .NET Framework v3.5, which allows it to run out-of-the-box on all operating systems starting with Windows 7.
 
-When the user runs the application through the bootstrapper, it execute the next steps:
+When the user runs the application through the bootstrapper, it executes these steps:
 
-1. Attempt to locate existing .NET installation
-2. Attempt to run the application via latest available `hostfxr.dll`
+1. Attempts to locate existing .NET installation
+2. Attempts to run the application via latest available `hostfxr.dll`
 3. If that fails:
-   1. Resolve the target runtime by reading the `runtimeconfig.json` file
-   2. Check if the required .NET runtime is missing
-   3. Check if any of .NET's prerequisites are missing
-   4. Prompt the user to install the missing components
-   5. Download and install the missing components
-   6. If necessary, prompt the user to restart Windows
-   7. Run the application again
+   1. Resolves the target runtime by reading the `runtimeconfig.json` file
+   2. Checks if the required .NET runtime is missing
+   3. Checks if any of .NET's prerequisites are missing
+   4. Prompts the user to install the missing components
+   5. Downloads and installs the missing components
+   6. If necessary, prompts the user to reboot the system
+   7. Runs the application again
 
 ### Application resources
 
@@ -146,13 +146,13 @@ CreateBootstrapperAfterBuild:
 #### Application host logs
 
 In the event of a fatal error, in addition to showing a message to the user, bootstrapper will also produce a timestamped error dump in the application's directory (for example, `AppHost_Error_20211205001042.txt`).
-If the bootstrapper does not have sufficient permissions to create a file in that directory, it will write it to `%LocalAppData%\DotnetRuntimeBootstrapper` instead.
+If the bootstrapper does not have sufficient permissions to create a file in that directory, it will write it to `%LocalAppData%\Tyrrrz\DotnetRuntimeBootstrapper` instead.
 
 The dump has the following format:
 
 ```txt
 Timestamp: 05.12.2021 0:10:42 +02:00
-AppHost: .NET Runtime Bootstrapper v1.1.2 (https://github.com/Tyrrrz/DotnetRuntimeBootstrapper)
+AppHost: .NET Runtime Bootstrapper v2.0.0 (https://github.com/Tyrrrz/DotnetRuntimeBootstrapper)
 Message: System.Exception: Test failure
    at DotnetRuntimeBootstrapper.AppHost.Program.Run(String[] args)
    at DotnetRuntimeBootstrapper.AppHost.Program.Main(String[] args)

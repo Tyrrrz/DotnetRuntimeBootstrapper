@@ -1,3 +1,25 @@
+### v2.0 (05-Dec-2021)
+
+- Reimplemented the bootstrapper executable as a custom .NET runtime host. It now executes the target application by leveraging `hostfxr.dll` instead of the .NET CLI. This means that it no longer creates a separate process to host the application.
+- Optimized bootstrapper's execution flow to prioritize hot path. It will now attempt to run the application first and only check for missing prerequisites if that attempt fails.
+- Improved the strategy used to resolve the target .NET runtime name and version. It now relies on the `runtimeconfig.json` file instead of the `<TargetFramework>` project property.
+- Improved the strategy used to resolve the download URL for the target .NET runtime. It now relies on the release manifest resources published to .NET CLI's blob storage, instead of manual web scraping of the download page.
+- Improved the strategy used to resolve .NET installation path. It now relies on the system registry and additional fallback heuristics, instead of assuming that `dotnet` is always on the `PATH`.
+- Improved bootstrapper's user interface. Bootstrapper now also displays the correct application icon in the title bar and task bar.
+- Improved error handling in the bootstrapper. If it doesn't have enough permissions to write the error dump to the application directory, it will now write it to `%localappdata%\Tyrrrz\DotnetRuntimeBootstrapper` instead.
+- Removed the "Ignore" button from the prerequisite installation prompt. Now that the prerequisite check happens after the initial attempt to execute the application, this is no longer necessary.
+- Removed `KB3154518` from the list of prerequisites for Windows 7 as it is no longer available. It wasn't strictly required anyway.
+- Fixed an issue where the target application did not inherit native resources from the bootstrapper's PE file.
+- Fixed an issue where the launched child processes (such as installers) were not killed if the bootstrapper was forcibly closed.
+- Fixed an issue where the installation of Visual C++ Redistributable was not correctly verified on 32-bit systems.
+- Replaced `rcedit` CLI in MSBuild task with [Ressy](https://github.com/Tyrrrz/Ressy).
+- Changed the default behavior of the MSBuild task to not create a bootstrapper on build, but instead only do it on publish. This can be re-enabled by setting the `<GenerateBootstrapperOnBuild>` project property to `true`.
+- Other minor improvements and changes which are covered in the readme.
+
+If you previously relied on `CurrentProcess.MainModule.FileName` or similar to get the path to your application, note that it will now return the correct path to the executable instead of the path to .NET CLI.
+
+If you previously used a conditional package reference for DotnetRuntimeBootstrapper (e.g. using it only in `Release` configuration), note that it's not required anymore because the bootstrapper is no longer created for build targets (by default).
+
 ### v1.1.2 (14-Jun-2021)
 
 - Fixed an issue where the package was missing some required files. Again. I really hate MSBuild.
