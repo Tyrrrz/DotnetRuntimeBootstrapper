@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace DotnetRuntimeBootstrapper.Demo
 {
@@ -6,6 +7,8 @@ namespace DotnetRuntimeBootstrapper.Demo
     {
         public MainForm()
         {
+            Icon = Icon.ExtractAssociatedIcon(typeof(MainForm).Assembly.Location);
+
             InitializeComponent();
         }
     }

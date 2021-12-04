@@ -22,13 +22,13 @@
 
   <!-- Embed the base bootstrapper executable inside the assembly -->
   <ItemGroup>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.Executable.exe">
-      <Link>Bootstrapper.exe</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.exe">
+      <Link>AppHost.exe</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.Executable.exe.config">
-      <Link>Bootstrapper.exe.config</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.exe.config">
+      <Link>AppHost.exe.config</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
@@ -42,6 +42,7 @@
     <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Microsoft.NET.StringTools.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
@@ -49,16 +50,19 @@
     <None Include="$(OutputPath)/netstandard2.0/Ressy.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Buffers.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Collections.Immutable.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Configuration.ConfigurationManager.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Memory.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Security.AccessControl.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Security.Cryptography.ProtectedData.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Security.Permissions.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Threading.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Microsoft.NET.StringTools.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.VisualStudio.Setup.Configuration.Interop.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
@@ -67,9 +71,14 @@
     <None Include="$(OutputPath)/net472/Ressy.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Buffers.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Collections.Immutable.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Configuration.ConfigurationManager.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Memory.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Security.AccessControl.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Security.Permissions.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/System.ValueTuple.dll" Pack="true" PackagePath="build/net472" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,16 +90,13 @@
 
   <!-- Non-linking dependency on the bootstrapper executable project (to ensure correct build order) -->
   <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.Executable\DotnetRuntimeBootstrapper.Executable.csproj">
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost\DotnetRuntimeBootstrapper.AppHost.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <CopyLocal>false</CopyLocal>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Utils\Polyfills.cs" />
   </ItemGroup>
 
   <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
