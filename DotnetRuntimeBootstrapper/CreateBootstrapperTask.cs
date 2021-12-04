@@ -166,7 +166,7 @@ namespace DotnetRuntimeBootstrapper
             Log.LogMessage("Injecting version info...");
             InjectVersionInfo();
 
-            Log.LogMessage("Bootstrapper successfully created.");
+            Log.LogMessage("Bootstrapper created successfully.");
             return true;
         }
     }

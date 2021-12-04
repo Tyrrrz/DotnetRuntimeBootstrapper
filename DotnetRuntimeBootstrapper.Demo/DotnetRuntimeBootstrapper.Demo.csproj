@@ -8,6 +8,7 @@
     <Version>1.2.3</Version>
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
     <ApplicationManifest>Manifest.xml</ApplicationManifest>
+    <GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
   </PropertyGroup>
 
   <!-- Import props/targets manually (normally taken care of by NuGet) -->
