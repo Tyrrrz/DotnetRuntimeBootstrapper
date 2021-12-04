@@ -21,6 +21,17 @@ namespace DotnetRuntimeBootstrapper.AppHost
             InitializeComponent();
         }
 
+        // Disable close button
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var result = base.CreateParams;
+                result.ClassStyle |= 0x200;
+                return result;
+            }
+        }
+
         private void InvokeOnUI(Action action) => Invoke(action);
 
         private void UpdateStatus(string status) => InvokeOnUI(() => StatusLabel.Text = status);

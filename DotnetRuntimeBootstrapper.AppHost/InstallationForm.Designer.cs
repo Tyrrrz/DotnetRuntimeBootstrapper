@@ -79,13 +79,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(509, 161);
-            this.ControlBox = false;
             this.Controls.Add(this.TotalProgressLabel);
             this.Controls.Add(this.CurrentProgressBar);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.TotalProgressBar);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(525, 200);

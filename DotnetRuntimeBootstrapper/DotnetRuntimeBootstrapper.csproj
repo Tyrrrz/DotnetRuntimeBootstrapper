@@ -89,9 +89,6 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Utils\Polyfills.cs" />
-  </ItemGroup>
 
   <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
      (i.e. only for DotnetRuntimeBootstrapper.Demo; shouldn't be required when referenced as NuGet package) -->

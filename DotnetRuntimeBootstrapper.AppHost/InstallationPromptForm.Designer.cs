@@ -143,7 +143,6 @@ namespace DotnetRuntimeBootstrapper.AppHost
             this.Controls.Add(this.InstallButton);
             this.Controls.Add(this.ExitButton);
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(520, 320);
