@@ -21,36 +21,36 @@ namespace DotnetRuntimeBootstrapper
 
         public string TargetFileName => Path.GetFileName(TargetFilePath);
 
-        public string BootstrapperFilePath => Path.ChangeExtension(TargetFilePath, "exe");
+        public string AppHostFilePath => Path.ChangeExtension(TargetFilePath, "exe");
 
-        public string BootstrapperFileName => Path.GetFileName(BootstrapperFilePath);
+        public string AppHostFileName => Path.GetFileName(AppHostFilePath);
 
-        private void ExtractBootstrapper()
+        private void ExtractAppHost()
         {
             var assembly = typeof(CreateBootstrapperTask).Assembly;
-            var resourceName = $"{typeof(CreateBootstrapperTask).Namespace}.Bootstrapper.exe";
+            var resourceName = $"{typeof(CreateBootstrapperTask).Namespace}.AppHost.exe";
 
             // Executable file
             assembly.ExtractManifestResource(
                 resourceName,
-                BootstrapperFilePath
+                AppHostFilePath
             );
 
-            Log.LogMessage("Extracted bootstrapper executable to '{0}'.", BootstrapperFilePath);
+            Log.LogMessage("Extracted apphost to '{0}'.", AppHostFilePath);
 
             // Config file
             assembly.ExtractManifestResource(
                 resourceName + ".config",
-                BootstrapperFilePath + ".config"
+                AppHostFilePath + ".config"
             );
 
-            Log.LogMessage("Extracted bootstrapper config to '{0}'.", BootstrapperFilePath + ".config");
+            Log.LogMessage("Extracted apphost config to '{0}'.", AppHostFilePath + ".config");
         }
 
         private void InjectTargetBinding()
         {
             using var assembly = AssemblyDefinition.ReadAssembly(
-                BootstrapperFilePath,
+                AppHostFilePath,
                 new ReaderParameters {ReadWrite = true}
             );
 
@@ -66,7 +66,7 @@ namespace DotnetRuntimeBootstrapper
 
             assembly.Write();
 
-            Log.LogMessage("Injected target binding to '{0}'.", BootstrapperFileName);
+            Log.LogMessage("Injected target binding to '{0}'.", AppHostFileName);
         }
 
         private void InjectManifest()
@@ -74,13 +74,13 @@ namespace DotnetRuntimeBootstrapper
             var targetPortableExecutable = new PortableExecutable(TargetFilePath);
             var targetManifest = targetPortableExecutable.TryGetManifest();
 
-            var bootstrapperPortableExecutable = new PortableExecutable(BootstrapperFilePath);
-            bootstrapperPortableExecutable.RemoveManifest();
+            var appHostPortableExecutable = new PortableExecutable(AppHostFilePath);
+            appHostPortableExecutable.RemoveManifest();
 
             if (!string.IsNullOrWhiteSpace(targetManifest))
             {
-                bootstrapperPortableExecutable.SetManifest(targetManifest);
-                Log.LogMessage("Injected manifest to '{0}'.", BootstrapperFileName);
+                appHostPortableExecutable.SetManifest(targetManifest);
+                Log.LogMessage("Injected manifest to '{0}'.", AppHostFileName);
             }
             else
             {
@@ -96,20 +96,20 @@ namespace DotnetRuntimeBootstrapper
                 .Where(r => r.Type.Code == ResourceType.Icon.Code || r.Type.Code == ResourceType.IconGroup.Code)
                 .ToArray();
 
-            var bootstrapperPortableExecutable = new PortableExecutable(BootstrapperFilePath);
-            bootstrapperPortableExecutable.RemoveIcon();
+            var appHostPortableExecutable = new PortableExecutable(AppHostFilePath);
+            appHostPortableExecutable.RemoveIcon();
 
             if (targetIconResourceIdentifiers.Any())
             {
                 foreach (var identifier in targetIconResourceIdentifiers)
                 {
-                    bootstrapperPortableExecutable.SetResource(
+                    appHostPortableExecutable.SetResource(
                         identifier,
                         targetPortableExecutable.GetResource(identifier).Data
                     );
                 }
 
-                Log.LogMessage("Injected icon to '{0}'.", BootstrapperFileName);
+                Log.LogMessage("Injected icon to '{0}'.", AppHostFileName);
             }
             else
             {
@@ -122,25 +122,25 @@ namespace DotnetRuntimeBootstrapper
             var targetPortableExecutable = new PortableExecutable(TargetFilePath);
             var targetVersionInfo = targetPortableExecutable.TryGetVersionInfo();
 
-            var bootstrapperPortableExecutable = new PortableExecutable(BootstrapperFilePath);
-            bootstrapperPortableExecutable.RemoveVersionInfo();
+            var appHostPortableExecutable = new PortableExecutable(AppHostFilePath);
+            appHostPortableExecutable.RemoveVersionInfo();
 
             if (targetVersionInfo is not null)
             {
                 var bootstrapperVersion = typeof(CreateBootstrapperTask).Assembly.GetName().Version.ToString(3);
 
-                bootstrapperPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
+                appHostPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
                     .SetAll(targetVersionInfo)
                     .SetFileFlags(FileFlags.None)
                     .SetFileType(FileType.Application)
                     .SetFileSubType(FileSubType.Unknown)
-                    .SetAttribute(VersionAttributeName.InternalName, BootstrapperFileName)
-                    .SetAttribute(VersionAttributeName.OriginalFilename, BootstrapperFileName)
-                    .SetAttribute("Bootstrapper", $".NET Runtime Bootstrapper v{bootstrapperVersion}")
+                    .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
+                    .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
+                    .SetAttribute("AppHost", $".NET Runtime Bootstrapper v{bootstrapperVersion}")
                     .Build()
                 );
 
-                Log.LogMessage("Injected version info to '{0}'.", BootstrapperFileName);
+                Log.LogMessage("Injected version info to '{0}'.", AppHostFileName);
             }
             else
             {
@@ -151,8 +151,8 @@ namespace DotnetRuntimeBootstrapper
 
         public override bool Execute()
         {
-            Log.LogMessage("Extracting bootstrapper...");
-            ExtractBootstrapper();
+            Log.LogMessage("Extracting apphost...");
+            ExtractAppHost();
 
             Log.LogMessage("Injecting target binding...");
             InjectTargetBinding();

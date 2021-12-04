@@ -22,13 +22,13 @@
 
   <!-- Embed the base bootstrapper executable inside the assembly -->
   <ItemGroup>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.Executable.exe">
-      <Link>Bootstrapper.exe</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.exe">
+      <Link>AppHost.exe</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.Executable/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.Executable.exe.config">
-      <Link>Bootstrapper.exe.config</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.exe.config">
+      <Link>AppHost.exe.config</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
@@ -81,7 +81,7 @@
 
   <!-- Non-linking dependency on the bootstrapper executable project (to ensure correct build order) -->
   <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.Executable\DotnetRuntimeBootstrapper.Executable.csproj">
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost\DotnetRuntimeBootstrapper.AppHost.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <CopyLocal>false</CopyLocal>
