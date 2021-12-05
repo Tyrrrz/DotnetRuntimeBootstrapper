@@ -1,3 +1,8 @@
+### v2.0.1 (05-Dec-2021)
+
+- Fixed an issue where the MSBuild task was refusing to execute under Visual Studio, incorrectly claiming that the project is not targeting .NET Core.
+- Fixed an issue where the MSBuild task warnings were not produced on build when `GenerateBootstrapperOnBuild` was enabled.
+
 ### v2.0 (05-Dec-2021)
 
 - Reimplemented the bootstrapper executable as a custom .NET runtime host. It now executes the target application by leveraging `hostfxr.dll` instead of the .NET CLI. This means that it no longer creates a separate process to host the application.
