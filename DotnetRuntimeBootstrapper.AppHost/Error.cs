@@ -39,14 +39,18 @@ namespace DotnetRuntimeBootstrapper.AppHost
                     // Otherwise, write to local app data
                     var title = Path.GetFileNameWithoutExtension(typeof(Error).Assembly.Location);
 
-                    var filePath = Path.Combine(
+                    var dirPath = Path.Combine(
                         Path.Combine(
-                            Path.Combine(
-                                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                                "Tyrrrz"
-                            ),
-                            "DotnetRuntimeBootstrapper"
+                            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                            "Tyrrrz"
                         ),
+                        "DotnetRuntimeBootstrapper"
+                    );
+
+                    Directory.CreateDirectory(dirPath);
+
+                    var filePath = Path.Combine(
+                        dirPath,
                         $"AppHost_{title}_Error_{timestampFileSafe}.txt"
                     );
 
