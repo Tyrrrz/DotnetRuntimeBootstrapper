@@ -1,3 +1,7 @@
+### v2.0.2 (05-Dec-2021)
+
+- Fixed an issue where the application host was not writing error dumps to `%localappdata%` if the subdirectory didn't already exist.
+
 ### v2.0.1 (05-Dec-2021)
 
 - Fixed an issue where the MSBuild task was refusing to execute under Visual Studio, incorrectly claiming that the project is not targeting .NET Core.
