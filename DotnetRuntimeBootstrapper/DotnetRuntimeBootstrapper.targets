@@ -2,13 +2,13 @@
 
   <Target Name="CheckBootstrapperPrerequisites" BeforeTargets="CreateBootstrapperAfterBuild;CreateBootstrapperAfterPublish">
     <!-- Warning: not .NET Core -->
-    <Warning Text="Project is not targeting .NET Core. Bootstrapper will not be created." Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'" />
+    <Warning Code="DRB_NOT_NETCORE" Text="Project is not targeting .NET Core. Bootstrapper will not be created." Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'" />
 
     <!-- Warning: not Windows executable -->
-    <Warning Text="Project output type is not WinExe. Boostrapper will not be created." Condition="'$(OutputType)' != 'WinExe'" />
+    <Warning Code="DRB_NOT_WINEXE" Text="Project output type is not WinExe. Boostrapper will not be created." Condition="'$(OutputType)' != 'WinExe'" />
 
     <!-- Warning: not Windows target platform -->
-    <Warning Text="Target platform is not Windows. Boostrapper will not be created." Condition="'$(TargetPlatformIdentifier)' != 'Windows'" />
+    <Warning Code="DRB_NOT_WINDOWS" Text="Target platform is not Windows. Boostrapper will not be created." Condition="'$(TargetPlatformIdentifier)' != 'Windows'" />
   </Target>
 
   <Target Name="CreateBootstrapperAfterBuild"
