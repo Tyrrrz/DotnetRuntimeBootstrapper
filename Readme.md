@@ -86,8 +86,7 @@ MyApp.deps.json
 
 Make sure to include all marked files in your application distribution.
 
-> ⚠️ Self-contained and single-file application distributions are not supported by the bootstrapper.
-Make sure you don't pass `--self-contained` or `/p:PublishSingleFile=true` options to `dotnet publish`.
+> ⚠ Single-file deployment (`/p:PublishSingleFile=true`) is not supported by the bootstrapper.
 
 ### Application host
 
@@ -150,11 +149,11 @@ In order to retain debugging capabilities of your application during local devel
 
 #### Build task logs
 
-If the build process does not seem to produce the bootstrapper correctly, you may be able to get more information by running the `build` or `publish` command with higher verbosity.
+If the build process does not seem to produce the bootstrapper correctly, you may be able to get more information by running the command with higher verbosity.
 For example, running `dotnet publish --verbosity normal` on `DotnetRuntimeBootstrapper.Demo` project should produce output that contains the following section:
 
 ```txt
-CreateBootstrapperAfterBuild:
+CreateBootstrapperAfterPublish:
  Extracting apphost...
  Extracted apphost to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe'.
  Extracted apphost config to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe.config'.
