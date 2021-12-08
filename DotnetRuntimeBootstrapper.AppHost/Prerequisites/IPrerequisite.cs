@@ -1,15 +1,14 @@
 ﻿using System;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites
+namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
+
+public interface IPrerequisite
 {
-    public interface IPrerequisite
-    {
-        string DisplayName { get; }
+    string DisplayName { get; }
 
-        bool IsInstalled { get; }
+    bool IsInstalled { get; }
 
-        bool IsRebootRequired { get; }
+    bool IsRebootRequired { get; }
 
-        IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress);
-    }
+    IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress);
 }

@@ -2,23 +2,22 @@
 using System.Collections;
 using System.Linq;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils
+namespace DotnetRuntimeBootstrapper.AppHost.Utils;
+
+internal static class EnvironmentEx
 {
-    internal static class EnvironmentEx
+    public static void ResetEnvironmentVariables()
     {
-        public static void ResetEnvironmentVariables()
+        var machineEnvironmentVariables = Environment
+            .GetEnvironmentVariables(EnvironmentVariableTarget.Machine)
+            .Cast<DictionaryEntry>();
+
+        foreach (var environmentVariable in machineEnvironmentVariables)
         {
-            var machineEnvironmentVariables = Environment
-                .GetEnvironmentVariables(EnvironmentVariableTarget.Machine)
-                .Cast<DictionaryEntry>();
+            var key = (string) environmentVariable.Key;
+            var value = (string?) environmentVariable.Value;
 
-            foreach (var environmentVariable in machineEnvironmentVariables)
-            {
-                var key = (string) environmentVariable.Key;
-                var value = (string?) environmentVariable.Value;
-
-                Environment.SetEnvironmentVariable(key, value);
-            }
+            Environment.SetEnvironmentVariable(key, value);
         }
     }
 }

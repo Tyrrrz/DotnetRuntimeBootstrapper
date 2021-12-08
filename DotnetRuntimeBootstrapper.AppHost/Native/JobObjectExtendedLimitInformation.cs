@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Native
+namespace DotnetRuntimeBootstrapper.AppHost.Native;
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct JobObjectExtendedLimitInformation
 {
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct JobObjectExtendedLimitInformation
-    {
-        public JobObjectBasicLimitInformation BasicLimitInformation;
-        public IOCounters IOInfo;
-        public IntPtr ProcessMemoryLimit;
-        public IntPtr JobMemoryLimit;
-        public IntPtr PeakProcessMemoryUsed;
-        public IntPtr PeakJobMemoryUsed;
-    }
+    public JobObjectBasicLimitInformation BasicLimitInformation;
+    public IOCounters IOInfo;
+    public IntPtr ProcessMemoryLimit;
+    public IntPtr JobMemoryLimit;
+    public IntPtr PeakProcessMemoryUsed;
+    public IntPtr PeakJobMemoryUsed;
 }

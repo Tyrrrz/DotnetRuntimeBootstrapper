@@ -3,59 +3,58 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Native
+namespace DotnetRuntimeBootstrapper.AppHost.Native;
+
+internal partial class ProcessJob : IDisposable
 {
-    internal partial class ProcessJob : IDisposable
+    private readonly IntPtr _handle;
+
+    public ProcessJob(IntPtr handle) =>
+        _handle = handle;
+
+    ~ProcessJob() => Dispose();
+
+    public void Configure(JobObjectExtendedLimitInformation limitInfo)
     {
-        private readonly IntPtr _handle;
+        var limitInfoSize = Marshal.SizeOf(typeof(JobObjectExtendedLimitInformation));
+        var limitInfoHandle = Marshal.AllocHGlobal(limitInfoSize);
 
-        public ProcessJob(IntPtr handle) =>
-            _handle = handle;
-
-        ~ProcessJob() => Dispose();
-
-        public void Configure(JobObjectExtendedLimitInformation limitInfo)
+        try
         {
-            var limitInfoSize = Marshal.SizeOf(typeof(JobObjectExtendedLimitInformation));
-            var limitInfoHandle = Marshal.AllocHGlobal(limitInfoSize);
+            Marshal.StructureToPtr(limitInfo, limitInfoHandle, false);
 
-            try
-            {
-                Marshal.StructureToPtr(limitInfo, limitInfoHandle, false);
-
-                if (!NativeMethods.SetInformationJobObject(
+            if (!NativeMethods.SetInformationJobObject(
                     _handle,
                     JobObjectInfoType.ExtendedLimitInformation,
                     limitInfoHandle,
                     (uint) limitInfoSize))
-                {
-                    throw new Win32Exception();
-                }
-            }
-            finally
             {
-                Marshal.FreeHGlobal(limitInfoHandle);
+                throw new Win32Exception();
             }
         }
-
-        public void AddProcess(IntPtr processHandle) =>
-            NativeMethods.AssignProcessToJobObject(_handle, processHandle);
-
-        public void AddProcess(Process process) =>
-            AddProcess(process.Handle);
-
-        public void Dispose() => NativeMethods.CloseHandle(_handle);
+        finally
+        {
+            Marshal.FreeHGlobal(limitInfoHandle);
+        }
     }
 
-    internal partial class ProcessJob
-    {
-        public static ProcessJob Create()
-        {
-            var handle = NativeMethods.CreateJobObject(IntPtr.Zero, null);
-            if (handle == IntPtr.Zero)
-                throw new Win32Exception();
+    public void AddProcess(IntPtr processHandle) =>
+        NativeMethods.AssignProcessToJobObject(_handle, processHandle);
 
-            return new ProcessJob(handle);
-        }
+    public void AddProcess(Process process) =>
+        AddProcess(process.Handle);
+
+    public void Dispose() => NativeMethods.CloseHandle(_handle);
+}
+
+internal partial class ProcessJob
+{
+    public static ProcessJob Create()
+    {
+        var handle = NativeMethods.CreateJobObject(IntPtr.Zero, null);
+        if (handle == IntPtr.Zero)
+            throw new Win32Exception();
+
+        return new ProcessJob(handle);
     }
 }
