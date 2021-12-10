@@ -1,6 +1,6 @@
 # .NET Runtime Bootstrapper
 
-[![Build](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/workflows/CI/badge.svg?branch=master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
+[![Build](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/workflows/main/badge.svg?branch=master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
 [![Version](https://img.shields.io/nuget/v/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Downloads](https://img.shields.io/nuget/dt/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Discord](https://img.shields.io/discord/869237470565392384?label=discord)](https://discord.gg/2SUWKFnHSm)
