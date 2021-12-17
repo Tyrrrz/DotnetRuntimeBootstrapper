@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using DotnetRuntimeBootstrapper.AppHost.Native;
 using DotnetRuntimeBootstrapper.AppHost.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
@@ -15,7 +16,16 @@ internal partial class DotnetHost : IDisposable
     public DotnetHost(NativeLibrary hostfxrLib) =>
         _hostfxrLib = hostfxrLib;
 
-    [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Auto, SetLastError = true)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto, SetLastError = true)]
+    private delegate void HostfxrErrorWriterFn(string message);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
+    private delegate void HostfxrSetErrorWriterFn(HostfxrErrorWriterFn errorWriterFn);
+
+    private HostfxrSetErrorWriterFn GetHostfxrSetErrorWriterFn() =>
+        _hostfxrLib.GetFunction<HostfxrSetErrorWriterFn>("hostfxr_set_error_writer");
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto, SetLastError = true)]
     private delegate int HostfxrInitializeForCommandLineFn(
         int argc,
         string[] argv,
@@ -26,13 +36,13 @@ internal partial class DotnetHost : IDisposable
     private HostfxrInitializeForCommandLineFn GetInitializeForCommandLineFn() =>
         _hostfxrLib.GetFunction<HostfxrInitializeForCommandLineFn>("hostfxr_initialize_for_dotnet_command_line");
 
-    [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
     private delegate int HostfxrRunAppFn(IntPtr handle);
 
     private HostfxrRunAppFn GetRunAppFn() =>
         _hostfxrLib.GetFunction<HostfxrRunAppFn>("hostfxr_run_app");
 
-    [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
     private delegate int HostfxrCloseFn(IntPtr handle);
 
     private HostfxrCloseFn GetCloseFn() =>
@@ -40,26 +50,30 @@ internal partial class DotnetHost : IDisposable
 
     public int Run(string targetFilePath, string[] args)
     {
-        var argsCombined = args.Prepend(targetFilePath).ToArray();
+        // Route errors to a buffer
+        var errorBuffer = new StringBuilder();
+        GetHostfxrSetErrorWriterFn()(s => errorBuffer.AppendLine(s));
 
+        // Initialize the host as if we're running the app from command line
+        var argsCombined = args.Prepend(targetFilePath).ToArray();
         if (GetInitializeForCommandLineFn()(argsCombined.Length, argsCombined, IntPtr.Zero, out var handle) != 0)
         {
             throw new ApplicationException(
-                $"Failed to initialize .NET host with arguments [{string.Join(", ", argsCombined)}]."
+                $"Failed to initialize .NET host for '{targetFilePath}' with arguments [{string.Join(", ", args)}]. " +
+                (errorBuffer.Length > 0
+                    ? "Error:" + Environment.NewLine + errorBuffer
+                    : "Host resolver did not report any errors.")
             );
         }
 
+        // Run the app
         try
         {
-            // This returns program's exit code, but may also return codes corresponding to
-            // .NET host errors. We can't discern between them, but we probably don't need
-            // to worry about it since the majority of errors are already filtered out by
-            // the previous step.
             return GetRunAppFn()(handle);
         }
         finally
         {
-            // Ignore errors
+            // Ignore errors when tearing down the host
             GetCloseFn()(handle);
         }
     }
@@ -69,7 +83,7 @@ internal partial class DotnetHost : IDisposable
 
 internal partial class DotnetHost
 {
-    private static string GetHostFrameworkResolverFilePath()
+    private static string GetHostfxrFilePath()
     {
         // hostfxr.dll resolution strategy:
         // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/fxr_resolver.cpp#L55-L135
@@ -102,5 +116,5 @@ internal partial class DotnetHost
         return highestVersionFilePath ?? throw new FileNotFoundException("Could not find hostfxr.dll.");
     }
 
-    public static DotnetHost Initialize() => new(NativeLibrary.Load(GetHostFrameworkResolverFilePath()));
+    public static DotnetHost Initialize() => new(NativeLibrary.Load(GetHostfxrFilePath()));
 }
