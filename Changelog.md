@@ -1,3 +1,7 @@
+### v2.0.3 (20-Dec-2021)
+
+- Extended "Failed to initialize .NET host..." error with additional information. It will now contain error messages logged by `hostfxr.dll`, if they are available. This should help clarify the reason for the error in most of the cases.
+
 ### v2.0.2 (05-Dec-2021)
 
 - Fixed an issue where the application host was not writing error dumps to `%localappdata%` if the subdirectory didn't already exist.
