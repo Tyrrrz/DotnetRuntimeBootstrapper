@@ -14,13 +14,23 @@
   <Target Name="CreateBootstrapperAfterBuild"
           AfterTargets="Build"
           Condition="$(GenerateBootstrapperOnBuild) == true AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
-    <CreateBootstrapperTask TargetFilePath="$(TargetPath)" />
+    <CreateBootstrapperTask TargetFilePath="$(TargetPath)"
+							MicrosoftNETCoreApp="$(MicrosoftNETCoreApp)"
+							MicrosoftWindowsDesktopApp="$(MicrosoftWindowsDesktopApp)"
+							MicrosoftAspNetCoreApp="$(MicrosoftAspNetCoreApp)"
+							MicrosoftWebView2Runtime="$(MicrosoftWebView2Runtime)"
+							/>
   </Target>
 
   <Target Name="CreateBootstrapperAfterPublish"
           AfterTargets="Publish"
           Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
-    <CreateBootstrapperTask TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))" />
+    <CreateBootstrapperTask TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))"
+							MicrosoftNETCoreApp="$(MicrosoftNETCoreApp)"
+							MicrosoftWindowsDesktopApp="$(MicrosoftWindowsDesktopApp)"
+							MicrosoftAspNetCoreApp="$(MicrosoftAspNetCoreApp)"
+							MicrosoftWebView2Runtime="$(MicrosoftWebView2Runtime)"
+							/>
   </Target>
 
 </Project>

@@ -56,17 +56,6 @@ internal partial class DotnetRuntime
 
     public static DotnetRuntime FromRuntimeConfig(string filePath)
     {
-        static DotnetRuntime ParseRuntime(JsonNode json)
-        {
-            var name = json.TryGetChild("name")?.TryGetString();
-            var version = json.TryGetChild("version")?.TryGetString()?.Pipe(VersionEx.TryParse);
-
-            if (string.IsNullOrEmpty(name) || version is null)
-                throw new ApplicationException("Could not parse runtime info from runtime config.");
-
-            return new DotnetRuntime(name, version);
-        }
-
         var json =
             Json.TryParse(File.ReadAllText(filePath)) ??
             throw new ApplicationException($"Failed to parse runtime config '{filePath}'.");
@@ -91,5 +80,31 @@ internal partial class DotnetRuntime
                 .Pipe(ParseRuntime) ??
 
             throw new ApplicationException("Could not resolve target runtime from runtime config.");
+    }
+
+    public static DotnetRuntime[] AdditionalFromRuntimeConfig(string filePath)
+    {
+        var json =
+            Json.TryParse(File.ReadAllText(filePath)) ??
+            throw new ApplicationException($"Failed to parse runtime config '{filePath}'.");
+
+        return
+            json
+                .TryGetChild("additionalRuntimes")?
+                .EnumerateChildren()
+                .Select(ParseRuntime)
+                .OrderBy(r => r.IsBase)
+                .ToArray();
+    }
+
+    private static DotnetRuntime ParseRuntime(JsonNode json)
+    {
+        var name = json.TryGetChild("name")?.TryGetString();
+        var version = json.TryGetChild("version")?.TryGetString()?.Pipe(VersionEx.TryParse);
+
+        if (string.IsNullOrEmpty(name) || version is null)
+            throw new ApplicationException("Could not parse runtime info from runtime config.");
+
+        return new DotnetRuntime(name, version);
     }
 }

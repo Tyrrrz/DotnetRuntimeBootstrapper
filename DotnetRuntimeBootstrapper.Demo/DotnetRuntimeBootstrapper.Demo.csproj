@@ -9,6 +9,12 @@
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
     <ApplicationManifest>Manifest.xml</ApplicationManifest>
     <GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
+	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	<!--extra runtimes-->
+	<MicrosoftNETCoreApp>8.0.0</MicrosoftNETCoreApp>
+	<MicrosoftWindowsDesktopApp>9.0.0</MicrosoftWindowsDesktopApp>
+	<MicrosoftAspNetCoreApp>10.0.0</MicrosoftAspNetCoreApp>
+	<MicrosoftWebView2Runtime>96.0.1054.62</MicrosoftWebView2Runtime>
   </PropertyGroup>
 
   <!-- Import props/targets manually (normally taken care of by NuGet) -->

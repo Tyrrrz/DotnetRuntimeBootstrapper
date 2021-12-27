@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Dotnet;
@@ -12,6 +13,8 @@ public partial class TargetAssembly
 {
     public string FilePath { get; }
 
+    public string RuntimeConfigFilePath => Path.ChangeExtension(FilePath, "runtimeconfig.json");
+
     public string Title { get; }
 
     public TargetAssembly(string filePath, string title)
@@ -20,16 +23,29 @@ public partial class TargetAssembly
         Title = title;
     }
 
-    public IPrerequisite[] GetMissingPrerequisites() => new IPrerequisite[]
+    public IPrerequisite[] GetMissingPrerequisites()
     {
-        // Low-level dependencies first, high-level last
-        new WindowsUpdate2999226Prerequisite(),
-        new WindowsUpdate3063858Prerequisite(),
-        new VisualCppPrerequisite(),
-        new DotnetPrerequisite(
-            DotnetRuntime.FromRuntimeConfig(Path.ChangeExtension(FilePath, "runtimeconfig.json"))
-        )
-    }.Where(p => !p.IsInstalled).ToArray();
+        var prerequisites = new List<IPrerequisite>
+        {
+                // Low-level dependencies first, high-level last
+                new WindowsUpdate2999226Prerequisite(),
+                new WindowsUpdate3063858Prerequisite(),
+                new VisualCppPrerequisite(),
+                new DotnetPrerequisite(
+                    DotnetRuntime.FromRuntimeConfig(RuntimeConfigFilePath)
+                )
+        }.ToList();
+
+        var additionalRuntimes = DotnetRuntime.AdditionalFromRuntimeConfig(RuntimeConfigFilePath);
+
+        foreach (var runtime in additionalRuntimes ?? new DotnetRuntime[0])
+        {
+            prerequisites.Add(new DotnetPrerequisite(runtime));
+        }
+
+        //todo remove duplicates?
+        return prerequisites.Where(p => !p.IsInstalled).ToArray();
+    }
 
     public int Run(string[] args) => DotnetHost.Initialize().Run(FilePath, args);
 }
