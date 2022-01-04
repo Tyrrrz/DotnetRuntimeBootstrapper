@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net35</TargetFramework>
-    <IsPackable>false</IsPackable>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
   </PropertyGroup>

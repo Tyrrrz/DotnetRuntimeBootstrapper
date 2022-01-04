@@ -5,6 +5,7 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <Authors>$(Company)</Authors>
     <Description>.NET runtime bootstrapper for Windows desktop applications</Description>
+    <IsPackable>true</IsPackable>
     <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
