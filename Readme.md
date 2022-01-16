@@ -25,8 +25,8 @@ Both of them come with a set of obvious and somewhat less obvious drawbacks:
   - Requires the user to have the correct .NET runtime installed on their machine. Not only will many users inevitably miss or ignore this requirement, the task of installing the _correct_ .NET runtime can be very challenging for non-technical individuals. Depending on their machine and the specifics of your application, they will need to carefully examine the [download page](https://dotnet.microsoft.com/download/dotnet/6.0/runtime) to find the installer for the right version, framework (i.e. base, desktop, or aspnet), CPU architecture, and operating system.
   - Comes with an application host that is _not platform-agnostic_. Even though the application itself (the `dll` file) is portable in the sense that it can run on any platform where the target runtime is supported, the application host (the `exe` file) is a native executable built for a specific platform (by default, the same platform as the dev machine). This means that if the application was built on Windows x64, a user running on Windows x86 will not be able to launch the application through the `exe` file, even if they have the correct runtime installed (`dotnet myapp.dll` will still work, however).
 - **Self-contained** deployment:
-  - While eliminating the need for installing the correct runtime, comes at a significant file size overhead. A very basic WinForms application, for example, starts at around 100 MB in size. This can be very cumbersome when doing auto-updates, but also seems quite wasteful if you consider that the user may end up with multiple .NET applications each bringing their own runtime.
-  - Targets a specific platform, which means that you have to provide separate binaries for each operating system and process architecture combination that you intend to support. Additionally, it can also create confusion among non-technical users, who may have a hard time figuring out which of the release binaries they need to download.
+  - While eliminating the need for installing the correct runtime, this method comes at a significant file size overhead. A very basic WinForms application, for example, starts at around 100 MB in size. This can be very cumbersome when doing auto-updates, but also seems quite wasteful if you consider that the user may end up with multiple .NET applications each bringing their own runtime.
+  - Targets a specific platform, which means that you have to provide separate binaries for each operating system and processor architecture that you intend to support. Additionally, it can also create confusion among non-technical users, who may have a hard time figuring out which of the release binaries they need to download.
   - Snapshots a specific version of the runtime when it's produced. This means that your application won't be able to benefit from newer releases of the runtime, potentially containing performance or security improvements, unless you deploy a new version of the application.
   - Is, in fact, _not completely self-contained_. Depending on the user's machine, they might still need to install Visual C++ runtime and required Windows updates, neither of which are packaged with the application. Although this is only required for operating systems older than Windows 10, a big portion of your users may still be using them.
 
@@ -42,17 +42,16 @@ Combining the best of both framework-dependent and self-contained deployments, b
 
 ## Features
 
-- Detects and installs missing .NET runtime
-- Detects and installs missing Visual C++ redistributable binaries
-- Detects and installs missing Windows updates
-- Provides GUI to guide the user through the installation process
-- Runs the application directly through `hostfxr.dll`
-- Routes command line arguments and environment variables
-- Inherits version info, manifest, icons, and other resources
+- Runs the application in-process using a custom runtime host
+- Detects and installs missing dependencies
+  - Required version of .NET runtime
+  - Required Visual C++ binaries
+  - Required Windows updates
 - Works out-of-the-box on Windows 7 and higher
 - Supports all platforms in a single executable
-- No file size or performance overhead
-- Zero-setup integration
+- Integrates seamlessly within the build process
+- Assimilates application resources, such as version info, icons, and manifest
+- Imposes no overhead in file size or performance
 
 ## Video
 
