@@ -1,36 +1,26 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 
-  <Target Name="CheckBootstrapperPrerequisites" BeforeTargets="CreateBootstrapperAfterBuild;CreateBootstrapperAfterPublish">
-    <!-- Warning: not .NET Core -->
-    <Warning Code="DRB_NOT_NETCORE" Text="Project is not targeting .NET Core. Bootstrapper will not be created." Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'" />
+	<Target Name="CheckBootstrapperPrerequisites" BeforeTargets="CreateBootstrapperAfterBuild;CreateBootstrapperAfterPublish">
+		<!-- Warning: not .NET Core -->
+		<Warning Code="DRB_NOT_NETCORE" Text="Project is not targeting .NET Core. Bootstrapper will not be created." Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'" />
 
-    <!-- Warning: not Windows executable -->
-    <Warning Code="DRB_NOT_WINEXE" Text="Project output type is not WinExe. Boostrapper will not be created." Condition="'$(OutputType)' != 'WinExe'" />
+		<!-- Warning: not Windows executable -->
+		<Warning Code="DRB_NOT_WINEXE" Text="Project output type is not WinExe. Boostrapper will not be created." Condition="'$(OutputType)' != 'WinExe'" />
 
-    <!-- Warning: not Windows target platform -->
-    <Warning Code="DRB_NOT_WINDOWS" Text="Target platform is not Windows. Boostrapper will not be created." Condition="'$(TargetPlatformIdentifier)' != 'Windows'" />
-  </Target>
+		<!-- Warning: not Windows target platform -->
+		<Warning Code="DRB_NOT_WINDOWS" Text="Target platform is not Windows. Boostrapper will not be created." Condition="'$(TargetPlatformIdentifier)' != 'Windows'" />
+	</Target>
 
-  <Target Name="CreateBootstrapperAfterBuild"
-          AfterTargets="Build"
-          Condition="$(GenerateBootstrapperOnBuild) == true AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
-    <CreateBootstrapperTask TargetFilePath="$(TargetPath)"
-							MicrosoftNETCoreApp="$(MicrosoftNETCoreApp)"
-							MicrosoftWindowsDesktopApp="$(MicrosoftWindowsDesktopApp)"
-							MicrosoftAspNetCoreApp="$(MicrosoftAspNetCoreApp)"
-							MicrosoftWebView2Runtime="$(MicrosoftWebView2Runtime)"
-							/>
-  </Target>
+	<Target Name="CreateBootstrapperAfterBuild"
+			AfterTargets="Build"
+			Condition="$(GenerateBootstrapperOnBuild) == true AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
+		<CreateBootstrapperTask TargetFilePath="$(TargetPath)" />
+	</Target>
 
-  <Target Name="CreateBootstrapperAfterPublish"
-          AfterTargets="Publish"
-          Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
-    <CreateBootstrapperTask TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))"
-							MicrosoftNETCoreApp="$(MicrosoftNETCoreApp)"
-							MicrosoftWindowsDesktopApp="$(MicrosoftWindowsDesktopApp)"
-							MicrosoftAspNetCoreApp="$(MicrosoftAspNetCoreApp)"
-							MicrosoftWebView2Runtime="$(MicrosoftWebView2Runtime)"
-							/>
-  </Target>
+	<Target Name="CreateBootstrapperAfterPublish"
+			AfterTargets="Publish"
+			Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OutputType)' == 'WinExe' AND '$(TargetPlatformIdentifier)' == 'Windows'">
+		<CreateBootstrapperTask TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))" />
+	</Target>
 
 </Project>

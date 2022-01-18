@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using DotnetRuntimeBootstrapper.Utils.Extensions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -20,19 +19,9 @@ public class CreateBootstrapperTask : Task
     [Required]
     public string TargetFilePath { get; set; } = default!;
 
-    public string MicrosoftNETCoreApp { get; set; } = default!;
-
-    public string MicrosoftWindowsDesktopApp { get; set; } = default!;
-
-    public string MicrosoftAspNetCoreApp { get; set; } = default!;
-
-    public string MicrosoftWebView2Runtime { get; set; } = default!;
-
     public string TargetFileName => Path.GetFileName(TargetFilePath);
 
     public string AppHostFilePath => Path.ChangeExtension(TargetFilePath, "exe");
-
-    public string TargetRuntimeConfigFilePath => Path.ChangeExtension(TargetFilePath, "runtimeconfig.json");
 
     public string AppHostFileName => Path.GetFileName(AppHostFilePath);
 
@@ -62,7 +51,7 @@ public class CreateBootstrapperTask : Task
     {
         using var assembly = AssemblyDefinition.ReadAssembly(
             AppHostFilePath,
-            new ReaderParameters {ReadWrite = true}
+            new ReaderParameters { ReadWrite = true }
         );
 
         assembly.MainModule.Resources.RemoveAll(r =>
@@ -160,64 +149,6 @@ public class CreateBootstrapperTask : Task
         }
     }
 
-    private void AddAdditionalRuntimes()
-    {
-        var fileContent = File.ReadAllBytes(TargetRuntimeConfigFilePath);
-        using (MemoryStream ms = new MemoryStream())
-        {
-            using (Utf8JsonWriter utf8JsonWriter1 = new Utf8JsonWriter(ms, new JsonWriterOptions { Indented = true }))
-            {
-                using (JsonDocument jsonDocument = JsonDocument.Parse(fileContent))
-                {
-                    utf8JsonWriter1.WriteStartObject();
-
-                    foreach (var element in jsonDocument.RootElement.EnumerateObject())
-                    {
-                        element.WriteTo(utf8JsonWriter1);
-                    }
-
-                    //additional runtimes
-                    utf8JsonWriter1.WriteStartArray("additionalRuntimes");
-
-                    if (!string.IsNullOrWhiteSpace(MicrosoftNETCoreApp))
-                    {
-                        utf8JsonWriter1.WriteStartObject();
-                        utf8JsonWriter1.WriteString("name", "Microsoft.NETCore.App");
-                        utf8JsonWriter1.WriteString("version", MicrosoftNETCoreApp);
-                        utf8JsonWriter1.WriteEndObject();
-                    }
-                    if (!string.IsNullOrWhiteSpace(MicrosoftWindowsDesktopApp))
-                    {
-                        utf8JsonWriter1.WriteStartObject();
-                        utf8JsonWriter1.WriteString("name", "Microsoft.WindowsDesktop.App");
-                        utf8JsonWriter1.WriteString("version", MicrosoftWindowsDesktopApp);
-                        utf8JsonWriter1.WriteEndObject();
-                    }
-                    if (!string.IsNullOrWhiteSpace(MicrosoftAspNetCoreApp))
-                    {
-                        utf8JsonWriter1.WriteStartObject();
-                        utf8JsonWriter1.WriteString("name", "Microsoft.AspNetCore.App");
-                        utf8JsonWriter1.WriteString("version", MicrosoftAspNetCoreApp);
-                        utf8JsonWriter1.WriteEndObject();
-                    }
-                    if (!string.IsNullOrWhiteSpace(MicrosoftWebView2Runtime))
-                    {
-                        utf8JsonWriter1.WriteStartObject();
-                        utf8JsonWriter1.WriteString("name", "Microsoft.WebView2.Runtime");
-                        utf8JsonWriter1.WriteString("version", MicrosoftWebView2Runtime);
-                        utf8JsonWriter1.WriteEndObject();
-                    }
-
-                    utf8JsonWriter1.WriteEndArray();
-
-                    utf8JsonWriter1.WriteEndObject();
-                }
-            }
-
-            File.WriteAllBytes(TargetRuntimeConfigFilePath, ms.ToArray());
-        }
-    }
-
     public override bool Execute()
     {
         Log.LogMessage("Extracting apphost...");
@@ -234,15 +165,6 @@ public class CreateBootstrapperTask : Task
 
         Log.LogMessage("Injecting version info...");
         InjectVersionInfo();
-
-        if (!string.IsNullOrWhiteSpace(MicrosoftNETCoreApp)
-            || !string.IsNullOrWhiteSpace(MicrosoftWindowsDesktopApp)
-            || !string.IsNullOrWhiteSpace(MicrosoftAspNetCoreApp)
-            || !string.IsNullOrWhiteSpace(MicrosoftWebView2Runtime))
-        {
-            Log.LogMessage("Adding additional runtimes...");
-            AddAdditionalRuntimes();
-        }
 
         Log.LogMessage("Bootstrapper created successfully.");
         return true;

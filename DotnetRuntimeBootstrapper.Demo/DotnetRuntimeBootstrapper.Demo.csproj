@@ -1,28 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <IsPackable>false</IsPackable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <Version>1.2.3</Version>
-    <ApplicationIcon>../favicon.ico</ApplicationIcon>
-    <ApplicationManifest>Manifest.xml</ApplicationManifest>
-    <GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
-	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	<!--extra runtimes-->
-	<MicrosoftNETCoreApp>8.0.0</MicrosoftNETCoreApp>
-	<MicrosoftWindowsDesktopApp>9.0.0</MicrosoftWindowsDesktopApp>
-	<MicrosoftAspNetCoreApp>10.0.0</MicrosoftAspNetCoreApp>
-	<MicrosoftWebView2Runtime>96.0.1054.62</MicrosoftWebView2Runtime>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Version>1.2.3</Version>
+		<ApplicationIcon>../favicon.ico</ApplicationIcon>
+		<ApplicationManifest>Manifest.xml</ApplicationManifest>
+		<GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	</PropertyGroup>
 
-  <!-- Import props/targets manually (normally taken care of by NuGet) -->
-  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
-  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.targets" />
+	<!--additional runtimes-->
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	
+	<Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
+	<Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.targets" />
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1072.54" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />
+	</ItemGroup>
 
 </Project>

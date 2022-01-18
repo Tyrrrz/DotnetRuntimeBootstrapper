@@ -54,7 +54,7 @@ internal partial class DotnetRuntime
         return result.ToArray();
     }
 
-    public static DotnetRuntime FromRuntimeConfig(string filePath)
+    public static DotnetRuntime[] FromRuntimeConfig(string filePath)
     {
         var json =
             Json.TryParse(File.ReadAllText(filePath)) ??
@@ -69,32 +69,9 @@ internal partial class DotnetRuntime
                 .TryGetChild("runtimeOptions")?
                 .TryGetChild("frameworks")?
                 .EnumerateChildren()
-                .Select(ParseRuntime)
-                .OrderBy(r => r.IsBase) // base comes last
-                .FirstOrDefault() ??
-
-            // .NET 5 and lower
-            json
-                .TryGetChild("runtimeOptions")?
-                .TryGetChild("framework")?
-                .Pipe(ParseRuntime) ??
+                .Select(ParseRuntime).Where(r => !r.IsBase).ToArray() ??
 
             throw new ApplicationException("Could not resolve target runtime from runtime config.");
-    }
-
-    public static DotnetRuntime[] AdditionalFromRuntimeConfig(string filePath)
-    {
-        var json =
-            Json.TryParse(File.ReadAllText(filePath)) ??
-            throw new ApplicationException($"Failed to parse runtime config '{filePath}'.");
-
-        return
-            json
-                .TryGetChild("additionalRuntimes")?
-                .EnumerateChildren()
-                .Select(ParseRuntime)
-                .OrderBy(r => r.IsBase)
-                .ToArray();
     }
 
     private static DotnetRuntime ParseRuntime(JsonNode json)

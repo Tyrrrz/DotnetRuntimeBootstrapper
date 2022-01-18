@@ -30,20 +30,16 @@ public partial class TargetAssembly
                 // Low-level dependencies first, high-level last
                 new WindowsUpdate2999226Prerequisite(),
                 new WindowsUpdate3063858Prerequisite(),
-                new VisualCppPrerequisite(),
-                new DotnetPrerequisite(
-                    DotnetRuntime.FromRuntimeConfig(RuntimeConfigFilePath)
-                )
+                new VisualCppPrerequisite()
         }.ToList();
 
-        var additionalRuntimes = DotnetRuntime.AdditionalFromRuntimeConfig(RuntimeConfigFilePath);
+        var runtimes = DotnetRuntime.FromRuntimeConfig(RuntimeConfigFilePath);
 
-        foreach (var runtime in additionalRuntimes ?? new DotnetRuntime[0])
+        foreach (var runtime in runtimes)
         {
             prerequisites.Add(new DotnetPrerequisite(runtime));
         }
 
-        //todo remove duplicates?
         return prerequisites.Where(p => !p.IsInstalled).ToArray();
     }
 
