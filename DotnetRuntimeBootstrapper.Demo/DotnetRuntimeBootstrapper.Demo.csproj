@@ -9,7 +9,6 @@
 		<ApplicationIcon>../favicon.ico</ApplicationIcon>
 		<ApplicationManifest>Manifest.xml</ApplicationManifest>
 		<GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
-		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	</PropertyGroup>
 
 	<!--additional runtimes-->
