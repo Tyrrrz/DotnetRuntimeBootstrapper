@@ -60,18 +60,27 @@ internal partial class DotnetRuntime
             Json.TryParse(File.ReadAllText(filePath)) ??
             throw new ApplicationException($"Failed to parse runtime config '{filePath}'.");
 
-        return
-            // .NET 6 and higher
-            // Config lists multiple frameworks, usually the base and the app-specific one,
-            // for example: Microsoft.NETCore.App and Microsoft.WindowsDesktop.App.
-            // We only care about the app-specific one.
-            json
-                .TryGetChild("runtimeOptions")?
-                .TryGetChild("frameworks")?
-                .EnumerateChildren()
-                .Select(ParseRuntime).Where(r => !r.IsBase).ToArray() ??
 
-            throw new ApplicationException("Could not resolve target runtime from runtime config.");
+        // .NET 6 and higher
+        // Config lists multiple frameworks, usually the base and the app-specific one,
+        // for example: Microsoft.NETCore.App and Microsoft.WindowsDesktop.App.
+        // We only care about the app-specific one.
+        var runtimes = json
+            .TryGetChild("runtimeOptions")?
+            .TryGetChild("frameworks")?
+            .EnumerateChildren()
+            .Select(ParseRuntime).Where(r => !r.IsBase).ToArray();
+
+        if (runtimes != null && runtimes.Any()) return runtimes;
+
+        var runtime = json
+            .TryGetChild("runtimeOptions")?
+            .TryGetChild("framework")?
+            .Pipe(ParseRuntime);
+
+        if (runtime != null) return new[] { runtime };
+
+        throw new ApplicationException("Could not resolve target runtime from runtime config.");
     }
 
     private static DotnetRuntime ParseRuntime(JsonNode json)
