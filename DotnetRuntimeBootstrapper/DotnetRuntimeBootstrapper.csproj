@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Authors>$(Company)</Authors>
     <Description>.NET runtime bootstrapper for Windows desktop applications</Description>
     <IsPackable>true</IsPackable>
