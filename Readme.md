@@ -121,6 +121,8 @@ Additionally, the version info resource is further modified to contain the follo
 
 ### Options
 
+#### Bootstrap on build
+
 By default, bootstrapper is only created when publishing the project (i.e. when running `dotnet publish`).
 If you want to also have it created on every build, set the `<GenerateBootstrapperOnBuild>` project property to `true`:
 
