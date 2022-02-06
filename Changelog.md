@@ -1,3 +1,10 @@
+### v2.1 (06-Feb-2022)
+
+- Added support for bootstrapping applications that have multiple non-base frameworks declared in their `runtimeconfig.json` (for example `WindowsDesktop` together with `AspNetCore`). The bootstrapper will now install all of the corresponding runtimes instead of just one. (Thanks [@Tomasz](https://github.com/Misiu))
+- Added logic that determines whether a system restart is required after prerequisite installation based on the exit code provided by the installer process. Previously this behavior was hard-codded.
+- Added zero exit code assertion for prerequisite installers. If an installer terminates with a non-zero exit code (except when it signals a system restart), the bootstrapper will fail with an error.
+- Fixed an issue which caused the bootstrapper to show an error saying "Hosting components are already initialized. Re-initialization for an app is not allowed." when the target application crashed due to an unhandled exception. This error message should no longer be shown in such cases.
+
 ### v2.0.3 (20-Dec-2021)
 
 - Extended "Failed to initialize .NET host..." error with additional information. It will now contain error messages logged by `hostfxr.dll`, if they are available. This should help clarify the reason for the error in most of the cases.
