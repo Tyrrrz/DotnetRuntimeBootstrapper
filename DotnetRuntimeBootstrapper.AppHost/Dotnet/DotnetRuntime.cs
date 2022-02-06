@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Utils;
@@ -38,23 +37,17 @@ internal partial class DotnetRuntime
         if (!Directory.Exists(sharedDirPath))
             throw new DirectoryNotFoundException("Could not find directory containing .NET runtime binaries.");
 
-        var result = new List<DotnetRuntime>();
-        foreach (var runtimeDirPath in Directory.GetDirectories(sharedDirPath))
-        {
-            var name = Path.GetFileName(runtimeDirPath);
-
-            foreach (var runtimeVersionDirPath in Directory.GetDirectories(runtimeDirPath))
-            {
-                var version = VersionEx.TryParse(Path.GetFileName(runtimeVersionDirPath));
-                if (version is not null)
-                    result.Add(new DotnetRuntime(name, version));
-            }
-        }
-
-        return result.ToArray();
+        return (
+            from runtimeDirPath in Directory.GetDirectories(sharedDirPath)
+            let name = Path.GetFileName(runtimeDirPath)
+            from runtimeVersionDirPath in Directory.GetDirectories(runtimeDirPath)
+            let version = VersionEx.TryParse(Path.GetFileName(runtimeVersionDirPath))
+            where version is not null
+            select new DotnetRuntime(name, version)
+        ).ToArray();
     }
 
-    public static DotnetRuntime FromRuntimeConfig(string filePath)
+    public static DotnetRuntime[] GetAllTargets(string runtimeConfigFilePath)
     {
         static DotnetRuntime ParseRuntime(JsonNode json)
         {
@@ -68,27 +61,25 @@ internal partial class DotnetRuntime
         }
 
         var json =
-            Json.TryParse(File.ReadAllText(filePath)) ??
-            throw new ApplicationException($"Failed to parse runtime config '{filePath}'.");
+            Json.TryParse(File.ReadAllText(runtimeConfigFilePath)) ??
+            throw new ApplicationException($"Failed to parse runtime config '{runtimeConfigFilePath}'.");
 
         return
-            // .NET 6 and higher
-            // Config lists multiple frameworks, usually the base and the app-specific one,
-            // for example: Microsoft.NETCore.App and Microsoft.WindowsDesktop.App.
-            // We only care about the app-specific one.
+            // Multiple targets
             json
                 .TryGetChild("runtimeOptions")?
                 .TryGetChild("frameworks")?
                 .EnumerateChildren()
                 .Select(ParseRuntime)
-                .OrderBy(r => r.IsBase) // base comes last
-                .FirstOrDefault() ??
+                .ToArray() ??
 
-            // .NET 5 and lower
+            // Single target
             json
                 .TryGetChild("runtimeOptions")?
                 .TryGetChild("framework")?
-                .Pipe(ParseRuntime) ??
+                .Pipe(ParseRuntime)
+                .Enumerate()
+                .ToArray() ??
 
             throw new ApplicationException("Could not resolve target runtime from runtime config.");
     }

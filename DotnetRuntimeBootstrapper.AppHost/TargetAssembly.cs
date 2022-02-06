@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Dotnet;
@@ -20,16 +21,50 @@ public partial class TargetAssembly
         Title = title;
     }
 
-    public IPrerequisite[] GetMissingPrerequisites() => new IPrerequisite[]
+    private DotnetRuntime[] GetRuntimes()
     {
-        // Low-level dependencies first, high-level last
-        new WindowsUpdate2999226Prerequisite(),
-        new WindowsUpdate3063858Prerequisite(),
-        new VisualCppPrerequisite(),
-        new DotnetPrerequisite(
-            DotnetRuntime.FromRuntimeConfig(Path.ChangeExtension(FilePath, "runtimeconfig.json"))
-        )
-    }.Where(p => !p.IsInstalled).ToArray();
+        var configFilePath = Path.ChangeExtension(FilePath, "runtimeconfig.json");
+        var runtimes = DotnetRuntime.GetAllTargets(configFilePath).ToList();
+
+        // Non-base runtimes already include the base runtime, so
+        // filter out unnecessary targets.
+        if (runtimes.Count > 1)
+        {
+            foreach (var nonBaseRuntime in runtimes.Where(r => !r.IsBase).ToArray())
+            {
+                // Only filter out compatible base runtimes!
+                // If the app targets .NET 5 desktop and .NET 6 base,
+                // we still need to keep the base.
+                // This is very unlikely to happen, but it's nice to
+                // be able to handle those edge cases.
+                runtimes.RemoveAll(r =>
+                    r.IsBase &&
+                    r.Version.Major == nonBaseRuntime.Version.Major &&
+                    r.Version <= nonBaseRuntime.Version
+                );
+            }
+        }
+
+        return runtimes.ToArray();
+    }
+
+    public IPrerequisite[] GetMissingPrerequisites()
+    {
+        var prerequisites = new List<IPrerequisite>
+        {
+            new WindowsUpdate2999226Prerequisite(),
+            new WindowsUpdate3063858Prerequisite(),
+            new VisualCppPrerequisite()
+        };
+
+        foreach (var runtime in GetRuntimes())
+            prerequisites.Add(new DotnetPrerequisite(runtime));
+
+        // Filter out prerequisites that are already installed
+        prerequisites.RemoveAll(p => p.IsInstalled);
+
+        return prerequisites.ToArray();
+    }
 
     public int Run(string[] args) => DotnetHost.Initialize().Run(FilePath, args);
 }

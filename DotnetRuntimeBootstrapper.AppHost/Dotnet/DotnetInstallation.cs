@@ -19,16 +19,13 @@ internal static class DotnetInstallation
         {
             var archMoniker = OperatingSystem.ProcessorArchitecture.GetMoniker();
 
-            // Installation information is only available in the 32-bit view of the registry
-            var dotnetRegistryKey = OperatingSystem.ProcessorArchitecture.Is64Bit()
-                ? Registry.LocalMachine.OpenSubKey(
-                    "SOFTWARE\\Wow6432Node\\dotnet\\Setup\\InstalledVersions\\" + archMoniker,
-                    false
-                )
-                : Registry.LocalMachine.OpenSubKey(
-                    "SOFTWARE\\dotnet\\Setup\\InstalledVersions\\" + archMoniker,
-                    false
-                );
+            var dotnetRegistryKey = Registry.LocalMachine.OpenSubKey(
+                // Installation information is only available in the 32-bit view of the registry
+                OperatingSystem.ProcessorArchitecture.Is64Bit()
+                    ? "SOFTWARE\\Wow6432Node\\dotnet\\Setup\\InstalledVersions\\" + archMoniker
+                    : "SOFTWARE\\dotnet\\Setup\\InstalledVersions\\" + archMoniker,
+                false
+            );
 
             var dotnetDirPath = dotnetRegistryKey?.GetValue("InstallLocation", null) as string;
 

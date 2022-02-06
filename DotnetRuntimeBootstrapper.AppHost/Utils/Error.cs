@@ -2,12 +2,10 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
 
-namespace DotnetRuntimeBootstrapper.AppHost;
+namespace DotnetRuntimeBootstrapper.AppHost.Utils;
 
-// Global error sink
-public static class Error
+internal static class Error
 {
     private static void ReportToFile(string message)
     {
