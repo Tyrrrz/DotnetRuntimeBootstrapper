@@ -8,7 +8,5 @@ public interface IPrerequisite
 
     bool IsInstalled { get; }
 
-    bool IsRebootRequired { get; }
-
     IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress);
 }

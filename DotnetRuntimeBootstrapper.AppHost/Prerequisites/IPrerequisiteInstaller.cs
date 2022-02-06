@@ -6,5 +6,5 @@ public interface IPrerequisiteInstaller
 
     string FilePath { get; }
 
-    void Run();
+    PrerequisiteInstallerResult Run();
 }

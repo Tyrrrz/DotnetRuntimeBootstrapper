@@ -88,7 +88,9 @@ public partial class InstallationForm : Form
             UpdateStatus(@$"Installing {installer.Prerequisite.DisplayName}");
             UpdateCurrentProgress(-1);
 
-            installer.Run();
+            if (installer.Run() == PrerequisiteInstallerResult.RebootRequired)
+                DialogResult = DialogResult.Retry;
+
             FileEx.TryDelete(installer.FilePath);
 
             UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));

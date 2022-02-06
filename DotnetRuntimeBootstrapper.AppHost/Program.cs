@@ -31,32 +31,23 @@ public partial class Program
             }
         }
 
-        bool PromptInstallation() =>
-            ShowForm(new InstallationPromptForm(_targetAssembly, missingPrerequisites)) == DialogResult.Yes;
-
-        void PerformInstallation() =>
-            ShowForm(new InstallationForm(_targetAssembly, missingPrerequisites));
-
-        bool PromptReboot() => MessageBox.Show(
-            @$"You need to restart Windows before you can run {_targetAssembly.Title}. " +
-            @"Would you like to do it now?",
-            @"Restart required",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Warning
-        ) == DialogResult.Yes;
-
-        // Prompt
-        if (!PromptInstallation())
+        // Prompt installation
+        if (ShowForm(new InstallationPromptForm(_targetAssembly, missingPrerequisites)) != DialogResult.Yes)
             return false;
 
-        // Install
-        PerformInstallation();
-
-        // Check if reboot is required
-        if (missingPrerequisites.Any(p => p.IsRebootRequired))
+        // Perform installation
+        if (ShowForm(new InstallationForm(_targetAssembly, missingPrerequisites)) == DialogResult.Retry)
         {
-            if (PromptReboot())
+            // Reboot is required
+            if (MessageBox.Show(
+                    @$"You need to restart Windows before you can run {_targetAssembly.Title}. " +
+                    @"Would you like to do it now?",
+                    @"Restart required",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
                 OperatingSystem.Reboot();
+            }
 
             return false;
         }
