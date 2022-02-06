@@ -1,4 +1,5 @@
-﻿using DotnetRuntimeBootstrapper.AppHost.Utils;
+﻿using System;
+using DotnetRuntimeBootstrapper.AppHost.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
 
@@ -19,8 +20,18 @@ internal class ExecutablePrerequisiteInstaller : IPrerequisiteInstaller
         var exitCode = CommandLine.Run(FilePath, new[] { "/install", "/quiet", "/norestart" }, true);
 
         // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/24#issuecomment-1021447102
-        return exitCode is 3010 or 3011 or 1641
-            ? PrerequisiteInstallerResult.RebootRequired
-            : PrerequisiteInstallerResult.Success;
+        if (exitCode is 3010 or 3011 or 1641)
+            return PrerequisiteInstallerResult.RebootRequired;
+
+        if (exitCode != 0)
+        {
+            throw new ApplicationException(
+                $"Failed to install {Prerequisite.DisplayName}. " +
+                $"Exit code: {exitCode}. " +
+                "Please try to install this prerequisite manually."
+            );
+        }
+
+        return PrerequisiteInstallerResult.Success;
     }
 }
