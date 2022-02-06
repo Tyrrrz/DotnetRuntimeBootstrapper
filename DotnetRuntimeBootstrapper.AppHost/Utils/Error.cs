@@ -1,58 +1,53 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using DotnetRuntimeBootstrapper.AppHost.Native;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Utils;
 
 internal static class Error
 {
-    private static void ReportToFile(string message)
+    private static void ReportToEventLog(string message)
     {
+        // Inspired by:
+        // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
+
         try
         {
-            var timestamp = DateTimeOffset.Now;
-            var timestampFileSafe = timestamp.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture);
-            var version = typeof(Error).Assembly.GetName().Version.ToString(3);
-
-            var content =
-                $"Timestamp: {timestamp}" +
-                Environment.NewLine +
-                $"AppHost: .NET Runtime Bootstrapper v{version} (https://github.com/Tyrrrz/DotnetRuntimeBootstrapper)" +
-                Environment.NewLine +
-                $"Message: {message}";
+            var eventSourceHandle = NativeMethods.RegisterEventSource(null, ".NET Runtime");
 
             try
             {
-                // Try writing to executing directory first
-                var filePath = Path.Combine(
-                    PathEx.ExecutingDirectoryPath,
-                    $"AppHost_Error_{timestampFileSafe}.txt"
-                );
+                var bootstrapperVersion = typeof(Error).Assembly.GetName().Version.ToString(3);
+                var applicationName = Path.GetFileName(typeof(Error).Assembly.Location);
+                var applicationFilePath = typeof(Error).Assembly.Location;
 
-                File.WriteAllText(filePath, content);
+                var content =
+                    "Description: Bootstrapper for a .NET application has failed." +
+                    Environment.NewLine +
+                    $"Application: {applicationName}" +
+                    Environment.NewLine +
+                    $"Path: {applicationFilePath}" +
+                    Environment.NewLine +
+                    $"AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion} (https://github.com/Tyrrrz/DotnetRuntimeBootstrapper)" +
+                    Environment.NewLine +
+                    $"Message: {message}";
+
+                NativeMethods.ReportEvent(
+                    eventSourceHandle,
+                    0x0001,
+                    0,
+                    1023, // matches standard .NET Runtime event ID
+                    IntPtr.Zero,
+                    1,
+                    0,
+                    new[] { content },
+                    IntPtr.Zero
+                );
             }
-            catch
+            finally
             {
-                // Otherwise, write to local app data
-                var title = Path.GetFileNameWithoutExtension(typeof(Error).Assembly.Location);
-
-                var dirPath = Path.Combine(
-                    Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                        "Tyrrrz"
-                    ),
-                    "DotnetRuntimeBootstrapper"
-                );
-
-                Directory.CreateDirectory(dirPath);
-
-                var filePath = Path.Combine(
-                    dirPath,
-                    $"AppHost_{title}_Error_{timestampFileSafe}.txt"
-                );
-
-                File.WriteAllText(filePath, content);
+                NativeMethods.DeregisterEventSource(eventSourceHandle);
             }
         }
         catch
@@ -75,10 +70,7 @@ internal static class Error
 
     public static void Report(string message)
     {
-        // Report the error by writing it to a file and showing in a dialog.
-        // Either one of the two can fail for various reasons, which
-        // is why we use two approaches for redundancy.
-        ReportToFile(message);
+        ReportToEventLog(message);
         ReportToUser(message);
     }
 
