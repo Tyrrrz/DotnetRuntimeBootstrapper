@@ -171,10 +171,26 @@ CreateBootstrapperAfterPublish:
 
 #### Application host logs
 
-In the event of a fatal error, in addition to showing a message to the user, bootstrapper will also produce a timestamped error dump in the application's directory (for example, `AppHost_Error_20211205001042.txt`).
-If the bootstrapper does not have sufficient permissions to create a file in that directory, it will write it to `%LocalAppData%\Tyrrrz\DotnetRuntimeBootstrapper` instead.
+In the event of a fatal error, in addition to showing a message to the user, bootstrapper will produce an error dump.
+It can be found in either of the following places:
 
-The dump has the following format:
+- Windows event log (event ID: `1023`; source: `.NET Runtime`)
+- File `AppHost_Error_{timestamp}.txt` in the application directory (only v2.1 and below)
+- File `%LocalAppData%\Tyrrrz\DotnetRuntimeBootstrapper\AppHost_{app}_Error_{timestamp}.txt` (only v2.1 and below)
+
+Format (event log):
+
+```txt
+Description: Bootstrapper for a .NET application has failed.
+Application: DotnetRuntimeBootstrapper.Demo.exe
+Path: F:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe
+AppHost: .NET Runtime Bootstrapper v2.1.0 (https://github.com/Tyrrrz/DotnetRuntimeBootstrapper)
+Message: System.Exception: Test failure
+   at DotnetRuntimeBootstrapper.AppHost.Program.Run(String[] args)
+   at DotnetRuntimeBootstrapper.AppHost.Program.Main(String[] args)
+```
+
+Format (file):
 
 ```txt
 Timestamp: 05.12.2021 0:10:42 +02:00
