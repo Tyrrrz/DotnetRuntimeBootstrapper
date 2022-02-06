@@ -9,6 +9,7 @@ using DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Dotnet;
 
+// https://github.com/dotnet/runtime/blob/57bfe47451/src/native/corehost/hostfxr.h
 internal partial class DotnetHost : IDisposable
 {
     private readonly NativeLibrary _hostfxrLib;
@@ -70,6 +71,14 @@ internal partial class DotnetHost : IDisposable
         try
         {
             return GetRunAppFn()(handle);
+        }
+        catch (SEHException ex)
+        {
+            // This is thrown when the app crashes with an unhandled exception.
+            // Unfortunately, there is no way to get that exception or its message,
+            // so the best we can do is to return the associated exit code.
+            // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/23
+            return ex.ErrorCode;
         }
         finally
         {
