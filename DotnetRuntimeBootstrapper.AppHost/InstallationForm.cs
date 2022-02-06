@@ -82,6 +82,7 @@ public partial class InstallationForm : Form
         }
 
         // Install
+        var isRebootRequired = false;
         var installersFinishedCount = 0;
         foreach (var installer in installers)
         {
@@ -89,7 +90,7 @@ public partial class InstallationForm : Form
             UpdateCurrentProgress(-1);
 
             if (installer.Run() == PrerequisiteInstallerResult.RebootRequired)
-                DialogResult = DialogResult.Retry;
+                isRebootRequired = true;
 
             FileEx.TryDelete(installer.FilePath);
 
@@ -97,6 +98,7 @@ public partial class InstallationForm : Form
         }
 
         // Finalize
+        DialogResult = isRebootRequired ? DialogResult.Retry : DialogResult.OK;
         Close();
     }
 
