@@ -10,6 +10,8 @@ internal partial class NativeLibrary : IDisposable
     private readonly IntPtr _handle;
     private readonly Dictionary<string, Delegate> _functionTable = new(StringComparer.Ordinal);
 
+    private bool _isLoaded = true;
+
     public NativeLibrary(IntPtr handle) => _handle = handle;
 
     ~NativeLibrary() => Dispose();
@@ -29,7 +31,14 @@ internal partial class NativeLibrary : IDisposable
         return func;
     }
 
-    public void Dispose() => NativeMethods.FreeLibrary(_handle);
+    public void Dispose()
+    {
+        if (_isLoaded)
+        {
+            _isLoaded = false;
+            NativeMethods.FreeLibrary(_handle);
+        }
+    }
 }
 
 internal partial class NativeLibrary
