@@ -66,7 +66,11 @@ public partial class TargetAssembly
         return prerequisites.ToArray();
     }
 
-    public int Run(string[] args) => DotnetHost.Initialize().Run(FilePath, args);
+    public int Run(string[] args)
+    {
+        using var host = DotnetHost.Initialize();
+        return host.Run(FilePath, args);
+    }
 }
 
 public partial class TargetAssembly

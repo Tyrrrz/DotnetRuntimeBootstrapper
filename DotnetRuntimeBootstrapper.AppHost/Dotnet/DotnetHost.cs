@@ -9,7 +9,15 @@ using DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Dotnet;
 
+// Headers for hostfxr.dll:
 // https://github.com/dotnet/runtime/blob/57bfe47451/src/native/corehost/hostfxr.h
+
+// Muxer implementation:
+// https://github.com/dotnet/runtime/blob/57bfe47451/src/native/corehost/fxr/fx_muxer.cpp
+
+// .NET CLI host implementation:
+// https://github.com/dotnet/runtime/blob/57bfe47451/src/native/corehost/corehost.cpp
+
 internal partial class DotnetHost : IDisposable
 {
     private readonly NativeLibrary _hostfxrLib;
@@ -49,26 +57,40 @@ internal partial class DotnetHost : IDisposable
     private HostfxrCloseFn GetCloseFn() =>
         _hostfxrLib.GetFunction<HostfxrCloseFn>("hostfxr_close");
 
-    public int Run(string targetFilePath, string[] args)
+    private IntPtr Initialize(string targetFilePath, string[] args)
     {
         // Route errors to a buffer
         var errorBuffer = new StringBuilder();
         GetHostfxrSetErrorWriterFn()(s => errorBuffer.AppendLine(s));
 
         // Initialize the host as if we're running the app from command line
-        var argsCombined = args.Prepend(targetFilePath).ToArray();
-        if (GetInitializeForCommandLineFn()(argsCombined.Length, argsCombined, IntPtr.Zero, out var handle) != 0)
+        var initStatus = GetInitializeForCommandLineFn()(
+            args.Length + 1,
+            args.Prepend(targetFilePath).ToArray(),
+            IntPtr.Zero,
+            out var handle
+        );
+
+        if (initStatus != 0)
         {
             throw new ApplicationException(
-                $"Failed to initialize .NET host for '{targetFilePath}'." +
+                "Failed to initialize .NET host." +
+                Environment.NewLine +
+                "Target: " + targetFilePath +
                 Environment.NewLine +
                 "Arguments: [" + string.Join(", ", args) + ']' +
                 Environment.NewLine +
-                "Error: " + (errorBuffer.Length > 0 ? errorBuffer : "<none>")
+                "Status: " + initStatus +
+                Environment.NewLine +
+                (errorBuffer.Length > 0 ? errorBuffer : "No error messages reported.")
             );
         }
 
-        // Run the app
+        return handle;
+    }
+
+    private int Run(IntPtr handle)
+    {
         try
         {
             return GetRunAppFn()(handle);
@@ -81,9 +103,22 @@ internal partial class DotnetHost : IDisposable
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/23
             return ex.ErrorCode;
         }
+    }
+
+    private void Unload(IntPtr handle) => GetCloseFn()(handle);
+
+    public int Run(string targetFilePath, string[] args)
+    {
+        var handle = Initialize(targetFilePath, args);
+
+        // Run the app
+        try
+        {
+            return Run(handle);
+        }
         finally
         {
-            GetCloseFn()(handle);
+            Unload(handle);
         }
     }
 

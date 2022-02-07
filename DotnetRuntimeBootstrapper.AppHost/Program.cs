@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Utils;
@@ -66,7 +67,7 @@ public partial class Program
             // Attempt to run the target first without any checks (hot path)
             return _targetAssembly.Run(args);
         }
-        catch
+        catch (ApplicationException)
         {
             if (!InstallMissingPrerequisites())
             {
@@ -82,11 +83,27 @@ public partial class Program
 
 public partial class Program
 {
+    private static bool IsDebugModeEnabled()
+    {
+#if DEBUG
+        return string.Equals(
+            Environment.GetEnvironmentVariable("DotnetRuntimeBootstrapper_Debug"),
+            "true",
+            StringComparison.OrdinalIgnoreCase
+        );
+#else
+        return false;
+#endif
+    }
+
     [STAThread]
     public static int Main(string[] args)
     {
         AppDomain.CurrentDomain.UnhandledException += (_, e) => Error.Report(e.ExceptionObject.ToString());
         Application.ThreadException += (_, e) => Error.Report(e.Exception);
+
+        if (IsDebugModeEnabled())
+            Debugger.Launch();
 
         try
         {
