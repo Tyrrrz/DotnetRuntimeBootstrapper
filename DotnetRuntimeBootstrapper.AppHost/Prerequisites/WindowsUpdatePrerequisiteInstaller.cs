@@ -28,7 +28,7 @@ internal class WindowsUpdatePrerequisiteInstaller : IPrerequisiteInstaller
             throw new ApplicationException(
                 $"Failed to install {Prerequisite.DisplayName}. " +
                 $"Exit code: {exitCode}. " +
-                "Please try to install this prerequisite manually."
+                "Please try to install this component manually."
             );
         }
 

@@ -60,10 +60,11 @@ internal partial class DotnetHost : IDisposable
         if (GetInitializeForCommandLineFn()(argsCombined.Length, argsCombined, IntPtr.Zero, out var handle) != 0)
         {
             throw new ApplicationException(
-                $"Failed to initialize .NET host for '{targetFilePath}' with arguments [{string.Join(", ", args)}]. " +
-                (errorBuffer.Length > 0
-                    ? "Error:" + Environment.NewLine + errorBuffer
-                    : "Host resolver did not report any errors.")
+                $"Failed to initialize .NET host for '{targetFilePath}'." +
+                Environment.NewLine +
+                "Arguments: [" + string.Join(", ", args) + ']' +
+                Environment.NewLine +
+                "Error: " + (errorBuffer.Length > 0 ? errorBuffer : "<none>")
             );
         }
 
@@ -82,7 +83,6 @@ internal partial class DotnetHost : IDisposable
         }
         finally
         {
-            // Ignore errors when tearing down the host
             GetCloseFn()(handle);
         }
     }

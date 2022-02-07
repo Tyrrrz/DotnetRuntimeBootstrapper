@@ -35,7 +35,7 @@ internal static class Error
 
                 NativeMethods.ReportEvent(
                     eventSourceHandle,
-                    0x0001,
+                    1,
                     0,
                     1023, // matches standard .NET Runtime event ID
                     IntPtr.Zero,
