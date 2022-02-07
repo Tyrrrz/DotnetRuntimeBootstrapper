@@ -64,14 +64,14 @@ internal partial class DotnetHost : IDisposable
         GetHostfxrSetErrorWriterFn()(s => errorBuffer.AppendLine(s));
 
         // Initialize the host as if we're running the app from command line
-        var initStatus = GetInitializeForCommandLineFn()(
+        var status = GetInitializeForCommandLineFn()(
             args.Length + 1,
             args.Prepend(targetFilePath).ToArray(),
             IntPtr.Zero,
             out var handle
         );
 
-        if (initStatus != 0)
+        if (status != 0)
         {
             throw new ApplicationException(
                 "Failed to initialize .NET host." +
@@ -80,7 +80,7 @@ internal partial class DotnetHost : IDisposable
                 Environment.NewLine +
                 "Arguments: [" + string.Join(", ", args) + ']' +
                 Environment.NewLine +
-                "Status: " + initStatus +
+                "Status: " + status +
                 Environment.NewLine +
                 (errorBuffer.Length > 0 ? errorBuffer : "No error messages reported.")
             );
@@ -111,7 +111,6 @@ internal partial class DotnetHost : IDisposable
     {
         var handle = Initialize(targetFilePath, args);
 
-        // Run the app
         try
         {
             return Run(handle);
