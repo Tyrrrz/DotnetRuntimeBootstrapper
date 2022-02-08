@@ -105,7 +105,14 @@ internal partial class DotnetHost : IDisposable
         }
     }
 
-    private void Unload(IntPtr handle) => GetCloseFn()(handle);
+    private void Unload(IntPtr handle) =>
+        // Closing the handle doesn't completely unload the host.
+        // There are some native libraries loaded by the resolver
+        // that are purposefully leaked to preserve state.
+        // This means that we can't successfully initialize the host
+        // twice, but that shouldn't matter since we'd only attempt
+        // to do it again if the first attempt failed in the first place.
+        GetCloseFn()(handle);
 
     public int Run(string targetFilePath, string[] args)
     {
