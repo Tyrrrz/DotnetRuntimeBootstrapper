@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Prerequisites;
@@ -105,7 +104,7 @@ public partial class InstallationForm : Form
     private void InstallationForm_Load(object sender, EventArgs e)
     {
         Text = @$"{_targetAssembly.Title}: installing prerequisites";
-        Icon = Icon.ExtractAssociatedIcon(typeof(InstallationForm).Assembly.Location);
+        Icon = IconEx.TryExtractAssociatedIcon(Application.ExecutablePath);
 
         UpdateStatus(@"Downloading files...");
 

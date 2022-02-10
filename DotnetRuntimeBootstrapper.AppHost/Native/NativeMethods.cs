@@ -8,6 +8,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Native;
 internal static class NativeMethods
 {
     private const string Kernel32 = "kernel32.dll";
+    private const string Shell32 = "shell32.dll";
     private const string NtDll = "ntdll.dll";
     private const string Advapi32 = "advapi32.dll";
 
@@ -62,4 +63,7 @@ internal static class NativeMethods
 
     [DllImport(Advapi32, SetLastError = true)]
     public static extern bool DeregisterEventSource(IntPtr hEventLog);
+
+    [DllImport(Shell32, CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr ExtractAssociatedIcon(IntPtr hInst, string lpIconPath, out ushort lpiIcon);
 }
