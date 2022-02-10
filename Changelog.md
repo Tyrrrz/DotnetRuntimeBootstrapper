@@ -1,3 +1,9 @@
+### v2.2 (10-Feb-2022)
+
+- Changed error logging approach to use Windows Event Log instead of relying on the file system. If the bootstrapper crashes with a fatal error, it will now write a new entry to the event log with `1023` as event ID and `.NET Runtime` as source. Readme has been updated with new troubleshooting instructions.
+- Improved error messages. When .NET host fails to initialize, the error will now also show the returned status code.
+- Fixed an issue which caused the bootstrapper to crash when running from a network directory.
+
 ### v2.1 (06-Feb-2022)
 
 - Added support for bootstrapping applications that have multiple non-base frameworks declared in their `runtimeconfig.json` (for example `WindowsDesktop` together with `AspNetCore`). The bootstrapper will now install all of the corresponding runtimes instead of just one. (Thanks [@Tomasz](https://github.com/Misiu))
