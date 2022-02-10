@@ -67,7 +67,10 @@ public partial class Program
             // Attempt to run the target first without any checks (hot path)
             return _targetAssembly.Run(args);
         }
-        catch (ApplicationException)
+        // Possible exception causes:
+        // - .NET host not found (DirectoryNotFoundException)
+        // - .NET host failed to initialize (ApplicationException)
+        catch
         {
             if (!InstallMissingPrerequisites())
             {
