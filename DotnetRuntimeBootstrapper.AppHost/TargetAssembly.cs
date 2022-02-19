@@ -26,17 +26,16 @@ public partial class TargetAssembly
         var configFilePath = Path.ChangeExtension(FilePath, "runtimeconfig.json");
         var runtimes = DotnetRuntime.GetAllTargets(configFilePath).ToList();
 
-        // Non-base runtimes already include the base runtime, so
-        // filter out unnecessary targets.
+        // Desktop runtimes already include the base runtime, so we can filter out unnecessary targets
+        // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/30
         if (runtimes.Count > 1)
         {
-            foreach (var nonBaseRuntime in runtimes.Where(r => !r.IsBase).ToArray())
+            foreach (var nonBaseRuntime in runtimes.Where(r => r.IsWindowsDesktop).ToArray())
             {
                 // Only filter out compatible base runtimes!
                 // If the app targets .NET 5 desktop and .NET 6 base,
                 // we still need to keep the base.
-                // This is very unlikely to happen, but it's nice to
-                // be able to handle those edge cases.
+                // Very unlikely that such a situation can happen though.
                 runtimes.RemoveAll(r =>
                     r.IsBase &&
                     r.Version.Major == nonBaseRuntime.Version.Major &&
