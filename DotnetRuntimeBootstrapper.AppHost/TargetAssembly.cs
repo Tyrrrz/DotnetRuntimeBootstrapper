@@ -30,16 +30,16 @@ public partial class TargetAssembly
         // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/30
         if (runtimes.Count > 1)
         {
-            foreach (var nonBaseRuntime in runtimes.Where(r => r.IsWindowsDesktop).ToArray())
+            foreach (var desktopRuntime in runtimes.Where(r => r.IsWindowsDesktop).ToArray())
             {
                 // Only filter out compatible base runtimes!
                 // If the app targets .NET 5 desktop and .NET 6 base,
                 // we still need to keep the base.
-                // Very unlikely that such a situation can happen though.
+                // Very unlikely that such a situation will happen though.
                 runtimes.RemoveAll(r =>
                     r.IsBase &&
-                    r.Version.Major == nonBaseRuntime.Version.Major &&
-                    r.Version <= nonBaseRuntime.Version
+                    r.Version.Major == desktopRuntime.Version.Major &&
+                    r.Version <= desktopRuntime.Version
                 );
             }
         }
