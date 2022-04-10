@@ -51,7 +51,7 @@ public class CreateBootstrapperTask : Task
     {
         using var assembly = AssemblyDefinition.ReadAssembly(
             AppHostFilePath,
-            new ReaderParameters {ReadWrite = true}
+            new ReaderParameters { ReadWrite = true }
         );
 
         assembly.MainModule.Resources.RemoveAll(r =>
@@ -66,7 +66,7 @@ public class CreateBootstrapperTask : Task
 
         assembly.Write();
 
-        Log.LogMessage("Injected target binding to '{0}'.", AppHostFileName);
+        Log.LogMessage("Injected target binding into '{0}'.", AppHostFileName);
     }
 
     private void InjectManifest()
@@ -80,7 +80,7 @@ public class CreateBootstrapperTask : Task
         if (!string.IsNullOrWhiteSpace(targetManifest))
         {
             appHostPortableExecutable.SetManifest(targetManifest);
-            Log.LogMessage("Injected manifest to '{0}'.", AppHostFileName);
+            Log.LogMessage("Injected manifest into '{0}'.", AppHostFileName);
         }
         else
         {
@@ -109,7 +109,7 @@ public class CreateBootstrapperTask : Task
                 );
             }
 
-            Log.LogMessage("Injected icon to '{0}'.", AppHostFileName);
+            Log.LogMessage("Injected icon into '{0}'.", AppHostFileName);
         }
         else
         {
@@ -140,7 +140,7 @@ public class CreateBootstrapperTask : Task
                 .Build()
             );
 
-            Log.LogMessage("Injected version info to '{0}'.", AppHostFileName);
+            Log.LogMessage("Injected version info into '{0}'.", AppHostFileName);
         }
         else
         {
