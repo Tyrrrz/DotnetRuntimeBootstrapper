@@ -1,10 +1,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="TaskAssembly">
 
   <PropertyGroup>
+    <GenerateBootstrapperOnBuild Condition="'$(GenerateBootstrapperOnBuild)' == ''">false</GenerateBootstrapperOnBuild>
+    <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">Console</BootstrapperVariant>
+    <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">Desktop</BootstrapperVariant>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
     <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
   </PropertyGroup>
 
-  <UsingTask TaskName="DotnetRuntimeBootstrapper.CreateBootstrapperTask" AssemblyFile="$(TaskAssembly)" />
+  <UsingTask TaskName="DotnetRuntimeBootstrapper.BootstrapperTask" AssemblyFile="$(TaskAssembly)" />
 
 </Project>

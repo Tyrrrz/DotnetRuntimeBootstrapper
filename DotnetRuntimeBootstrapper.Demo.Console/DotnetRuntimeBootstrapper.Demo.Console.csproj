@@ -1,12 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>DotnetRuntimeBootstrapper.Demo</RootNamespace>
     <Version>1.2.3</Version>
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
-    <ApplicationManifest>Manifest.xml</ApplicationManifest>
     <GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
   </PropertyGroup>
 

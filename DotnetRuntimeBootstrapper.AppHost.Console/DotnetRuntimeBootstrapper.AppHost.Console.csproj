@@ -1,11 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net35</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>DotnetRuntimeBootstrapper.AppHost</RootNamespace>
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../DotnetRuntimeBootstrapper.AppHost.Core/**/*.cs" Exclude="**/bin/**/*.cs;**/obj/**/*.cs" />
+    <None Include="../DotnetRuntimeBootstrapper.AppHost.Core/*.config" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />

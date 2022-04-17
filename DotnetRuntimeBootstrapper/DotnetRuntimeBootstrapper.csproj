@@ -5,7 +5,7 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Authors>$(Company)</Authors>
-    <Description>.NET runtime bootstrapper for Windows desktop applications</Description>
+    <Description>.NET runtime bootstrapper for Windows applications</Description>
     <IsPackable>true</IsPackable>
     <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
@@ -24,13 +24,23 @@
 
   <!-- Embed the base bootstrapper executable inside the assembly -->
   <ItemGroup>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.exe">
-      <Link>AppHost.exe</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Console/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Console.exe">
+      <Link>AppHost.Console.exe</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.exe.config">
-      <Link>AppHost.exe.config</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Console/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Console.exe.config">
+      <Link>AppHost.Console.exe.config</Link>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Desktop/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Desktop.exe">
+      <Link>AppHost.Desktop.exe</Link>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Desktop/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Desktop.exe.config">
+      <Link>AppHost.Desktop.exe.config</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
@@ -92,7 +102,14 @@
 
   <!-- Non-linking dependency on the bootstrapper executable project (to ensure correct build order) -->
   <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost\DotnetRuntimeBootstrapper.AppHost.csproj">
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Console\DotnetRuntimeBootstrapper.AppHost.Console.csproj">
+      <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <CopyLocal>false</CopyLocal>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Desktop\DotnetRuntimeBootstrapper.AppHost.Desktop.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <CopyLocal>false</CopyLocal>
@@ -102,7 +119,7 @@
   </ItemGroup>
 
   <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
-     (i.e. only for DotnetRuntimeBootstrapper.Demo; shouldn't be required when referenced as NuGet package) -->
+       (i.e. only in the local demo projects; shouldn't be required when referenced as NuGet package) -->
   <PropertyGroup>
     <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
   </PropertyGroup>

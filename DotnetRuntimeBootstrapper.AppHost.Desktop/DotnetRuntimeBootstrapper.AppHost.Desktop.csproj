@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net35</TargetFramework>
+    <RootNamespace>DotnetRuntimeBootstrapper.AppHost</RootNamespace>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>../favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../DotnetRuntimeBootstrapper.AppHost.Core/**/*.cs" Exclude="**/bin/**;**/obj/**" />
+    <None Include="../DotnetRuntimeBootstrapper.AppHost.Core/*.config" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    <PackageReference Include="QuickJson" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Management" />
+  </ItemGroup>
+
+</Project>

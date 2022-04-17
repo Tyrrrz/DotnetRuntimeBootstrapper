@@ -14,8 +14,11 @@ using ResourceType = Ressy.ResourceType;
 
 namespace DotnetRuntimeBootstrapper;
 
-public class CreateBootstrapperTask : Task
+public class BootstrapperTask : Task
 {
+    [Required]
+    public string Variant { get; set; }
+
     [Required]
     public string TargetFilePath { get; set; } = default!;
 
@@ -27,8 +30,8 @@ public class CreateBootstrapperTask : Task
 
     private void ExtractAppHost()
     {
-        var assembly = typeof(CreateBootstrapperTask).Assembly;
-        var resourceName = $"{typeof(CreateBootstrapperTask).Namespace}.AppHost.exe";
+        var assembly = typeof(BootstrapperTask).Assembly;
+        var resourceName = $"{typeof(BootstrapperTask).Namespace}.AppHost.{Variant}.exe";
 
         // Executable file
         assembly.ExtractManifestResource(
@@ -127,7 +130,7 @@ public class CreateBootstrapperTask : Task
 
         if (targetVersionInfo is not null)
         {
-            var bootstrapperVersion = typeof(CreateBootstrapperTask).Assembly.GetName().Version.ToString(3);
+            var bootstrapperVersion = typeof(BootstrapperTask).Assembly.GetName().Version.ToString(3);
 
             appHostPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
                 .SetAll(targetVersionInfo)
@@ -136,7 +139,7 @@ public class CreateBootstrapperTask : Task
                 .SetFileSubType(FileSubType.Unknown)
                 .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
                 .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
-                .SetAttribute("AppHost", $".NET Runtime Bootstrapper v{bootstrapperVersion}")
+                .SetAttribute("AppHost", $".NET Runtime Bootstrapper v{bootstrapperVersion} ({Variant})")
                 .Build()
             );
 
@@ -151,6 +154,9 @@ public class CreateBootstrapperTask : Task
 
     public override bool Execute()
     {
+        Log.LogMessage("Bootstrapper target: '{0}'.", TargetFilePath);
+        Log.LogMessage("Bootstrapper variant: '{0}'.", Variant);
+
         Log.LogMessage("Extracting apphost...");
         ExtractAppHost();
 

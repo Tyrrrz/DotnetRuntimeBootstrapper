@@ -195,7 +195,7 @@ Format (event log):
 Description: Bootstrapper for a .NET application has failed.
 Application: DotnetRuntimeBootstrapper.Demo.exe
 Path: F:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe
-AppHost: .NET Runtime Bootstrapper v2.1.0 (https://github.com/Tyrrrz/DotnetRuntimeBootstrapper)
+AppHost: .NET Runtime Bootstrapper v2.1.0
 Message: System.Exception: Test failure
    at DotnetRuntimeBootstrapper.AppHost.Program.Run(String[] args)
    at DotnetRuntimeBootstrapper.AppHost.Program.Main(String[] args)
@@ -205,7 +205,7 @@ Format (file):
 
 ```txt
 Timestamp: 05.12.2021 0:10:42 +02:00
-AppHost: .NET Runtime Bootstrapper v2.0.0 (https://github.com/Tyrrrz/DotnetRuntimeBootstrapper)
+AppHost: .NET Runtime Bootstrapper v2.0.0
 Message: System.Exception: Test failure
    at DotnetRuntimeBootstrapper.AppHost.Program.Run(String[] args)
    at DotnetRuntimeBootstrapper.AppHost.Program.Main(String[] args)
