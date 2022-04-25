@@ -74,9 +74,9 @@ To add **.NET Runtime Bootstrapper** to your project, simply install the corresp
 MSBuild will automatically pick up the `props` and `targets` files provided by the package and integrate them inside the build process.
 After that, no further configuration is required.
 
-> ⚠ Bootstrapper only supports applications targeting **.NET Core 3.0 or higher**.
+> ⚠️ Bootstrapper only supports applications targeting **.NET Core 3.0 or higher**.
 
-> ⚠ Bootstrapper's user experience is optimized for **desktop applications**.
+> ⚠️ Bootstrapper's user experience is optimized for **desktop applications**.
 > Other application models are supported in theory but not necessarily in practice.
 
 ### Publishing
@@ -96,7 +96,7 @@ MyApp.deps.json
 
 Make sure to include all marked files in your application distribution.
 
-> ⚠ Single-file deployment (`/p:PublishSingleFile=true`) is not supported by the bootstrapper.
+> ⚠️ Single-file deployment (`/p:PublishSingleFile=true`) is not supported by the bootstrapper.
 
 ### Application host
 
@@ -161,7 +161,7 @@ If you want to also have it created on every build, set the `<GenerateBootstrapp
 </Project>
 ```
 
-> ⚠ Bootstrapper's application host does not support debugging.
+> ⚠️ Bootstrapper's application host does not support debugging.
 > In order to retain debugging capabilities of your application during local development, keep `<GenerateBootstrapperOnBuild>` set to `false` (default).
 
 ### Troubleshooting
