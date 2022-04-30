@@ -1,9 +1,10 @@
 ﻿using System;
-using DotnetRuntimeBootstrapper.AppHost.Platform;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Platform.OperatingSystem;
+using System.Linq;
+using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 // Universal C Runtime
 internal class WindowsUpdate2999226Prerequisite : IPrerequisite
@@ -12,11 +13,9 @@ internal class WindowsUpdate2999226Prerequisite : IPrerequisite
 
     public string DisplayName => $"Windows Update {Id}";
 
-    public bool IsInstalled =>
+    public bool IsInstalled() =>
         OperatingSystem.Version >= OperatingSystemVersion.Windows10 ||
-        OperatingSystem.IsUpdateInstalled(Id);
-
-    public bool IsRebootRequired => false;
+        OperatingSystem.GetInstalledUpdates().Contains(Id, StringComparer.OrdinalIgnoreCase);
 
     private string GetInstallerDownloadUrl()
     {

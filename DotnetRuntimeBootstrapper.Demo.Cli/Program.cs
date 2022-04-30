@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace DotnetRuntimeBootstrapper.Demo;
+namespace DotnetRuntimeBootstrapper.Demo.Cli;
 
 public static class Program
 {

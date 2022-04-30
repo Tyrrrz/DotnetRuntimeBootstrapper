@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 using QuickJson;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Dotnet;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
 internal partial class DotnetRuntime
 {
@@ -27,6 +27,11 @@ internal partial class DotnetRuntime
         Name = name;
         Version = version;
     }
+
+    public bool IsSupersededBy(DotnetRuntime other) =>
+        string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) &&
+        Version.Major == other.Version.Major &&
+        Version <= other.Version;
 }
 
 internal partial class DotnetRuntime
@@ -54,10 +59,9 @@ internal partial class DotnetRuntime
             var name = json.TryGetChild("name")?.TryGetString();
             var version = json.TryGetChild("version")?.TryGetString()?.Pipe(VersionEx.TryParse);
 
-            if (string.IsNullOrEmpty(name) || version is null)
-                throw new ApplicationException("Could not parse runtime info from runtime config.");
-
-            return new DotnetRuntime(name, version);
+            return !string.IsNullOrEmpty(name) && version is not null
+                ? new DotnetRuntime(name, version)
+                : throw new ApplicationException("Could not parse runtime info from runtime config.");
         }
 
         var json =

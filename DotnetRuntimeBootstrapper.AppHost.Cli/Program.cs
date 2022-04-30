@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Forms;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Platform.OperatingSystem;
+using DotnetRuntimeBootstrapper.AppHost.Core;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
-namespace DotnetRuntimeBootstrapper.AppHost;
+namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
 public partial class Program
 {
@@ -19,18 +18,7 @@ public partial class Program
         if (!missingPrerequisites.Any())
             return true;
 
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-
-        static DialogResult ShowForm(Form form)
-        {
-            using (form)
-            {
-                Application.Run(form);
-                return form.DialogResult;
-            }
-        }
-
+        /*
         // Prompt installation
         if (ShowForm(new InstallationPromptForm(_targetAssembly, missingPrerequisites)) != DialogResult.Yes)
             return false;
@@ -50,7 +38,7 @@ public partial class Program
             }
 
             return false;
-        }
+        }*/
 
         // Reset environment variables to update PATH and other variables
         // that may have been changed by the installation process.
@@ -85,11 +73,9 @@ public partial class Program
 
 public partial class Program
 {
-    [STAThread]
     public static int Main(string[] args)
     {
         AppDomain.CurrentDomain.UnhandledException += (_, e) => Error.Report(e.ExceptionObject.ToString());
-        Application.ThreadException += (_, e) => Error.Report(e.Exception);
 
         try
         {

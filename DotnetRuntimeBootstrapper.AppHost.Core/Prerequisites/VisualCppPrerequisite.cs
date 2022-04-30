@@ -1,25 +1,24 @@
 ﻿using System;
-using DotnetRuntimeBootstrapper.AppHost.Platform;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
+using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 using Microsoft.Win32;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Platform.OperatingSystem;
+using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 internal class VisualCppPrerequisite : IPrerequisite
 {
     public string DisplayName => "Visual C++ Redistributable 2015-2019";
 
-    public bool IsInstalled => Registry.LocalMachine.ContainsSubKey(
-        OperatingSystem.ProcessorArchitecture.Is64Bit()
-            ? "SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\" +
-              OperatingSystem.ProcessorArchitecture.GetMoniker()
-            : "SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\" +
-              OperatingSystem.ProcessorArchitecture.GetMoniker()
-    );
-
-    public bool IsRebootRequired => false;
+    public bool IsInstalled() =>
+        Registry.LocalMachine.ContainsSubKey(
+            (OperatingSystem.ProcessorArchitecture.Is64Bit()
+                ? "SOFTWARE\\Wow6432Node\\"
+                : "SOFTWARE\\") +
+            "Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\" +
+            OperatingSystem.ProcessorArchitecture.GetMoniker()
+        );
 
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {

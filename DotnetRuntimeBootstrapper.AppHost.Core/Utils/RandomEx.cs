@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 internal static class RandomEx
 {

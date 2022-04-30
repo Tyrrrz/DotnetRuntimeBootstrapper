@@ -3,14 +3,13 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net35</TargetFramework>
-    <RootNamespace>DotnetRuntimeBootstrapper.AppHost</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="../DotnetRuntimeBootstrapper.AppHost.Core/**/*.cs" Exclude="**/bin/**;**/obj/**" />
-    <None Include="../DotnetRuntimeBootstrapper.AppHost.Core/*.config" />
+    <Compile Include="../DotnetRuntimeBootstrapper.AppHost.Core/**/*.cs" Exclude="**/bin/**;**/obj/**" Visible="false" />
+    <None Include="../DotnetRuntimeBootstrapper.AppHost.Core/*.config" Visible="false" />
   </ItemGroup>
   
   <ItemGroup>

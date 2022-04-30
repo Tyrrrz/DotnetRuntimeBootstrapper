@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 
-namespace DotnetRuntimeBootstrapper.AppHost;
+namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
 internal static class Error
 {
@@ -25,7 +24,7 @@ internal static class Error
                 Environment.NewLine +
                 $"Path: {applicationFilePath}" +
                 Environment.NewLine +
-                $"AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion} (desktop)" +
+                $"AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion} (console)" +
                 Environment.NewLine +
                 $"Message: {message}";
 
@@ -41,7 +40,9 @@ internal static class Error
     {
         try
         {
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Error.WriteLine("ERROR: " + message);
+            Console.ResetColor();
         }
         catch
         {

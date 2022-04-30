@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 internal static class PathEx
 {
-    public static string ExecutingDirectoryPath { get; } =
-        Path.GetDirectoryName(typeof(PathEx).Assembly.Location) ??
-        AppDomain.CurrentDomain.BaseDirectory;
+    public static string Combine(params string[] paths) => paths.Aggregate(Path.Combine);
 }

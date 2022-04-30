@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 public interface IPrerequisite
 {
     string DisplayName { get; }
 
-    bool IsInstalled { get; }
+    bool IsInstalled();
 
     IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress);
 }

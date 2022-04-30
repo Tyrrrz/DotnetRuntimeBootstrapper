@@ -1,5 +1,5 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.AppHost.Desktop", "DotnetRuntimeBootstrapper.AppHost.Desktop\DotnetRuntimeBootstrapper.AppHost.Desktop.csproj", "{C3E22118-1186-41FB-939F-7C48EA109D07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.AppHost.Gui", "DotnetRuntimeBootstrapper.AppHost.Gui\DotnetRuntimeBootstrapper.AppHost.Gui.csproj", "{C3E22118-1186-41FB-939F-7C48EA109D07}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper", "DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj", "{40809F7D-623B-4CB1-8EF4-25A90352B487}"
 EndProject
@@ -11,13 +11,13 @@ ProjectSection(SolutionItems) = preProject
 	Readme.md = Readme.md
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Demo.Desktop", "DotnetRuntimeBootstrapper.Demo.Desktop\DotnetRuntimeBootstrapper.Demo.Desktop.csproj", "{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Demo.Gui", "DotnetRuntimeBootstrapper.Demo.Gui\DotnetRuntimeBootstrapper.Demo.Gui.csproj", "{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.AppHost.Core", "DotnetRuntimeBootstrapper.AppHost.Core\DotnetRuntimeBootstrapper.AppHost.Core.csproj", "{BBC765B2-054F-4F83-911E-52E1FA180AB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Demo.Console", "DotnetRuntimeBootstrapper.Demo.Console\DotnetRuntimeBootstrapper.Demo.Console.csproj", "{87960C84-72B2-4472-888A-D85E92CFEFC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Demo.Cli", "DotnetRuntimeBootstrapper.Demo.Cli\DotnetRuntimeBootstrapper.Demo.Cli.csproj", "{87960C84-72B2-4472-888A-D85E92CFEFC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.AppHost.Console", "DotnetRuntimeBootstrapper.AppHost.Console\DotnetRuntimeBootstrapper.AppHost.Console.csproj", "{FF316DCE-0272-4BAB-9BA9-ED3BCF2BECC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.AppHost.Cli", "DotnetRuntimeBootstrapper.AppHost.Cli\DotnetRuntimeBootstrapper.AppHost.Cli.csproj", "{FF316DCE-0272-4BAB-9BA9-ED3BCF2BECC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

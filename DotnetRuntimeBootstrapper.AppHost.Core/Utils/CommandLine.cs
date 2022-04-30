@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Linq;
-using DotnetRuntimeBootstrapper.AppHost.Native;
+using DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 internal static class CommandLine
 {

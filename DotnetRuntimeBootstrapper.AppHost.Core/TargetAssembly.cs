@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using DotnetRuntimeBootstrapper.AppHost.Dotnet;
-using DotnetRuntimeBootstrapper.AppHost.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
+using DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
+using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
-namespace DotnetRuntimeBootstrapper.AppHost;
+namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
 public partial class TargetAssembly
 {
@@ -60,7 +61,7 @@ public partial class TargetAssembly
             prerequisites.Add(new DotnetPrerequisite(runtime));
 
         // Filter out prerequisites that are already installed
-        prerequisites.RemoveAll(p => p.IsInstalled);
+        prerequisites.RemoveAll(p => p.IsInstalled());
 
         return prerequisites.ToArray();
     }
@@ -79,7 +80,11 @@ public partial class TargetAssembly
         // Target assembly file name is provided to the bootstrapper in an embedded
         // resource. It's injected during the build process by a special MSBuild task.
         var fileName = typeof(TargetAssembly).Assembly.GetManifestResourceString(nameof(TargetAssembly));
-        var filePath = Path.Combine(PathEx.ExecutingDirectoryPath, fileName);
+
+        var filePath = Path.Combine(
+            Path.GetDirectoryName(EnvironmentEx.ProcessPath) ?? AppDomain.CurrentDomain.BaseDirectory,
+            fileName
+        );
 
         // Ensure that the target assembly is present in the executing directory
         if (!File.Exists(filePath))

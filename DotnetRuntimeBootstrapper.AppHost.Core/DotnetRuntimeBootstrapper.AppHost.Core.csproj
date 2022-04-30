@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net35</TargetFramework>
-    <RootNamespace>DotnetRuntimeBootstrapper.AppHost</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

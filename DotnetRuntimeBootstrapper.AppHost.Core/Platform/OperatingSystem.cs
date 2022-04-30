@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Management;
-using DotnetRuntimeBootstrapper.AppHost.Native;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Native;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Platform;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 
 internal static class OperatingSystem
 {
@@ -21,7 +22,7 @@ internal static class OperatingSystem
         _ => throw new InvalidOperationException("Unknown processor architecture.")
     };
 
-    public static bool IsUpdateInstalled(string updateId)
+    public static IEnumerable<string> GetInstalledUpdates()
     {
         using var search = new ManagementObjectSearcher("SELECT HotFixID FROM Win32_QuickFixEngineering");
         using var results = search.Get();
@@ -29,11 +30,9 @@ internal static class OperatingSystem
         foreach (var result in results)
         {
             var id = result["HotFixID"] as string;
-            if (string.Equals(id, updateId, StringComparison.OrdinalIgnoreCase))
-                return true;
+            if (!string.IsNullOrEmpty(id))
+                yield return id;
         }
-
-        return false;
     }
 
     public static void Reboot() => CommandLine.Run("shutdown", new[] {"/r", "/t", "0"});

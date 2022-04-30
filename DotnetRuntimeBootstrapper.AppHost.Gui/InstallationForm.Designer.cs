@@ -1,4 +1,4 @@
-﻿namespace DotnetRuntimeBootstrapper.AppHost
+﻿namespace DotnetRuntimeBootstrapper.AppHost.Gui
 {
     partial class InstallationForm
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 internal static class CollectionExtensions
 {

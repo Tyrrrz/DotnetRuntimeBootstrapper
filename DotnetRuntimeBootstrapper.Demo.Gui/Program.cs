@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace DotnetRuntimeBootstrapper.Demo;
+namespace DotnetRuntimeBootstrapper.Demo.Gui;
 
 public static class Program
 {

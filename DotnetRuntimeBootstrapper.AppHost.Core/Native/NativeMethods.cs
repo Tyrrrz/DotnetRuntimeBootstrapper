@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
-namespace DotnetRuntimeBootstrapper.AppHost.Native;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 internal static class NativeMethods
 {

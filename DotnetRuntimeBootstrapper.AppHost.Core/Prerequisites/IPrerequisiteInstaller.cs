@@ -1,4 +1,4 @@
-﻿namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
+﻿namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 public interface IPrerequisiteInstaller
 {

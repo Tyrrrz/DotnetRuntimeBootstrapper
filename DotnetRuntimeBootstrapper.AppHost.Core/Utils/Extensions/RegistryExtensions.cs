@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 internal static class RegistryExtensions
 {

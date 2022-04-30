@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Native;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 internal partial class ProcessJob : IDisposable
 {

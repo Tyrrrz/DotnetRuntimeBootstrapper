@@ -1,9 +1,10 @@
 ﻿using System;
-using DotnetRuntimeBootstrapper.AppHost.Platform;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Platform.OperatingSystem;
+using System.Linq;
+using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 // Security update
 internal class WindowsUpdate3063858Prerequisite : IPrerequisite
@@ -12,13 +13,13 @@ internal class WindowsUpdate3063858Prerequisite : IPrerequisite
 
     public string DisplayName => $"Windows Update {Id}";
 
-    public bool IsInstalled =>
+    public bool IsInstalled() =>
         OperatingSystem.Version >= OperatingSystemVersion.Windows8 ||
-        OperatingSystem.IsUpdateInstalled(Id) ||
-        // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
-        OperatingSystem.IsUpdateInstalled("KB3068708");
-
-    public bool IsRebootRequired => true;
+        OperatingSystem.GetInstalledUpdates().Any(u =>
+            string.Equals(u, Id, StringComparison.OrdinalIgnoreCase) ||
+            // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
+            string.Equals(u, "KB3068708", StringComparison.OrdinalIgnoreCase)
+        );
 
     private string GetInstallerDownloadUrl()
     {

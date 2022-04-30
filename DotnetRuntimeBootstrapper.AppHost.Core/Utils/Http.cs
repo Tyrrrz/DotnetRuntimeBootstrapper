@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 internal static class Http
 {

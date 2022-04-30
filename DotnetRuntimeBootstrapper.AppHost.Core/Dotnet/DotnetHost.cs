@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using DotnetRuntimeBootstrapper.AppHost.Native;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Utils.Extensions;
+using DotnetRuntimeBootstrapper.AppHost.Core.Native;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Dotnet;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
 // Headers for hostfxr.dll:
 // https://github.com/dotnet/runtime/blob/57bfe47451/src/native/corehost/hostfxr.h
@@ -105,7 +105,7 @@ internal partial class DotnetHost : IDisposable
         }
     }
 
-    private void Unload(IntPtr handle) =>
+    private void Close(IntPtr handle) =>
         // Closing the handle doesn't completely unload the host.
         // There are some native libraries loaded by the resolver
         // that are purposefully leaked to preserve state.
@@ -124,7 +124,7 @@ internal partial class DotnetHost : IDisposable
         }
         finally
         {
-            Unload(handle);
+            Close(handle);
         }
     }
 
@@ -140,31 +140,26 @@ internal partial class DotnetHost
         // 1. Find the hostfxr directory containing versioned subdirectories
         // 2. Get the hostfxr.dll from the subdirectory with the highest version number
 
-        var hostfxrRootDirPath = Path.Combine(Path.Combine(DotnetInstallation.GetDirectoryPath(), "host"), "fxr");
+        var hostfxrRootDirPath = PathEx.Combine(DotnetInstallation.GetDirectoryPath(), "host", "fxr");
         if (!Directory.Exists(hostfxrRootDirPath))
             throw new DirectoryNotFoundException("Could not find directory containing hostfxr.dll.");
 
-        var highestVersion = default(Version);
-        var highestVersionFilePath = default(string);
-        foreach (var dirPath in Directory.GetDirectories(hostfxrRootDirPath))
-        {
-            var version = VersionEx.TryParse(Path.GetFileName(dirPath));
-            if (version is null)
-                continue;
-
-            var filePath = Path.Combine(dirPath, "hostfxr.dll");
-            if (!File.Exists(filePath))
-                continue;
-
-            if (highestVersion is null || version > highestVersion)
-            {
-                highestVersion = version;
-                highestVersionFilePath = filePath;
-            }
-        }
-
-        return highestVersionFilePath ?? throw new FileNotFoundException("Could not find hostfxr.dll.");
+        var hostfxrFilePath = (
+            from dirPath in Directory.GetDirectories(hostfxrRootDirPath)
+            let version = VersionEx.TryParse(Path.GetFileName(dirPath))
+            let filePath = Path.Combine(dirPath, "hostfxr.dll")
+            where version is not null
+            where File.Exists(filePath)
+            orderby version descending
+            select filePath
+        ).FirstOrDefault();
+        
+        return
+            hostfxrFilePath ??
+            throw new FileNotFoundException("Could not find hostfxr.dll.");
     }
 
-    public static DotnetHost Initialize() => new(NativeLibrary.Load(GetHostfxrFilePath()));
+    public static DotnetHost Initialize() => new(
+        NativeLibrary.Load(GetHostfxrFilePath())
+    );
 }

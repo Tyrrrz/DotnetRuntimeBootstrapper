@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
-using DotnetRuntimeBootstrapper.AppHost.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core;
+using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
-namespace DotnetRuntimeBootstrapper.AppHost;
+namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
 public partial class InstallationForm : Form
 {

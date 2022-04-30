@@ -31,7 +31,12 @@ public class BootstrapperTask : Task
     private void ExtractAppHost()
     {
         var assembly = typeof(BootstrapperTask).Assembly;
-        var resourceName = $"{typeof(BootstrapperTask).Namespace}.AppHost.{Variant}.exe";
+        var resourceName = typeof(BootstrapperTask).Namespace + Variant.ToUpperInvariant() switch
+        {
+            "CLI" => ".AppHost.Cli.exe",
+            "GUI" => ".AppHost.Gui.exe",
+            _ => throw new InvalidOperationException($"Unknown bootstrapper variant '{Variant}'.")
+        };
 
         // Executable file
         assembly.ExtractManifestResource(

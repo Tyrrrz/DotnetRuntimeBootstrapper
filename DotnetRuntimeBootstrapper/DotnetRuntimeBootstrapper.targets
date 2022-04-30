@@ -3,36 +3,36 @@
   <Target Name="CheckBootstrapperPrerequisites" BeforeTargets="CreateBootstrapperAfterBuild;CreateBootstrapperAfterPublish">
     <!-- Warning: not .NET Core -->
     <Warning
+      Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'"
       Code="DRB_NOT_NETCORE"
-      Text="Project is not targeting .NET Core. Bootstrapper will not be created."
-      Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'" />
+      Text="Project is not targeting .NET Core. Bootstrapper will not be created." />
 
     <!-- Warning: not Windows target platform -->
     <Warning
+      Condition="'$(TargetPlatformIdentifier)' != 'Windows'"
       Code="DRB_NOT_WINDOWS"
-      Text="Target platform is not Windows. Boostrapper will not be created."
-      Condition="'$(TargetPlatformIdentifier)' != 'Windows'" />
+      Text="Target platform is not Windows. Boostrapper will not be created." />
 
     <!-- Warning: bootstrapper variant not specified nor inferred -->
     <Warning
+      Condition="'$(BootstrapperVariant)' == ''"
       Code="DRB_UNKNOWN_VARIANT"
-      Text="Bootstrapper variant was not specified and could not be inferred. Bootstrapper will not be created."
-      Condition="'$(BootstrapperVariant)' == ''" />
+      Text="Bootstrapper variant was not specified and could not be inferred. Bootstrapper will not be created." />
   </Target>
 
   <Target
+    Condition="$(GenerateBootstrapperOnBuild) == true AND '$(BootstrapperVariant)' != '' AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(TargetPlatformIdentifier)' == 'Windows'"
     Name="CreateBootstrapperAfterBuild"
-    AfterTargets="Build"
-    Condition="$(GenerateBootstrapperOnBuild) == true AND '$(BootstrapperVariant)' != '' AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(TargetPlatformIdentifier)' == 'Windows'">
+    AfterTargets="Build">
     <BootstrapperTask
       Variant="$(BootstrapperVariant)"
       TargetFilePath="$(TargetPath)" />
   </Target>
 
   <Target
+    Condition="'$(BootstrapperVariant)' != '' AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(TargetPlatformIdentifier)' == 'Windows'"
     Name="CreateBootstrapperAfterPublish"
-    AfterTargets="Publish"
-    Condition="'$(BootstrapperVariant)' != '' AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(TargetPlatformIdentifier)' == 'Windows'">
+    AfterTargets="Publish">
     <BootstrapperTask
       Variant="$(BootstrapperVariant)"
       TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))" />

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Native;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 internal partial class NativeLibrary : IDisposable
 {

@@ -24,23 +24,23 @@
 
   <!-- Embed the base bootstrapper executable inside the assembly -->
   <ItemGroup>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Console/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Console.exe">
-      <Link>AppHost.Console.exe</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Cli/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Cli.exe">
+      <Link>AppHost.Cli.exe</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Console/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Console.exe.config">
-      <Link>AppHost.Console.exe.config</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Cli/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Cli.exe.config">
+      <Link>AppHost.Cli.exe.config</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Desktop/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Desktop.exe">
-      <Link>AppHost.Desktop.exe</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Gui/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Gui.exe">
+      <Link>AppHost.Gui.exe</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
-    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Desktop/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Desktop.exe.config">
-      <Link>AppHost.Desktop.exe.config</Link>
+    <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Gui/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Gui.exe.config">
+      <Link>AppHost.Gui.exe.config</Link>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Visible>false</Visible>
     </EmbeddedResource>
@@ -94,22 +94,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.11.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.11.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.1.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.1.0" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Ressy" Version="1.0.0" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
-  <!-- Non-linking dependency on the bootstrapper executable project (to ensure correct build order) -->
+  <!-- Non-linking dependency on the apphosot projects to ensure correct build order -->
   <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Console\DotnetRuntimeBootstrapper.AppHost.Console.csproj">
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Cli\DotnetRuntimeBootstrapper.AppHost.Cli.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <CopyLocal>false</CopyLocal>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Desktop\DotnetRuntimeBootstrapper.AppHost.Desktop.csproj">
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Gui\DotnetRuntimeBootstrapper.AppHost.Gui.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <CopyLocal>false</CopyLocal>

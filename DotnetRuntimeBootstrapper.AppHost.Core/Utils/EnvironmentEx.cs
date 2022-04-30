@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Linq;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Utils;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 internal static class EnvironmentEx
 {
+    public static string ProcessPath { get; } = typeof(EnvironmentEx).Assembly.Location;
+
     public static void ResetEnvironmentVariables()
     {
         var machineEnvironmentVariables = Environment

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Platform;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 
 internal static class OperatingSystemVersion
 {

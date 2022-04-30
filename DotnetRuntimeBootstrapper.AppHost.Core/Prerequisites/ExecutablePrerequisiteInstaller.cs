@@ -1,7 +1,7 @@
 ﻿using System;
-using DotnetRuntimeBootstrapper.AppHost.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Prerequisites;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 internal class ExecutablePrerequisiteInstaller : IPrerequisiteInstaller
 {

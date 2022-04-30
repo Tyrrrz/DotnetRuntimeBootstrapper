@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace DotnetRuntimeBootstrapper.Demo;
+namespace DotnetRuntimeBootstrapper.Demo.Gui;
 
 public partial class MainForm : Form
 {

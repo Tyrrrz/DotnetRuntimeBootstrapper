@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace DotnetRuntimeBootstrapper.AppHost.Native;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 [StructLayout(LayoutKind.Sequential)]
 internal readonly partial struct SystemVersionInfo

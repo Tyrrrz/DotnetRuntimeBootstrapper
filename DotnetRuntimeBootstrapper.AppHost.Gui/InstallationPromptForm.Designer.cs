@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace DotnetRuntimeBootstrapper.AppHost
+namespace DotnetRuntimeBootstrapper.AppHost.Gui
 {
     partial class InstallationPromptForm
     {
