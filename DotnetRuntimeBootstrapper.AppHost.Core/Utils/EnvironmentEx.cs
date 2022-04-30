@@ -8,7 +8,7 @@ internal static class EnvironmentEx
 {
     public static string ProcessPath { get; } = typeof(EnvironmentEx).Assembly.Location;
 
-    public static void ResetEnvironmentVariables()
+    public static void RefreshEnvironmentVariables()
     {
         var machineEnvironmentVariables = Environment
             .GetEnvironmentVariables(EnvironmentVariableTarget.Machine)

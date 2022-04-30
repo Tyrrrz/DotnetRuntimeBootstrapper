@@ -23,7 +23,7 @@ public partial class Program
         }
     }
 
-    private bool InstallMissingPrerequisites()
+    private bool EnsurePrerequisites()
     {
         var missingPrerequisites = _targetAssembly.GetMissingPrerequisites();
         if (!missingPrerequisites.Any())
@@ -55,7 +55,7 @@ public partial class Program
 
         // Reset environment variables to update PATH and other variables
         // that may have been changed by the installation process.
-        EnvironmentEx.ResetEnvironmentVariables();
+        EnvironmentEx.RefreshEnvironmentVariables();
 
         return true;
     }
@@ -72,7 +72,7 @@ public partial class Program
         // - .NET host failed to initialize (ApplicationException)
         catch
         {
-            if (!InstallMissingPrerequisites())
+            if (!EnsurePrerequisites())
             {
                 // User canceled or reboot is required
                 return 0xB007;

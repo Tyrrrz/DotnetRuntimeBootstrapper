@@ -12,9 +12,9 @@ public static class Program
         {
             Console.WriteLine("Routed command line arguments:");
             Console.WriteLine(string.Join(" ", args));
+            Console.WriteLine();
         }
 
-        Console.WriteLine();
         Console.WriteLine("Hello world!");
     }
 }
