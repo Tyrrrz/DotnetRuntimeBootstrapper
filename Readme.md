@@ -54,6 +54,7 @@ Combining the best of both framework-dependent and self-contained deployments, b
 ## Features
 
 - Runs the application in-process using a custom runtime host
+- Comes in both GUI and CLI variants
 - Detects and installs missing dependencies:
   - Required version of .NET runtime
   - Required Visual C++ binaries
@@ -76,11 +77,7 @@ After that, no further configuration is required.
 
 > **Warning**:
 > Bootstrapper only supports applications targeting **.NET Core 3.0 or higher**.
-
-> **Warning**:
-> Bootstrapper's user experience is optimized for **desktop applications**.
-> Other application models are supported in theory but not necessarily in practice.
-
+ 
 ### Publishing
 
 In order to create a sharable distribution of your application, run `dotnet publish` as you normally would.
@@ -130,15 +127,15 @@ flowchart
 
 When the bootstrapper is created, the build task copies important native resources from the target assembly into the application host:
 
-- Application manifest (resource type: `24`). Can be configured by the `<ApplicationManifest>` project property.
-- Application icon (resource types: `3` and `14`). Can be configured by the `<ApplicationIcon>` project property.
+- Application manifest (resource type: `24`). Configured by the `<ApplicationManifest>` project property.
+- Application icon (resource types: `3` and `14`). Configured by the `<ApplicationIcon>` project property.
 - Version info (resource type: `16`). Contains values configured by `<FileVersion>`, `<InformationalVersion>`, `<Product>`, `<Copyright>`, and other similar project properties.
 
 Additionally, version info resource is further modified to contain the following attributes:
 
 - `InternalName` set to the application host's file name.
 - `OriginalName` set to the application host's file name.
-- `AppHost` set to `.NET Runtime Bootstrapper vX.Y.Z` where `X.Y.Z` is the version of the bootstrapper.
+- `AppHost` set to `.NET Runtime Bootstrapper vX.Y.Z (VARIANT)` where `X.Y.Z` is the version of the bootstrapper and `VARIANT` is either `CLI` or `GUI`.
 
 ### Options
 
@@ -167,6 +164,28 @@ If you want to also have it created on every build, set the `<GenerateBootstrapp
 > **Warning**:
 > Bootstrapper's application host does not support debugging.
 > In order to retain debugging capabilities of your application during local development, keep `<GenerateBootstrapperOnBuild>` set to `false` (default).
+
+#### Override application host variant
+
+Depending on your application type (i.e. the value of the `<OutputType>` project property), **.NET Runtime Bootstrapper** will generate either a CLI-based or a GUI-based application host.
+You can override the default behavior and specify the preferred variant explicitly by setting the `<BootstrapperVariant>` project property to either `CLI` or `GUI`:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <!-- ... -->
+
+    <!-- Specify bootstrapper variant explicitly (GUI or CLI) -->
+    <BootstrapperVariant>GUI</BootstrapperVariant>
+  </PropertyGroup>
+
+  <!-- ... -->
+
+</Project>
+```
 
 ### Troubleshooting
 
@@ -201,10 +220,10 @@ The dump has the following format:
 Description: Bootstrapper for a .NET application has failed.
 Application: DotnetRuntimeBootstrapper.Demo.exe
 Path: F:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe
-AppHost: .NET Runtime Bootstrapper v2.2.0
+AppHost: .NET Runtime Bootstrapper v2.3.0 (GUI)
 Message: System.Exception: Test failure
-   at DotnetRuntimeBootstrapper.AppHost.Program.Run(String[] args)
-   at DotnetRuntimeBootstrapper.AppHost.Program.Main(String[] args)
+   at DotnetRuntimeBootstrapper.AppHost.Gui.Bootstrapper.Run(String[] args)
+   at DotnetRuntimeBootstrapper.AppHost.Gui.Program.Main(String[] args)
 ```
 
 Older versions of the bootstrapper (version 2.1 and below) instead created an error dump on the file system in either of the following locations:
