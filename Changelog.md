@@ -1,3 +1,8 @@
+### v2.3 (10-Jun-2022)
+
+- Added console variant of the application host. This variant will be used automatically for non-desktop applications (i.e. not `WinExe`). You can also specify the variant explicitly by setting the `<BootstrapperVariant>` project property to either `CLI` or `GUI`.
+- Fixed an issue where the base runtime was not installed for applications targeting the ASP.NET runtime.
+
 ### v2.2 (10-Feb-2022)
 
 - Changed error logging approach to use Windows Event Log instead of relying on the file system. If the bootstrapper crashes with a fatal error, it will now write a new entry to the event log with `1023` as event ID and `.NET Runtime` as source. Readme has been updated with new troubleshooting instructions.
