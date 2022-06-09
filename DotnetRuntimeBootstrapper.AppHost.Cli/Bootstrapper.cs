@@ -128,15 +128,16 @@ public class Bootstrapper : BootstrapperBase
         var installers = new List<IPrerequisiteInstaller>();
         foreach (var prerequisite in missingPrerequisites)
         {
-            Console.Out.Write($"[{currentStep} / {totalSteps}] ");
+            Console.Out.Write($"[{currentStep}/{totalSteps}] ");
             Console.Out.Write($"Downloading {prerequisite.DisplayName}... ");
 
-            using var progress = new ConsoleProgress(Console.Out);
+            using (var progress = new ConsoleProgress(Console.Out))
             {
                 var installer = prerequisite.DownloadInstaller(progress.Report);
                 installers.Add(installer);
             }
 
+            Console.Out.Write("Done");
             Console.Out.WriteLine();
 
             currentStep++;
@@ -146,17 +147,25 @@ public class Bootstrapper : BootstrapperBase
         var isRebootRequired = false;
         foreach (var installer in installers)
         {
-            Console.Out.Write($"[{currentStep} / {totalSteps}] ");
+            Console.Out.Write($"[{currentStep}/{totalSteps}] ");
             Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}...");
-            Console.Out.WriteLine();
 
-            if (installer.Run() == PrerequisiteInstallerResult.RebootRequired)
-                isRebootRequired = true;
+            var installationResult = installer.Run();
+
+            Console.Out.Write("Done");
+            Console.Out.WriteLine();
 
             FileEx.TryDelete(installer.FilePath);
 
+            if (installationResult == PrerequisiteInstallerResult.RebootRequired)
+                isRebootRequired = true;
+
             currentStep++;
         }
+
+        using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
+            Console.Out.WriteLine("Prerequisites installed successfully.");
+        Console.Out.WriteLine();
 
         // Finalize
         if (isRebootRequired)

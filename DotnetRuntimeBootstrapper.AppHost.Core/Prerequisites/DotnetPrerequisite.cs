@@ -14,10 +14,13 @@ internal class DotnetPrerequisite : IPrerequisite
 {
     private readonly DotnetRuntime _runtime;
 
-    private string ShortName =>
-        _runtime.Name
-            .TrimStart("Microsoft.", StringComparison.OrdinalIgnoreCase)
-            .TrimEnd(".App", StringComparison.OrdinalIgnoreCase);
+    private string ShortName => _runtime switch
+    {
+        { IsWindowsDesktop: true } => "Desktop",
+        { IsAspNet: true } => "ASP.NET",
+        { IsBase: true } => "Base",
+        _ => _runtime.Name
+    };
 
     public string DisplayName => $".NET Runtime ({ShortName}) v{_runtime.Version}";
 
@@ -54,8 +57,8 @@ internal class DotnetPrerequisite : IPrerequisite
                 .TryGetChild(0)?
                 .TryGetChild(_runtime switch
                 {
-                    {IsWindowsDesktop: true} => "windowsdesktop",
-                    {IsAspNet: true} => "aspnetcore-runtime",
+                    { IsWindowsDesktop: true } => "windowsdesktop",
+                    { IsAspNet: true } => "aspnetcore-runtime",
                     _ => "runtime"
                 })?
                 .TryGetChild("files")?

@@ -70,11 +70,14 @@ public partial class InstallationForm : Form
 
     private void PerformInstall()
     {
+        var currentStep = 1;
+        var totalSteps = _missingPrerequisites.Length * 2;
+
         // Download
         var installers = new List<IPrerequisiteInstaller>();
         foreach (var prerequisite in _missingPrerequisites)
         {
-            UpdateStatus(@$"Downloading {prerequisite.DisplayName}");
+            UpdateStatus(@$"[{currentStep}/{totalSteps}] Downloading {prerequisite.DisplayName}...");
             UpdateCurrentProgress(0);
 
             var installer = prerequisite.DownloadInstaller(p =>
@@ -84,6 +87,8 @@ public partial class InstallationForm : Form
             });
 
             installers.Add(installer);
+
+            currentStep++;
         }
 
         // Install
@@ -91,15 +96,18 @@ public partial class InstallationForm : Form
         var installersFinishedCount = 0;
         foreach (var installer in installers)
         {
-            UpdateStatus(@$"Installing {installer.Prerequisite.DisplayName}");
+            UpdateStatus(@$"[{currentStep}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}...");
             UpdateCurrentProgress(-1);
 
-            if (installer.Run() == PrerequisiteInstallerResult.RebootRequired)
-                isRebootRequired = true;
+            var installationResult = installer.Run();
 
             FileEx.TryDelete(installer.FilePath);
 
+            if (installationResult == PrerequisiteInstallerResult.RebootRequired)
+                isRebootRequired = true;
+
             UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
+            currentStep++;
         }
 
         // Finalize

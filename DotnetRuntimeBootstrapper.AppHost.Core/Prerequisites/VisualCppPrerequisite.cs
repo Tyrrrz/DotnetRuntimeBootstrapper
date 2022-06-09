@@ -25,7 +25,7 @@ internal class VisualCppPrerequisite : IPrerequisite
         var fileName = $"VC_redist.{OperatingSystem.ProcessorArchitecture.GetMoniker()}.exe";
         var filePath = FileEx.GenerateTempFilePath(fileName);
 
-        Http.DownloadFile($"https://aka.ms/vs/16/release/{fileName}", filePath, handleProgress);
+        Http.DownloadFile($"http://aka.ms/vs/16/release/{fileName}", filePath, handleProgress);
 
         return new ExecutablePrerequisiteInstaller(this, filePath);
     }
