@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
@@ -12,14 +13,6 @@ public partial class InstallationForm : Form
 {
     private readonly TargetAssembly _targetAssembly;
     private readonly IPrerequisite[] _missingPrerequisites;
-
-    public InstallationForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
-    {
-        _targetAssembly = targetAssembly;
-        _missingPrerequisites = missingPrerequisites;
-
-        InitializeComponent();
-    }
 
     // Disable close button
     protected override CreateParams CreateParams
@@ -32,9 +25,21 @@ public partial class InstallationForm : Form
         }
     }
 
+    public bool Result { get; private set; }
+
+    public InstallationForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
+    {
+        _targetAssembly = targetAssembly;
+        _missingPrerequisites = missingPrerequisites;
+
+        InitializeComponent();
+    }
+
     private void InvokeOnUI(Action action) => Invoke(action);
 
-    private void UpdateStatus(string status) => InvokeOnUI(() => StatusLabel.Text = status);
+    private void UpdateStatus(string status) => InvokeOnUI(() =>
+        StatusLabel.Text = status
+    );
 
     private void UpdateCurrentProgress(double progress) => InvokeOnUI(() =>
     {
@@ -98,7 +103,26 @@ public partial class InstallationForm : Form
         }
 
         // Finalize
-        DialogResult = isRebootRequired ? DialogResult.Retry : DialogResult.OK;
+        if (isRebootRequired)
+        {
+            var isRebootAccepted = MessageBox.Show(
+                @$"You need to restart Windows before you can run {_targetAssembly.Title}. " +
+                @"Would you like to do it now?",
+                @"Restart required",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            ) == DialogResult.Yes;
+
+            if (isRebootAccepted)
+                OperatingSystem.Reboot();
+
+            Result = false;
+        }
+        else
+        {
+            Result = true;
+        }
+
         Close();
     }
 
@@ -107,7 +131,7 @@ public partial class InstallationForm : Form
         Text = @$"{_targetAssembly.Title}: installing prerequisites";
         Icon = IconEx.TryExtractAssociatedIcon(Application.ExecutablePath);
 
-        UpdateStatus(@"Downloading files...");
+        UpdateStatus(@"Preparing installation");
 
         new Thread(PerformInstall)
         {

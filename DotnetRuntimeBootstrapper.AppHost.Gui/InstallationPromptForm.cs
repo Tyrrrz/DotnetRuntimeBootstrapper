@@ -13,6 +13,8 @@ public partial class InstallationPromptForm : Form
     private readonly TargetAssembly _targetAssembly;
     private readonly IPrerequisite[] _missingPrerequisites;
 
+    public bool Result { get; private set; }
+
     public InstallationPromptForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
     {
         _targetAssembly = targetAssembly;
@@ -31,13 +33,13 @@ public partial class InstallationPromptForm : Form
 
     private void InstallButton_Click(object sender, EventArgs e)
     {
-        DialogResult = DialogResult.Yes;
+        Result = true;
         Close();
     }
 
     private void ExitButton_Click(object sender, EventArgs e)
     {
-        DialogResult = DialogResult.Cancel;
+        Result = false;
         Close();
     }
 }

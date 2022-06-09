@@ -74,15 +74,17 @@ internal partial class DotnetHost : IDisposable
         if (status != 0)
         {
             throw new ApplicationException(
-                "Failed to initialize .NET host." +
-                Environment.NewLine +
-                "Target: " + targetFilePath +
-                Environment.NewLine +
-                "Arguments: [" + string.Join(", ", args) + ']' +
-                Environment.NewLine +
-                "Status: " + status +
-                Environment.NewLine +
-                (errorBuffer.Length > 0 ? errorBuffer : "No error messages reported.")
+                string.Join(
+                    Environment.NewLine,
+                    new[]
+                    {
+                        "Failed to initialize .NET host.",
+                        "Target: " + targetFilePath,
+                        "Arguments: [" + string.Join(", ", args) + ']',
+                        "Status: " + status,
+                        errorBuffer.Length > 0 ? errorBuffer.ToString() : "No error messages reported."
+                    }
+                )
             );
         }
 
@@ -153,7 +155,7 @@ internal partial class DotnetHost
             orderby version descending
             select filePath
         ).FirstOrDefault();
-        
+
         return
             hostfxrFilePath ??
             throw new FileNotFoundException("Could not find hostfxr.dll.");

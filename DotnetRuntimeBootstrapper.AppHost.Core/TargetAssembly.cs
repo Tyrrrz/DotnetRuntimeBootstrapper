@@ -27,7 +27,7 @@ public partial class TargetAssembly
         var configFilePath = Path.ChangeExtension(FilePath, "runtimeconfig.json");
         var runtimes = DotnetRuntime.GetAllTargets(configFilePath).ToList();
 
-        // Desktop runtimes already include the base runtime, so we can filter out unnecessary targets
+        // Desktop runtimes already include the base runtimes, so we can filter out unnecessary targets
         // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/30
         if (runtimes.Count > 1)
         {
