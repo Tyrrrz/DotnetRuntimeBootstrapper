@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <GenerateBootstrapperOnBuild Condition="'$(GenerateBootstrapperOnBuild)' == ''">false</GenerateBootstrapperOnBuild>
-    <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' != 'WinExe'">CLI</BootstrapperVariant>
-    <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
   </PropertyGroup>
 
   <PropertyGroup>

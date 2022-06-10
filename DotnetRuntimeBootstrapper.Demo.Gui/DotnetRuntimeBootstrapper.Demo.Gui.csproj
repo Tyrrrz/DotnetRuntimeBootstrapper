@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Import props/targets manually (normally taken care of by NuGet) -->
+  <!-- Has to be before any other props or targets, to match NuGet behavior -->
+  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
+  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.targets" />
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -9,10 +14,6 @@
     <ApplicationManifest>Manifest.xml</ApplicationManifest>
     <GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
   </PropertyGroup>
-
-  <!-- Import props/targets manually (normally taken care of by NuGet) -->
-  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
-  <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.targets" />
 
   <ItemGroup>
     <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />

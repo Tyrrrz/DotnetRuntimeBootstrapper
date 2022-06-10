@@ -9,30 +9,34 @@
 
     <!-- Warning: not Windows target platform -->
     <Warning
-      Condition="'$(TargetPlatformIdentifier)' != 'Windows'"
+      Condition="'$(OS)' != 'Windows_NT'"
       Code="DRB_NOT_WINDOWS"
       Text="Target platform is not Windows. Boostrapper will not be created." />
-
-    <!-- Warning: bootstrapper variant not specified nor inferred -->
-    <Warning
-      Condition="'$(BootstrapperVariant)' == ''"
-      Code="DRB_UNKNOWN_VARIANT"
-      Text="Bootstrapper variant was not specified and could not be inferred. Bootstrapper will not be created." />
   </Target>
 
   <Target
-    Condition="$(GenerateBootstrapperOnBuild) == true AND '$(BootstrapperVariant)' != '' AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(TargetPlatformIdentifier)' == 'Windows'"
+    Condition="$(GenerateBootstrapperOnBuild) AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OS)' == 'Windows_NT'"
     Name="CreateBootstrapperAfterBuild"
     AfterTargets="Build">
+    <PropertyGroup>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+    </PropertyGroup>
+
     <BootstrapperTask
       Variant="$(BootstrapperVariant)"
       TargetFilePath="$(TargetPath)" />
   </Target>
 
   <Target
-    Condition="'$(BootstrapperVariant)' != '' AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(TargetPlatformIdentifier)' == 'Windows'"
+    Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OS)' == 'Windows_NT'"
     Name="CreateBootstrapperAfterPublish"
     AfterTargets="Publish">
+    <PropertyGroup>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+    </PropertyGroup>
+
     <BootstrapperTask
       Variant="$(BootstrapperVariant)"
       TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))" />
