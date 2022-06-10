@@ -131,7 +131,7 @@ public class Bootstrapper : BootstrapperBase
             Console.Out.Write($"[{currentStep}/{totalSteps}] ");
             Console.Out.Write($"Downloading {prerequisite.DisplayName}... ");
 
-            using (var progress = new ConsoleProgress(Console.Out))
+            using (var progress = new ConsoleProgress(Console.Error))
             {
                 var installer = prerequisite.DownloadInstaller(progress.Report);
                 installers.Add(installer);
@@ -148,7 +148,7 @@ public class Bootstrapper : BootstrapperBase
         foreach (var installer in installers)
         {
             Console.Out.Write($"[{currentStep}/{totalSteps}] ");
-            Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}...");
+            Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
 
             var installationResult = installer.Run();
 
