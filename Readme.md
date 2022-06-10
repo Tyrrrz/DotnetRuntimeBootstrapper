@@ -30,7 +30,7 @@ To learn more about the war and how you can help, [click here](https://tyrrrz.me
 ## Why?
 
 Currently, .NET offers two main ways of [distributing applications](https://docs.microsoft.com/en-us/dotnet/core/deploying): **framework-dependent** deployment and **self-contained** deployment.
-Both of them come with a set of obvious and somewhat less obvious drawbacks:
+Both of them come with a set of obvious and somewhat less obvious drawbacks.
 
 - **Framework-dependent** deployment:
   - Requires the user to have the correct .NET runtime installed on their machine. Not only will many users inevitably miss or ignore this requirement, the task of installing the _correct_ .NET runtime can be very challenging for non-technical individuals. Depending on their machine and the specifics of your application, they will need to carefully examine the [download page](https://dotnet.microsoft.com/download/dotnet/6.0/runtime) to find the installer for the right version, framework (i.e. base, desktop, or aspnet), CPU architecture, and operating system.
@@ -38,31 +38,30 @@ Both of them come with a set of obvious and somewhat less obvious drawbacks:
 - **Self-contained** deployment:
   - While eliminating the need for installing the correct runtime, this method comes at a significant file size overhead. A very basic WinForms application, for example, starts at around 100 MB in size. This can be very cumbersome when doing auto-updates, but also seems quite wasteful if you consider that the user may end up with multiple .NET applications each bringing their own runtime.
   - Targets a specific platform, which means that you have to provide separate binaries for each operating system and processor architecture that you intend to support. Additionally, it can also create confusion among non-technical users, who may have a hard time figuring out which of the release binaries they need to download.
-  - Snapshots a specific version of the runtime when it's produced. This means that your application won't be able to benefit from newer releases of the runtime, potentially containing performance or security improvements, unless you deploy a new version of the application.
-  - Is, in fact, _not completely self-contained_. Depending on the user's machine, they might still need to install Visual C++ runtime and required Windows updates, neither of which are packaged with the application. Although this is only required for operating systems older than Windows 10, a big portion of your users may still be using them.
+  - Snapshots a specific version of the runtime when it's produced. This means that your application won't be able to benefit from newer releases of the runtime — which may potentially contain performance or security improvements — unless you deploy a new version of the application.
+  - Is, in fact, _not completely self-contained_. Depending on the user's machine, they might still need to install the Visual C++ runtime or certain Windows updates, neither of which are packaged with the application. Although this is only required for older operating systems, a big portion of your users may still be using them.
 
-**.NET Runtime Bootstrapper** is a project that provides an alternative _third deployment option_.
-Combining the best of both framework-dependent and self-contained deployments, bootstrapped deployment eliminates the above-mentioned issues.
+**.NET Runtime Bootstrapper** seeks to solve all the above problems by providing an alternative, third deployment option — **bootstrapped** deployment.
 
 - **Bootstrapped** deployment:
-  - Takes care of installing the target .NET runtime automatically. All the user has to do is press "Yes" when prompted and the bootstrapper will download and install the correct version of the runtime on its own.
+  - Takes care of installing the target .NET runtime automatically. All the user has to do is accept the prompt and the bootstrapper will download and install the correct version of the runtime on its own.
   - Can also automatically install the Visual C++ runtime and missing Windows updates, when running on older operating systems. This means that users who are still using Windows 7 will have just as seamless experience as those running on Windows 10.
-  - Does not have any file size overhead because it doesn't package additional files. Missing prerequisites are downloaded on-demand.
-  - Allows your application to benefit from newer releases of the runtime that the user might install in the future. When deploying your application, you are only tying it to a _minimum_ .NET version (within the same major).
-  - Is _truly portable_ because the provided application host is a platform-agnostic .NET Framework 3.5 executable, which works out-of-the-box on all environments starting with Windows 7. This means that you only need to share a single distribution of your application, without worrying about different CPU architectures or operating systems.
+  - Does not impose any file size overhead as it does not package additional files. Missing prerequisites are downloaded on-demand.
+  - Allows your application to benefit from newer releases of the runtime that the user might install in the future. When deploying your application, you are only tying it to a _minimum_ .NET version within the same major.
+  - Is _truly portable_ because the provided application host is a platform-agnostic .NET Framework 3.5 executable that works out-of-the-box on all environments starting with Windows 7. This means that you only need to share a single distribution of your application, without worrying about different CPU architectures or other details.
 
 ## Features
 
-- Runs the application in-process using a custom runtime host
-- Comes in both GUI and CLI variants
+- Executes target assembly in-process using a custom runtime host
+- Provides GUI-based or CLI-based host, depending on the application
 - Detects and installs missing dependencies:
   - Required version of .NET runtime
   - Required Visual C++ binaries
   - Required Windows updates
 - Works out-of-the-box on Windows 7 and higher
 - Supports all platforms in a single executable
-- Integrates seamlessly within the build process
-- Inherits application resources, such as version info, manifest, and icons
+- Integrates seamlessly inside the build process
+- Retains native resources, such as version info, manifest, and icons
 - Imposes no overhead in file size or performance
 
 ## Video
@@ -75,9 +74,6 @@ To add **.NET Runtime Bootstrapper** to your project, simply install the corresp
 MSBuild will automatically pick up the `props` and `targets` files provided by the package and integrate them inside the build process.
 After that, no further configuration is required.
 
-> **Warning**:
-> Bootstrapper only supports applications targeting **.NET Core 3.0 or higher**.
- 
 ### Publishing
 
 In order to create a sharable distribution of your application, run `dotnet publish` as you normally would.
@@ -85,15 +81,15 @@ This should produce the following files in the output directory:
 
 ```txt
 MyApp.exe                 <-- bootstrapper's application host
-MyApp.exe.config          <-- .NET config required by the application host
+MyApp.exe.config          <-- assembly config required by the application host
 MyApp.runtimeconfig.json  <-- runtime config required by the application host
-MyApp.dll                 <-- your application
+MyApp.dll                 <-- main assembly of your application
 MyApp.pdb
 MyApp.deps.json
 [... other application dependencies ...]
 ```
 
-Make sure to include all marked files in your application distribution.
+Make sure to include all highlighted files in your application distribution.
 
 > **Warning**:
 > Single-file deployment (`/p:PublishSingleFile=true`) is not supported by the bootstrapper.
@@ -101,9 +97,10 @@ Make sure to include all marked files in your application distribution.
 ### Application host
 
 The client-facing side of **.NET Runtime Bootstrapper** is implemented as a [custom .NET runtime host](https://docs.microsoft.com/en-us/dotnet/core/tutorials/netcore-hosting).
-Internally, it's a pre-compiled managed executable built against legacy .NET Framework v3.5, which allows it to run out-of-the-box on all operating systems starting with Windows 7.
+It's generated during build by injecting project-specific instructions into a special pre-compiled executable provided by the package.
+Internally, this executable is a managed .NET Framework v3.5 assembly, which allows it to run out-of-the-box on all platforms starting with Windows 7.
 
-When the user runs the application through the bootstrapper, it executes the following steps:
+When the user executes the application through the bootstrapper, it goes through the following steps:
 
 ```mermaid
 flowchart
@@ -119,7 +116,7 @@ flowchart
     4[Identify missing prerequisites] -->
     5[Prompt the user to install missing prerequisites] -->
     6[Download and install missing prerequisites] --> 6a(Reboot required?)
-    6a -- Yes --> 6b[Prompt the user to reboot]
+    6a -- Yes --> 6b[Prompt the user to reboot] --> 6c[Reboot] --> 1
     6a -- No --> 1
 ```
 
@@ -142,7 +139,7 @@ Additionally, version info resource is further modified to contain the following
 #### Generate bootstrapper on build
 
 By default, bootstrapper is only created when publishing the project (i.e. when running `dotnet publish`).
-If you want to also have it created on every build, set the `<GenerateBootstrapperOnBuild>` project property to `true`:
+If you want to also have it created on regular builds as well, set the `<GenerateBootstrapperOnBuild>` project property to `true`:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -165,10 +162,10 @@ If you want to also have it created on every build, set the `<GenerateBootstrapp
 > Bootstrapper's application host does not support debugging.
 > In order to retain debugging capabilities of your application during local development, keep `<GenerateBootstrapperOnBuild>` set to `false` (default).
 
-#### Override application host variant
+#### Override bootstrapper variant
 
-Depending on your application type (i.e. the value of the `<OutputType>` project property), **.NET Runtime Bootstrapper** will generate either a CLI-based or a GUI-based application host.
-You can override the default behavior and specify the preferred variant explicitly by setting the `<BootstrapperVariant>` project property to either `CLI` or `GUI`:
+Depending on your application type (i.e. the value of the `<OutputType>` project property), the build process will generate either a CLI-based or a GUI-based bootstrapper.
+You can override the default behavior and specify the preferred variant explicitly using the `<BootstrapperVariant>` project property:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -192,51 +189,38 @@ You can override the default behavior and specify the preferred variant explicit
 #### Build task logs
 
 If the build process does not seem to produce the bootstrapper correctly, you may be able to get more information by running the command with higher verbosity.
-For example, running `dotnet publish --verbosity normal` on `DotnetRuntimeBootstrapper.Demo` project should produce the following section in the output:
+For example, running `dotnet publish --verbosity normal` on `DotnetRuntimeBootstrapper.Demo.Gui` project should produce the following section in the output:
 
 ```txt
 CreateBootstrapperAfterPublish:
+ Bootstrapper target: 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo.Gui\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.dll'.
+ Bootstrapper variant: 'GUI'.
  Extracting apphost...
- Extracted apphost to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe'.
- Extracted apphost config to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe.config'.
+ Extracted apphost to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo.Gui\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.Gui.exe'.
+ Extracted apphost config to 'f:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo.Gui\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.Gui.exe.config'.
  Injecting target binding...
- Injected target binding to 'DotnetRuntimeBootstrapper.Demo.exe'.
+ Injected target binding to 'DotnetRuntimeBootstrapper.Demo.Gui.exe'.
  Injecting manifest...
- Injected manifest to 'DotnetRuntimeBootstrapper.Demo.exe'.
+ Injected manifest to 'DotnetRuntimeBootstrapper.Demo.Gui.exe'.
  Injecting icon...
- Injected icon to 'DotnetRuntimeBootstrapper.Demo.exe'.
+ Injected icon to 'DotnetRuntimeBootstrapper.Demo.Gui.exe'.
  Injecting version info...
- Injected version info to 'DotnetRuntimeBootstrapper.Demo.exe'.
+ Injected version info to 'DotnetRuntimeBootstrapper.Demo.Gui.exe'.
  Bootstrapper created successfully.
 ```
 
 #### Application host logs
 
-In the event of a fatal error, in addition to showing a message to the user, bootstrapper will produce an error dump.
+In the event of a fatal error, bootstrapper will produce an error dump (in addition to showing a message to the user).
 It can be found in the Windows event log under **Windows Logs** → **Application** with event ID `1023` and source `.NET Runtime`.
 The dump has the following format:
 
 ```txt
 Description: Bootstrapper for a .NET application has failed.
-Application: DotnetRuntimeBootstrapper.Demo.exe
-Path: F:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.exe
+Application: DotnetRuntimeBootstrapper.Demo.Gui.exe
+Path: F:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo.Gui\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.Gui.exe
 AppHost: .NET Runtime Bootstrapper v2.3.0 (GUI)
 Message: System.Exception: Test failure
    at DotnetRuntimeBootstrapper.AppHost.Gui.Bootstrapper.Run(String[] args)
    at DotnetRuntimeBootstrapper.AppHost.Gui.Program.Main(String[] args)
-```
-
-Older versions of the bootstrapper (version 2.1 and below) instead created an error dump on the file system in either of the following locations:
-
-- File `AppHost_Error_{timestamp}.txt` in the application directory
-- File `%LocalAppData%\Tyrrrz\DotnetRuntimeBootstrapper\AppHost_{app}_Error_{timestamp}.txt`
-
-The file format is as follows:
-
-```txt
-Timestamp: 05.12.2021 0:10:42 +02:00
-AppHost: .NET Runtime Bootstrapper v2.0.0
-Message: System.Exception: Test failure
-   at DotnetRuntimeBootstrapper.AppHost.Program.Run(String[] args)
-   at DotnetRuntimeBootstrapper.AppHost.Program.Main(String[] args)
 ```
