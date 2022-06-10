@@ -221,6 +221,6 @@ Application: DotnetRuntimeBootstrapper.Demo.Gui.exe
 Path: F:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo.Gui\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.Gui.exe
 AppHost: .NET Runtime Bootstrapper v2.3.0 (GUI)
 Message: System.Exception: Test failure
-   at DotnetRuntimeBootstrapper.AppHost.Gui.Bootstrapper.Run(String[] args)
+   at DotnetRuntimeBootstrapper.AppHost.Core.ApplicationShellBase.Run(String[] args)
    at DotnetRuntimeBootstrapper.AppHost.Gui.Program.Main(String[] args)
 ```

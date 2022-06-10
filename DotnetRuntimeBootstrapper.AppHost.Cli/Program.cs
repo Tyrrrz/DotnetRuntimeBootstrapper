@@ -2,5 +2,5 @@
 
 public static class Program
 {
-    public static int Main(string[] args) => new Bootstrapper().Run(args);
+    public static int Main(string[] args) => new ApplicationShell().Run(args);
 }

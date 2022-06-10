@@ -5,7 +5,7 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
-public abstract class BootstrapperBase
+public abstract class ApplicationShellBase
 {
     protected abstract void ReportError(string message);
 
@@ -24,7 +24,7 @@ public abstract class BootstrapperBase
 
             try
             {
-                // Attempt to run the target first without any checks (hot path)
+                // Hot path: attempt to run the target first without any checks
                 return targetAssembly.Run(args);
             }
             // Possible exception causes:
