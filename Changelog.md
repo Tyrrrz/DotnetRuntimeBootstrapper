@@ -1,3 +1,9 @@
+### v2.3.1 (10-Jun-2022)
+
+- Fixed an issue where the CLI-based bootstrapper was incorrectly created for GUI applications.
+- Fixed an issue where running the CLI-based bootstrapper with output redirected resulted in a crash.
+- Fixed minor stylistic issues in the GUI-based bootstrapper.
+
 ### v2.3 (10-Jun-2022)
 
 - Added console variant of the application host. This variant will be used automatically for non-desktop applications (i.e. not `WinExe`). You can also specify the variant explicitly by setting the `<BootstrapperVariant>` project property to either `CLI` or `GUI`.
