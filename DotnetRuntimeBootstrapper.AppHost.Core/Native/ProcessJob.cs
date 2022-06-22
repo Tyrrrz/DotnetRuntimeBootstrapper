@@ -44,7 +44,11 @@ internal partial class ProcessJob : IDisposable
     public void AddProcess(Process process) =>
         AddProcess(process.Handle);
 
-    public void Dispose() => NativeMethods.CloseHandle(_handle);
+    public void Dispose()
+    {
+        NativeMethods.CloseHandle(_handle);
+        GC.SuppressFinalize(this);
+    }
 }
 
 internal partial class ProcessJob

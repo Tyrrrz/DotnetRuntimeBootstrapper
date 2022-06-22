@@ -33,11 +33,12 @@ internal partial class NativeLibrary : IDisposable
 
     public void Dispose()
     {
-        if (_isLoaded)
-        {
-            _isLoaded = false;
-            NativeMethods.FreeLibrary(_handle);
-        }
+        if (!_isLoaded)
+            return;
+
+        _isLoaded = false;
+        NativeMethods.FreeLibrary(_handle);
+        GC.SuppressFinalize(this);
     }
 }
 
