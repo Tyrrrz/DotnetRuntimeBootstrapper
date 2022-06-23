@@ -10,7 +10,7 @@ internal partial class NativeLibrary : IDisposable
     private readonly IntPtr _handle;
     private readonly Dictionary<string, Delegate> _functionTable = new(StringComparer.Ordinal);
 
-    private bool _isLoaded = true;
+    private bool _isDisposed;
 
     public NativeLibrary(IntPtr handle) => _handle = handle;
 
@@ -33,10 +33,10 @@ internal partial class NativeLibrary : IDisposable
 
     public void Dispose()
     {
-        if (!_isLoaded)
+        if (_isDisposed)
             return;
 
-        _isLoaded = false;
+        _isDisposed = true;
         NativeMethods.FreeLibrary(_handle);
         GC.SuppressFinalize(this);
     }

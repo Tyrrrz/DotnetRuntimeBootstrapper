@@ -9,6 +9,8 @@ internal partial class ProcessJob : IDisposable
 {
     private readonly IntPtr _handle;
 
+    private bool _isDisposed;
+
     public ProcessJob(IntPtr handle) =>
         _handle = handle;
 
@@ -46,6 +48,10 @@ internal partial class ProcessJob : IDisposable
 
     public void Dispose()
     {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
         NativeMethods.CloseHandle(_handle);
         GC.SuppressFinalize(this);
     }
