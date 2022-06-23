@@ -10,7 +10,7 @@ using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.Operatin
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
-public class ApplicationShell : ApplicationShellBase
+public class Shell : ShellBase
 {
     private const string PromptEnvironmentVariableName = "DOTNET_INSTALL_PREREQUISITES";
 
@@ -21,9 +21,9 @@ public class ApplicationShell : ApplicationShellBase
         // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
         try
         {
-            var applicationFilePath = typeof(ApplicationShell).Assembly.Location;
+            var applicationFilePath = typeof(Shell).Assembly.Location;
             var applicationName = Path.GetFileName(applicationFilePath);
-            var bootstrapperVersion = typeof(ApplicationShell).Assembly.GetName().Version.ToString(3);
+            var bootstrapperVersion = typeof(Shell).Assembly.GetName().Version.ToString(3);
 
             var content = string.Join(
                 Environment.NewLine,

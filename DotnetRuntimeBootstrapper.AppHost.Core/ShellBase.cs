@@ -5,7 +5,7 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
-public abstract class ApplicationShellBase
+public abstract class ShellBase
 {
     protected abstract void ReportError(string message);
 
