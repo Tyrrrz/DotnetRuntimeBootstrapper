@@ -51,9 +51,8 @@
     <None Include="../favicon.png" Pack="true" PackagePath="" Visible="false" />
     <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
     <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
+
     <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Microsoft.NET.StringTools.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
@@ -71,9 +70,11 @@
     <None Include="$(OutputPath)/netstandard2.0/System.Security.Permissions.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Threading.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+
     <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/net472" Visible="false" />
+    <None Include="$(OutputPath)/net472/Microsoft.IO.Redist.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.NET.StringTools.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.VisualStudio.Setup.Configuration.Interop.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.dll" Pack="true" PackagePath="build/net472" Visible="false" />
