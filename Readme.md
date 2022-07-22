@@ -97,8 +97,8 @@ Make sure to include all highlighted files in your application distribution.
 ### Application host
 
 The client-facing side of **.NET Runtime Bootstrapper** is implemented as a [custom .NET runtime host](https://docs.microsoft.com/en-us/dotnet/core/tutorials/netcore-hosting).
-It's generated during build by injecting project-specific instructions into a special pre-compiled executable provided by the package.
-Internally, this executable is a managed .NET Framework v3.5 assembly, which allows it to run out-of-the-box on all platforms starting with Windows 7.
+It's generated during the build process by injecting project-specific instructions into a special pre-compiled executable provided by the package.
+Internally, the host executable is a managed .NET Framework v3.5 assembly, which allows it to run out-of-the-box on all platforms starting with Windows 7.
 
 When the user executes the application through the bootstrapper, it goes through the following steps:
 
@@ -114,8 +114,8 @@ flowchart
 
     3[Resolve target runtime from runtimeconfig.json] -->
     4[Identify missing prerequisites] -->
-    5[Prompt the user to install missing prerequisites] -->
-    6[Download and install missing prerequisites] --> 6a(Reboot required?)
+    5[Prompt the user to install them] -->
+    6[Download and install] --> 6a(Reboot required?)
     6a -- Yes --> 6b[Prompt the user to reboot] --> 6c[Reboot] --> 1
     6a -- No --> 1
 ```
