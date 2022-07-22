@@ -76,7 +76,6 @@
     <None Include="$(OutputPath)/net472/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.IO.Redist.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.NET.StringTools.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Microsoft.VisualStudio.Setup.Configuration.Interop.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
