@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
@@ -7,7 +9,36 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
 public abstract class ShellBase
 {
-    protected abstract void ReportError(string message);
+    protected virtual void ReportError(string message)
+    {
+        // Report to Windows Event Log
+        // Inspired by:
+        // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
+        try
+        {
+            var applicationFilePath = typeof(ShellBase).Assembly.Location;
+            var applicationName = Path.GetFileName(applicationFilePath);
+            var bootstrapperVersion = typeof(ShellBase).Assembly.GetName().Version.ToString(3);
+
+            var content = string.Join(
+                Environment.NewLine,
+                new[]
+                {
+                    "Description: " + "Bootstrapper for a .NET application has failed.",
+                    "Application: " + applicationName,
+                    "Path: " + applicationFilePath,
+                    "AppHost: " + $".NET Runtime Bootstrapper v{bootstrapperVersion}",
+                    "Message: " + message
+                }
+            );
+
+            EventLog.WriteEntry(".NET Runtime", content, EventLogEntryType.Error, 1023);
+        }
+        catch
+        {
+            // Ignore
+        }
+    }
 
     protected abstract bool InstallPrerequisites(
         TargetAssembly targetAssembly,

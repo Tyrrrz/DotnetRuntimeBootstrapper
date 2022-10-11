@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
@@ -16,35 +14,8 @@ public class Shell : ShellBase
 
     protected override void ReportError(string message)
     {
-        // Report to Windows Event Log
-        // Inspired by:
-        // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
-        try
-        {
-            var applicationFilePath = typeof(Shell).Assembly.Location;
-            var applicationName = Path.GetFileName(applicationFilePath);
-            var bootstrapperVersion = typeof(Shell).Assembly.GetName().Version.ToString(3);
+        base.ReportError(message);
 
-            var content = string.Join(
-                Environment.NewLine,
-                new[]
-                {
-                    "Description: " + "Bootstrapper for a .NET application has failed.",
-                    "Application: " + applicationName,
-                    "Path: " + applicationFilePath,
-                    "AppHost: " + $".NET Runtime Bootstrapper v{bootstrapperVersion} (CLI)",
-                    "Message: " + message
-                }
-            );
-
-            EventLog.WriteEntry(".NET Runtime", content, EventLogEntryType.Error, 1023);
-        }
-        catch
-        {
-            // Ignore
-        }
-
-        // Report to the console
         try
         {
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))

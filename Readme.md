@@ -210,8 +210,8 @@ You can override the default value (which is inferred from the `<TargetFramework
 
 #### Build task logs
 
-If the build process does not seem to produce the bootstrapper correctly, you may be able to get more information by running the command with higher verbosity.
-For example, running `dotnet publish --verbosity normal` on `DotnetRuntimeBootstrapper.Demo.Gui` project should produce the following section in the output:
+If the build process does not seem to generate the bootstrapper correctly, you may be able to get more information by running the command with higher verbosity.
+For example, running `dotnet publish --verbosity normal` should produce output that includes the following section:
 
 ```txt
 CreateBootstrapperAfterPublish:
@@ -241,7 +241,7 @@ The dump has the following format:
 Description: Bootstrapper for a .NET application has failed.
 Application: DotnetRuntimeBootstrapper.Demo.Gui.exe
 Path: F:\Projects\Softdev\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.Demo.Gui\bin\Debug\net6.0-windows\DotnetRuntimeBootstrapper.Demo.Gui.exe
-AppHost: .NET Runtime Bootstrapper v2.3.0 (GUI)
+AppHost: .NET Runtime Bootstrapper v2.3.0
 Message: System.Exception: Test failure
    at DotnetRuntimeBootstrapper.AppHost.Core.ApplicationShellBase.Run(String[] args)
    at DotnetRuntimeBootstrapper.AppHost.Gui.Program.Main(String[] args)
