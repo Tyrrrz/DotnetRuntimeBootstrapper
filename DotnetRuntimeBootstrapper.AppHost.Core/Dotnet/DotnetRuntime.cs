@@ -81,8 +81,8 @@ internal partial class DotnetRuntime
             json
                 .TryGetChild("runtimeOptions")?
                 .TryGetChild("framework")?
-                .Pipe(ParseRuntime)
-                .Enumerate()
+                .ToSingletonEnumerable()
+                .Select(ParseRuntime)
                 .ToArray() ??
 
             throw new ApplicationException("Could not resolve target runtime from runtime config.");

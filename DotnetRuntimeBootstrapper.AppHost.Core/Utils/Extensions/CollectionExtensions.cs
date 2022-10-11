@@ -4,7 +4,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 internal static class CollectionExtensions
 {
-    public static IEnumerable<T> Enumerate<T>(this T value)
+    public static IEnumerable<T> ToSingletonEnumerable<T>(this T value)
     {
         yield return value;
     }
