@@ -1,10 +1,11 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
-public class Shell : ShellBase
+public class Bootstrapper : BootstrapperBase
 {
     protected override void ReportError(string message)
     {
@@ -27,7 +28,6 @@ public class Shell : ShellBase
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        // Prompt the user
         using (var promptForm = new InstallationPromptForm(targetAssembly, missingPrerequisites))
         {
             Application.Run(promptForm);
@@ -35,11 +35,13 @@ public class Shell : ShellBase
                 return false;
         }
 
-        // Perform the installation
         using (var installationForm = new InstallationForm(targetAssembly, missingPrerequisites))
         {
             Application.Run(installationForm);
             return installationForm.Result;
         }
     }
+
+    [STAThread]
+    public static int Main(string[] args) => new Bootstrapper().Run(args);
 }

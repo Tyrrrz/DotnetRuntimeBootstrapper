@@ -17,7 +17,7 @@ namespace DotnetRuntimeBootstrapper;
 public class BootstrapperTask : Task
 {
     [Required]
-    public string Variant { get; set; }
+    public string Variant { get; set; } = default!;
 
     [Required]
     public string TargetFilePath { get; set; } = default!;

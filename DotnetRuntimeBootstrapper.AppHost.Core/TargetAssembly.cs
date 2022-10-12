@@ -58,7 +58,7 @@ public partial class TargetAssembly
         };
 
         foreach (var runtime in GetRuntimes())
-            prerequisites.Add(new DotnetPrerequisite(runtime));
+            prerequisites.Add(new DotnetRuntimePrerequisite(runtime));
 
         // Filter out prerequisites that are already installed
         prerequisites.RemoveAll(p => p.IsInstalled());

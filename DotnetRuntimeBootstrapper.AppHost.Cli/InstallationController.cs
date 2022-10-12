@@ -8,28 +8,20 @@ using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.Operatin
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
-public class Shell : ShellBase
+public class InstallationController
 {
     private const string PromptEnvironmentVariableName = "DOTNET_INSTALL_PREREQUISITES";
 
-    protected override void ReportError(string message)
-    {
-        base.ReportError(message);
+    private readonly TargetAssembly _targetAssembly;
+    private readonly IPrerequisite[] _missingPrerequisites;
 
-        try
-        {
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
-                Console.Error.WriteLine("ERROR: " + message);
-        }
-        catch
-        {
-            // Ignore
-        }
+    public InstallationController(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
+    {
+        _targetAssembly = targetAssembly;
+        _missingPrerequisites = missingPrerequisites;
     }
 
-    private bool PromptInstallation(
-        TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
+    public bool PromptInstallation()
     {
         // Installation must be requested explicitly by setting the environment variable
         var isInstallationAccepted = string.Equals(
@@ -42,8 +34,8 @@ public class Shell : ShellBase
         {
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
             {
-                Console.Error.WriteLine($"Your system is missing runtime components required by {targetAssembly.Title}:");
-                foreach (var prerequisite in missingPrerequisites)
+                Console.Error.WriteLine($"Your system is missing runtime components required by {_targetAssembly.Title}:");
+                foreach (var prerequisite in _missingPrerequisites)
                     Console.Error.WriteLine($"  - {prerequisite.DisplayName}");
                 Console.Error.WriteLine();
             }
@@ -85,19 +77,17 @@ public class Shell : ShellBase
         return true;
     }
 
-    private bool PerformInstallation(
-        TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
+    public bool PerformInstall()
     {
         using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
-            Console.Out.WriteLine($"{targetAssembly.Title}: installing prerequisites");
+            Console.Out.WriteLine($"{_targetAssembly.Title}: installing prerequisites");
 
         var currentStep = 1;
-        var totalSteps = missingPrerequisites.Length * 2;
+        var totalSteps = _missingPrerequisites.Length * 2;
 
         // Download
         var installers = new List<IPrerequisiteInstaller>();
-        foreach (var prerequisite in missingPrerequisites)
+        foreach (var prerequisite in _missingPrerequisites)
         {
             Console.Out.Write($"[{currentStep}/{totalSteps}] ");
             Console.Out.Write($"Downloading {prerequisite.DisplayName}... ");
@@ -143,7 +133,7 @@ public class Shell : ShellBase
         {
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkYellow))
             {
-                Console.Out.WriteLine($"You need to restart Windows before you can run {targetAssembly.Title}.");
+                Console.Out.WriteLine($"You need to restart Windows before you can run {_targetAssembly.Title}.");
                 Console.Out.WriteLine("Would you like to do it now? [y/n]");
             }
 
@@ -155,17 +145,5 @@ public class Shell : ShellBase
         }
 
         return true;
-    }
-
-    protected override bool InstallPrerequisites(
-        TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
-    {
-        // Prompt the user
-        if (!PromptInstallation(targetAssembly, missingPrerequisites))
-            return false;
-
-        // Perform the installation
-        return PerformInstallation(targetAssembly, missingPrerequisites);
     }
 }

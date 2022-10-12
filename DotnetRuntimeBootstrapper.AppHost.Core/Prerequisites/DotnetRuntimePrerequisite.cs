@@ -10,7 +10,7 @@ using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.Operatin
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
-internal class DotnetPrerequisite : IPrerequisite
+internal class DotnetRuntimePrerequisite : IPrerequisite
 {
     private readonly DotnetRuntime _runtime;
 
@@ -24,7 +24,7 @@ internal class DotnetPrerequisite : IPrerequisite
 
     public string DisplayName => $".NET Runtime ({ShortName}) v{_runtime.Version}";
 
-    public DotnetPrerequisite(DotnetRuntime runtime) => _runtime = runtime;
+    public DotnetRuntimePrerequisite(DotnetRuntime runtime) => _runtime = runtime;
 
     // We are looking for a runtime with the same name and the same major version.
     // Installed runtime may have higher minor version than the target runtime, but not lower.
