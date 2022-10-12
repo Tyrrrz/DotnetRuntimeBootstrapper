@@ -53,7 +53,7 @@
     <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
 
     <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Microsoft.NET.StringTools.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Win32.Registry.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
@@ -69,7 +69,7 @@
     <None Include="$(OutputPath)/netstandard2.0/System.Security.Cryptography.ProtectedData.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Security.Permissions.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
     <None Include="$(OutputPath)/netstandard2.0/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Threading.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
+    <None Include="$(OutputPath)/netstandard2.0/System.Text.Encoding.CodePages.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
 
     <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" Visible="false" />
     <None Include="$(OutputPath)/net472/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/net472" Visible="false" />
@@ -94,6 +94,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- When updating packages, make sure to update the list of embedded files above! -->
     <PackageReference Include="Microsoft.Build.Framework" Version="17.3.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.3.1" PrivateAssets="all" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
