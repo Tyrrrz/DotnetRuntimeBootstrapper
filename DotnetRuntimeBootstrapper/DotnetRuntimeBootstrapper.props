@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
-    <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)/../tasks/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)/../tasks/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
   </PropertyGroup>
 
   <UsingTask TaskName="DotnetRuntimeBootstrapper.BootstrapperTask" AssemblyFile="$(TaskAssembly)" />

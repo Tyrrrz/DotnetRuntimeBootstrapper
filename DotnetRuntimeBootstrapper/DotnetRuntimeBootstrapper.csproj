@@ -2,11 +2,16 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <IsPackable>true</IsPackable>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Authors>$(Company)</Authors>
     <Description>.NET runtime bootstrapper for Windows applications</Description>
-    <IsPackable>true</IsPackable>
     <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
@@ -18,11 +23,41 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <!-- Embed the base bootstrapper executable inside the assembly -->
+  <ItemGroup>
+    <None Include="../Readme.md" Pack="true" PackagePath="" Visible="false" />
+    <None Include="../favicon.png" Pack="true" PackagePath="" Visible="false" />
+    <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
+    <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.3.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.3.2" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Ressy" Version="1.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <!-- Non-linking dependency on the apphost projects to ensure correct build order -->
+  <ItemGroup>
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Cli\DotnetRuntimeBootstrapper.AppHost.Cli.csproj">
+      <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <CopyLocal>false</CopyLocal>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Gui\DotnetRuntimeBootstrapper.AppHost.Gui.csproj">
+      <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <CopyLocal>false</CopyLocal>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- Embed apphost files inside the task assembly -->
   <ItemGroup>
     <EmbeddedResource Include="../DotnetRuntimeBootstrapper.AppHost.Cli/bin/$(Configuration)/net35/DotnetRuntimeBootstrapper.AppHost.Cli.exe">
       <Link>AppHost.Cli.exe</Link>
@@ -46,83 +81,31 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="../Readme.md" Pack="true" PackagePath="" Visible="false" />
-    <None Include="../favicon.png" Pack="true" PackagePath="" Visible="false" />
-    <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
-    <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
-
-    <None Include="$(OutputPath)/netstandard2.0/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Microsoft.Win32.Registry.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/Ressy.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Buffers.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Collections.Immutable.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Configuration.ConfigurationManager.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Memory.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Security.AccessControl.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Security.Cryptography.ProtectedData.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Security.Permissions.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-    <None Include="$(OutputPath)/netstandard2.0/System.Text.Encoding.CodePages.dll" Pack="true" PackagePath="build/netstandard2.0" Visible="false" />
-
-    <None Include="$(OutputPath)/net472/DotnetRuntimeBootstrapper.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Microsoft.Build.Framework.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Microsoft.Build.Utilities.Core.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Microsoft.IO.Redist.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Microsoft.NET.StringTools.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.Mdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.Pdb.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Mono.Cecil.Rocks.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/Ressy.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Buffers.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Collections.Immutable.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Configuration.ConfigurationManager.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Memory.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Numerics.Vectors.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Runtime.CompilerServices.Unsafe.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Security.AccessControl.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Security.Permissions.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.Security.Principal.Windows.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-    <None Include="$(OutputPath)/net472/System.ValueTuple.dll" Pack="true" PackagePath="build/net472" Visible="false" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- When updating packages, make sure to update the list of embedded files above! -->
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.3.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.3.1" PrivateAssets="all" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Ressy" Version="1.0.1" PrivateAssets="all" GeneratePathProperty="true" />
-  </ItemGroup>
-
-  <!-- Non-linking dependency on the apphosot projects to ensure correct build order -->
-  <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Cli\DotnetRuntimeBootstrapper.AppHost.Cli.csproj">
-      <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
-      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-      <CopyLocal>false</CopyLocal>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Gui\DotnetRuntimeBootstrapper.AppHost.Gui.csproj">
-      <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
-      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-      <CopyLocal>false</CopyLocal>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-
-  <!-- These elements are needed to get the dependencies working when this assembly is referenced as project
-       (i.e. only in the local demo projects; shouldn't be required when referenced as NuGet package) -->
+  <!-- Embed package references inside this package -->
   <PropertyGroup>
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+    <TargetsForTfmSpecificBuildOutput>
+      $(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage
+    </TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Embed the generated deps.json file inside this package -->
+  <Target Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput" BeforeTargets="BuiltProjectOutputGroup" Condition="'$(GenerateDependencyFile)' == 'true'">
+    <ItemGroup>
+      <BuiltProjectOutputGroupOutput Include="$(ProjectDepsFilePath)" TargetPath="$(ProjectDepsFileName)" FinalOutputPath="$(ProjectDepsFilePath)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Expose package references to dependent projects (only needed locally, not when distributed through NuGet) -->
+  <PropertyGroup>
+    <GetTargetPathDependsOn>
+      $(GetTargetPathDependsOn);GetDependencyTargetPaths
+    </GetTargetPathDependsOn>
   </PropertyGroup>
 
   <Target Name="GetDependencyTargetPaths">

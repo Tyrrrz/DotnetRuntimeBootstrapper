@@ -2,7 +2,7 @@
 
   <Import Project="DotnetRuntimeBootstrapper.props" />
 
-  <!-- Props for local testing, used in the demo projects -->
+  <!-- Props for local testing, used by the demo projects -->
   <PropertyGroup>
     <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)/bin/$(Configuration)/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
     <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)/bin/$(Configuration)/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
