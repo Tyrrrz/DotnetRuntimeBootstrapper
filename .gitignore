@@ -19,6 +19,3 @@ bld/
 
 # Coverage
 *.opencover.xml
-
-# Binaries
-*.exe
