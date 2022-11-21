@@ -86,7 +86,7 @@ MyApp.runtimeconfig.json  <-- runtime config required by the application host
 MyApp.dll                 <-- main assembly of your application
 MyApp.pdb
 MyApp.deps.json
-[... other application dependencies ...]
+... other application dependencies ...
 ```
 
 Make sure to include all highlighted files in your application distribution.
