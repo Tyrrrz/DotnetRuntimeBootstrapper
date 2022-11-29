@@ -6,11 +6,13 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 internal static class Http
 {
+    private static readonly bool IsHttpsSupported;
+
     static Http()
     {
         try
         {
-            // Disable certificate validation (valid certificate may fail on old operating systems)
+            // Disable certificate validation (valid certificate may fail on older operating systems)
             ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
 
             // Try to enable TLS1.2 if it's supported.
@@ -24,6 +26,8 @@ internal static class Http
                 (SecurityProtocolType) 0x00000C00 |
                 SecurityProtocolType.Tls |
                 SecurityProtocolType.Ssl3;
+
+            IsHttpsSupported = true;
         }
         catch
         {
@@ -33,7 +37,14 @@ internal static class Http
 
     private static HttpWebRequest CreateRequest(string url, string method = "GET")
     {
-        var request = (HttpWebRequest) WebRequest.Create(url);
+        var request = (HttpWebRequest) WebRequest.Create(
+            // Certain older systems don't support HTTPS protocols required by most web servers.
+            // If we're running on such a system, we have to downgrade to HTTP.
+            IsHttpsSupported
+                ? url
+                : Url.ReplaceProtocol(url, "http")
+        );
+
         request.Method = method;
 
         return request;
