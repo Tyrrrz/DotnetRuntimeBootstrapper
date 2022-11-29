@@ -1,6 +1,6 @@
 ﻿namespace DotnetRuntimeBootstrapper.AppHost.Gui
 {
-    partial class InstallationForm
+    partial class InstallForm
     {
         /// <summary>
         /// Required designer variable.
@@ -88,7 +88,7 @@
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(525, 200);
             this.MaximumSize = new System.Drawing.Size(525, 200);
-            this.Name = "InstallationForm";
+            this.Name = "InstallForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = ".NET Runtime Bootstrapper";
             this.Load += new System.EventHandler(this.InstallationForm_Load);

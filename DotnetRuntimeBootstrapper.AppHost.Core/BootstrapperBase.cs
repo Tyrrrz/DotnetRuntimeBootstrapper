@@ -9,10 +9,25 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
 public abstract class BootstrapperBase
 {
+    protected const string LegacyAcceptPromptEnvironmentVariable = "DOTNET_INSTALL_PREREQUISITES";
+    protected const string AcceptPromptEnvironmentVariable = "DOTNET_ENABLE_BOOTSTRAPPER";
+
+    // Installation prompt can be pre-accepted using an environment variable
+    protected bool IsPromptPreAccepted { get; } =
+        string.Equals(
+            Environment.GetEnvironmentVariable(AcceptPromptEnvironmentVariable),
+            "true",
+            StringComparison.OrdinalIgnoreCase
+        ) ||
+        string.Equals(
+            Environment.GetEnvironmentVariable(LegacyAcceptPromptEnvironmentVariable),
+            "true",
+            StringComparison.OrdinalIgnoreCase
+        );
+
     protected virtual void ReportError(string message)
     {
-        // Report to Windows Event Log
-        // Inspired by:
+        // Report to the Windows Event Log. Adapted from:
         // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
         try
         {
@@ -40,7 +55,12 @@ public abstract class BootstrapperBase
         }
     }
 
-    protected abstract bool InstallPrerequisites(
+    protected abstract bool Prompt(
+        TargetAssembly targetAssembly,
+        IPrerequisite[] missingPrerequisites
+    );
+
+    protected abstract bool Install(
         TargetAssembly targetAssembly,
         IPrerequisite[] missingPrerequisites
     );
@@ -67,10 +87,11 @@ public abstract class BootstrapperBase
                 var missingPrerequisites = targetAssembly.GetMissingPrerequisites();
                 if (missingPrerequisites.Any())
                 {
-                    var isInstallationSuccessful = InstallPrerequisites(targetAssembly, missingPrerequisites);
+                    var isPromptAccepted = IsPromptPreAccepted || Prompt(targetAssembly, missingPrerequisites);
+                    var isReadyToRun = isPromptAccepted && Install(targetAssembly, missingPrerequisites);
 
-                    // User canceled installation or reboot is required
-                    if (!isInstallationSuccessful)
+                    // User did not accept the installation or reboot is required
+                    if (!isReadyToRun)
                         return 0xB007;
 
                     // Reset environment to update PATH and other variables

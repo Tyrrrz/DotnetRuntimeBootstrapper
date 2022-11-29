@@ -9,7 +9,7 @@ using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.Operatin
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
-public partial class InstallationForm : Form
+public partial class InstallForm : Form
 {
     private readonly TargetAssembly _targetAssembly;
     private readonly IPrerequisite[] _missingPrerequisites;
@@ -25,9 +25,9 @@ public partial class InstallationForm : Form
         }
     }
 
-    public bool Result { get; private set; }
+    public bool IsSuccess { get; private set; }
 
-    public InstallationForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
+    public InstallForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
     {
         _targetAssembly = targetAssembly;
         _missingPrerequisites = missingPrerequisites;
@@ -68,7 +68,7 @@ public partial class InstallationForm : Form
         }
     });
 
-    private void PerformInstall()
+    private void Execute()
     {
         var currentStep = 1;
         var totalSteps = _missingPrerequisites.Length * 2;
@@ -124,11 +124,11 @@ public partial class InstallationForm : Form
             if (isRebootAccepted)
                 OperatingSystem.Reboot();
 
-            Result = false;
+            IsSuccess = false;
         }
         else
         {
-            Result = true;
+            IsSuccess = true;
         }
 
         Close();
@@ -141,9 +141,9 @@ public partial class InstallationForm : Form
 
         UpdateStatus(@"Preparing installation");
 
-        new Thread(PerformInstall)
+        new Thread(Execute)
         {
-            Name = nameof(PerformInstall),
+            Name = nameof(Execute),
             IsBackground = true
         }.Start();
     }

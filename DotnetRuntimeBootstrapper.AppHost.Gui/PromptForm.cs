@@ -8,14 +8,14 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
-public partial class InstallationPromptForm : Form
+public partial class PromptForm : Form
 {
     private readonly TargetAssembly _targetAssembly;
     private readonly IPrerequisite[] _missingPrerequisites;
 
-    public bool Result { get; private set; }
+    public bool IsSuccess { get; private set; }
 
-    public InstallationPromptForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
+    public PromptForm(TargetAssembly targetAssembly, IPrerequisite[] missingPrerequisites)
     {
         _targetAssembly = targetAssembly;
         _missingPrerequisites = missingPrerequisites;
@@ -33,13 +33,13 @@ public partial class InstallationPromptForm : Form
 
     private void InstallButton_Click(object sender, EventArgs e)
     {
-        Result = true;
+        IsSuccess = true;
         Close();
     }
 
     private void ExitButton_Click(object sender, EventArgs e)
     {
-        Result = false;
+        IsSuccess = false;
         Close();
     }
 }

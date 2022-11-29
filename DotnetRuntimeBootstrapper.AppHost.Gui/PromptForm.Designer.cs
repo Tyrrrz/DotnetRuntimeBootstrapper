@@ -2,7 +2,7 @@
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui
 {
-    partial class InstallationPromptForm
+    partial class PromptForm
     {
         /// <summary>
         /// Required designer variable.
@@ -146,7 +146,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Gui
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(520, 320);
-            this.Name = "InstallationPromptForm";
+            this.Name = "PromptForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = ".NET Runtime Bootstrapper";
             this.Load += new System.EventHandler(this.InstallationPromptForm_Load);

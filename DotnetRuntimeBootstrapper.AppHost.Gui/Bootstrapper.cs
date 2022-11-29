@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
+using DotnetRuntimeBootstrapper.AppHost.Gui.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
@@ -21,25 +22,28 @@ public class Bootstrapper : BootstrapperBase
         }
     }
 
-    protected override bool InstallPrerequisites(
+    protected override bool Prompt(
         TargetAssembly targetAssembly,
         IPrerequisite[] missingPrerequisites)
     {
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
+        ApplicationEx.EnsureInitialized();
 
-        using (var promptForm = new InstallationPromptForm(targetAssembly, missingPrerequisites))
-        {
-            Application.Run(promptForm);
-            if (!promptForm.Result)
-                return false;
-        }
+        using var promptForm = new PromptForm(targetAssembly, missingPrerequisites);
+        Application.Run(promptForm);
 
-        using (var installationForm = new InstallationForm(targetAssembly, missingPrerequisites))
-        {
-            Application.Run(installationForm);
-            return installationForm.Result;
-        }
+        return promptForm.IsSuccess;
+    }
+
+    protected override bool Install(
+        TargetAssembly targetAssembly,
+        IPrerequisite[] missingPrerequisites)
+    {
+        ApplicationEx.EnsureInitialized();
+
+        using var installForm = new InstallForm(targetAssembly, missingPrerequisites);
+        Application.Run(installForm);
+
+        return installForm.IsSuccess;
     }
 
     [STAThread]
