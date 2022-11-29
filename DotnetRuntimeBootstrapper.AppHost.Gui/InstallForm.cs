@@ -114,7 +114,7 @@ public partial class InstallForm : Form
         if (isRebootRequired)
         {
             var isRebootAccepted = MessageBox.Show(
-                @$"You need to restart Windows before you can run {_targetAssembly.Title}. " +
+                @$"You need to restart Windows before you can run {_targetAssembly.Name}. " +
                 @"Would you like to do it now?",
                 @"Restart required",
                 MessageBoxButtons.YesNo,
@@ -136,7 +136,7 @@ public partial class InstallForm : Form
 
     private void InstallationForm_Load(object sender, EventArgs e)
     {
-        Text = @$"{_targetAssembly.Title}: installing prerequisites";
+        Text = @$"{_targetAssembly.Name}: installing prerequisites";
         Icon = IconEx.TryExtractAssociatedIcon(Application.ExecutablePath);
 
         UpdateStatus(@"Preparing installation");

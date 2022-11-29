@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
@@ -14,12 +12,12 @@ public partial class TargetAssembly
 {
     public string FilePath { get; }
 
-    public string Title { get; }
+    public string Name { get; }
 
-    public TargetAssembly(string filePath, string title)
+    public TargetAssembly(string filePath, string name)
     {
         FilePath = filePath;
-        Title = title;
+        Name = name;
     }
 
     private DotnetRuntime[] GetRuntimes()
@@ -75,25 +73,15 @@ public partial class TargetAssembly
 
 public partial class TargetAssembly
 {
-    public static TargetAssembly Resolve()
+    public static TargetAssembly Resolve(string filePath)
     {
-        // Target assembly file name is provided to the bootstrapper in an embedded
-        // resource. It's injected during the build process by a special MSBuild task.
-        var fileName = typeof(TargetAssembly).Assembly.GetManifestResourceString(nameof(TargetAssembly));
-
-        var filePath = Path.Combine(
-            Path.GetDirectoryName(EnvironmentEx.ProcessPath) ?? AppDomain.CurrentDomain.BaseDirectory,
-            fileName
-        );
-
-        // Ensure that the target assembly is present in the executing directory
         if (!File.Exists(filePath))
-            throw new FileNotFoundException($"Could not find target assembly '{fileName}'.");
+            throw new FileNotFoundException($"Could not find target assembly '{Path.GetFileName(filePath)}'.");
 
-        var title =
+        var name =
             FileVersionInfo.GetVersionInfo(filePath).ProductName?.NullIfEmptyOrWhiteSpace() ??
             Path.GetFileNameWithoutExtension(filePath);
 
-        return new TargetAssembly(filePath, title);
+        return new TargetAssembly(filePath, name);
     }
 }

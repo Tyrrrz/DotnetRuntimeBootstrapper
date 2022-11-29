@@ -12,19 +12,6 @@ public abstract class BootstrapperBase
     protected const string LegacyAcceptPromptEnvironmentVariable = "DOTNET_INSTALL_PREREQUISITES";
     protected const string AcceptPromptEnvironmentVariable = "DOTNET_ENABLE_BOOTSTRAPPER";
 
-    // Installation prompt can be pre-accepted using an environment variable
-    protected bool IsPromptPreAccepted { get; } =
-        string.Equals(
-            Environment.GetEnvironmentVariable(AcceptPromptEnvironmentVariable),
-            "true",
-            StringComparison.OrdinalIgnoreCase
-        ) ||
-        string.Equals(
-            Environment.GetEnvironmentVariable(LegacyAcceptPromptEnvironmentVariable),
-            "true",
-            StringComparison.OrdinalIgnoreCase
-        );
-
     protected virtual void ReportError(string message)
     {
         // Report to the Windows Event Log. Adapted from:
@@ -65,43 +52,83 @@ public abstract class BootstrapperBase
         IPrerequisite[] missingPrerequisites
     );
 
+    private bool PromptAndInstall(
+        TargetAssembly targetAssembly,
+        IPrerequisite[] missingPrerequisites)
+    {
+        // Install prompt can be disabled in bootstrap configuration or via environment variable
+        var isPromptPreAccepted =
+            !Configuration.Instance.IsPromptRequired
+            ||
+            string.Equals(
+                Environment.GetEnvironmentVariable(AcceptPromptEnvironmentVariable),
+                "true",
+                StringComparison.OrdinalIgnoreCase
+            )
+            ||
+            string.Equals(
+                Environment.GetEnvironmentVariable(LegacyAcceptPromptEnvironmentVariable),
+                "true",
+                StringComparison.OrdinalIgnoreCase
+            );
+
+        var isPromptAccepted =
+            isPromptPreAccepted ||
+            Prompt(targetAssembly, missingPrerequisites);
+
+        return
+            isPromptAccepted &&
+            Install(targetAssembly, missingPrerequisites);
+    }
+
+    private int Run(TargetAssembly targetAssembly, string[] args)
+    {
+        try
+        {
+            // Hot path: attempt to run the target first without any checks
+            return targetAssembly.Run(args);
+        }
+        // Possible exception causes:
+        // - .NET host not found (DirectoryNotFoundException)
+        // - .NET host failed to initialize (ApplicationException)
+        catch
+        {
+            // Check for and install missing prerequisites
+            var missingPrerequisites = targetAssembly.GetMissingPrerequisites();
+            if (missingPrerequisites.Any())
+            {
+                var isReadyToRun = PromptAndInstall(targetAssembly, missingPrerequisites);
+
+                // User did not accept the installation or reboot is required
+                if (!isReadyToRun)
+                    return 0xB007;
+
+                // Reset environment to update PATH and other variables
+                // that may have been changed by the installation process.
+                EnvironmentEx.RefreshEnvironmentVariables();
+            }
+
+            // Attempt to run the target again, this time without ignoring exceptions
+            return targetAssembly.Run(args);
+        }
+    }
+
     public int Run(string[] args)
     {
-        AppDomain.CurrentDomain.UnhandledException += (_, e) => ReportError(e.ExceptionObject.ToString());
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+            ReportError(e.ExceptionObject.ToString());
 
         try
         {
-            var targetAssembly = TargetAssembly.Resolve();
+            var targetAssembly = TargetAssembly.Resolve(
+                Path.Combine(
+                    Path.GetDirectoryName(EnvironmentEx.ProcessPath) ??
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    Configuration.Instance.TargetFileName
+                )
+            );
 
-            try
-            {
-                // Hot path: attempt to run the target first without any checks
-                return targetAssembly.Run(args);
-            }
-            // Possible exception causes:
-            // - .NET host not found (DirectoryNotFoundException)
-            // - .NET host failed to initialize (ApplicationException)
-            catch
-            {
-                // Check for and install missing prerequisites
-                var missingPrerequisites = targetAssembly.GetMissingPrerequisites();
-                if (missingPrerequisites.Any())
-                {
-                    var isPromptAccepted = IsPromptPreAccepted || Prompt(targetAssembly, missingPrerequisites);
-                    var isReadyToRun = isPromptAccepted && Install(targetAssembly, missingPrerequisites);
-
-                    // User did not accept the installation or reboot is required
-                    if (!isReadyToRun)
-                        return 0xB007;
-
-                    // Reset environment to update PATH and other variables
-                    // that may have been changed by the installation process.
-                    EnvironmentEx.RefreshEnvironmentVariables();
-                }
-
-                // Attempt to run the target again, this time without ignoring exceptions
-                return targetAssembly.Run(args);
-            }
+            return Run(targetAssembly, args);
         }
         catch (Exception ex)
         {

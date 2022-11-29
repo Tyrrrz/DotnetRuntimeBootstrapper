@@ -25,7 +25,7 @@ public partial class PromptForm : Form
 
     private void InstallationPromptForm_Load(object sender, EventArgs e)
     {
-        Text = @$"{_targetAssembly.Title}: prerequisites missing";
+        Text = @$"{_targetAssembly.Name}: prerequisites missing";
         Icon = IconEx.TryExtractAssociatedIcon(Application.ExecutablePath);
         IconPictureBox.Image = SystemIcons.Warning.ToBitmap();
         MissingPrerequisitesTextBox.Lines = _missingPrerequisites.Select(c => $"• {c.DisplayName}").ToArray();

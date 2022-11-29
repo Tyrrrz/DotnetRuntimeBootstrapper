@@ -35,7 +35,7 @@ public class Bootstrapper : BootstrapperBase
 
         using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
         {
-            Console.Error.WriteLine($"Your system is missing runtime components required by {targetAssembly.Title}:");
+            Console.Error.WriteLine($"Your system is missing runtime components required by {targetAssembly.Name}:");
             foreach (var prerequisite in missingPrerequisites)
                 Console.Error.WriteLine($"  - {prerequisite.DisplayName}");
             Console.Error.WriteLine();
@@ -80,7 +80,7 @@ public class Bootstrapper : BootstrapperBase
         IPrerequisite[] missingPrerequisites)
     {
         using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
-            Console.Out.WriteLine($"{targetAssembly.Title}: installing prerequisites");
+            Console.Out.WriteLine($"{targetAssembly.Name}: installing prerequisites");
 
         var currentStep = 1;
         var totalSteps = missingPrerequisites.Length * 2;
@@ -133,7 +133,7 @@ public class Bootstrapper : BootstrapperBase
         {
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkYellow))
             {
-                Console.Out.WriteLine($"You need to restart Windows before you can run {targetAssembly.Title}.");
+                Console.Out.WriteLine($"You need to restart Windows before you can run {targetAssembly.Name}.");
                 Console.Out.WriteLine("Would you like to do it now? [y/n]");
             }
 

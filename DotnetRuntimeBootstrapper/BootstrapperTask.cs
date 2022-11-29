@@ -20,6 +20,9 @@ public class BootstrapperTask : Task
     public string Variant { get; set; } = default!;
 
     [Required]
+    public bool IsPromptRequired { get; set; } = true;
+
+    [Required]
     public string TargetFilePath { get; set; } = default!;
 
     public string TargetFileName => Path.GetFileName(TargetFilePath);
@@ -55,26 +58,32 @@ public class BootstrapperTask : Task
         Log.LogMessage("Extracted apphost config to '{0}'.", AppHostFilePath + ".config");
     }
 
-    private void InjectTargetBinding()
+    private void InjectConfiguration()
     {
+        var configuration = string.Join(
+            Environment.NewLine,
+            $"TargetFileName={TargetFileName}",
+            $"IsPromptRequired={IsPromptRequired}"
+        );
+
         using var assembly = AssemblyDefinition.ReadAssembly(
             AppHostFilePath,
             new ReaderParameters { ReadWrite = true }
         );
 
         assembly.MainModule.Resources.RemoveAll(r =>
-            string.Equals(r.Name, "TargetAssembly", StringComparison.OrdinalIgnoreCase)
+            string.Equals(r.Name, "Configuration", StringComparison.OrdinalIgnoreCase)
         );
 
         assembly.MainModule.Resources.Add(new EmbeddedResource(
-            "TargetAssembly",
+            "Configuration",
             ManifestResourceAttributes.Public,
-            Encoding.UTF8.GetBytes(TargetFileName)
+            Encoding.UTF8.GetBytes(configuration)
         ));
 
         assembly.Write();
 
-        Log.LogMessage("Injected target binding into '{0}'.", AppHostFileName);
+        Log.LogMessage("Injected configuration into '{0}'.", AppHostFileName);
     }
 
     private void InjectManifest()
@@ -165,8 +174,8 @@ public class BootstrapperTask : Task
         Log.LogMessage("Extracting apphost...");
         ExtractAppHost();
 
-        Log.LogMessage("Injecting target binding...");
-        InjectTargetBinding();
+        Log.LogMessage("Injecting configuration...");
+        InjectConfiguration();
 
         Log.LogMessage("Injecting manifest...");
         InjectManifest();

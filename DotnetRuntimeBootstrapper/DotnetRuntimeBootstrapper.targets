@@ -21,10 +21,12 @@
     <PropertyGroup>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+      <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''">true</BootstrapperPromptRequired>
     </PropertyGroup>
 
     <BootstrapperTask
       Variant="$(BootstrapperVariant)"
+      IsPromptRequired="$(BootstrapperPromptRequired)"
       TargetFilePath="$(TargetPath)" />
   </Target>
 
@@ -35,10 +37,12 @@
     <PropertyGroup>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+      <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''">true</BootstrapperPromptRequired>
     </PropertyGroup>
 
     <BootstrapperTask
       Variant="$(BootstrapperVariant)"
+      IsPromptRequired="$(BootstrapperPromptRequired)"
       TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))" />
   </Target>
 
