@@ -21,6 +21,7 @@
     <PropertyGroup>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == ''">GUI</BootstrapperVariant>
       <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''">true</BootstrapperPromptRequired>
     </PropertyGroup>
 
@@ -37,6 +38,7 @@
     <PropertyGroup>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == ''">GUI</BootstrapperVariant>
       <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''">true</BootstrapperPromptRequired>
     </PropertyGroup>
 
