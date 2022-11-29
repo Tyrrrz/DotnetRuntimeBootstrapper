@@ -6,7 +6,8 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 
-internal static class OperatingSystem
+// The 'Ex' suffix here is just to disambiguate from the existing 'OperatingSystem' type in the BCL
+internal static class OperatingSystemEx
 {
     public static Version Version { get; } = new(
         SystemVersionInfo.Instance.MajorVersion,

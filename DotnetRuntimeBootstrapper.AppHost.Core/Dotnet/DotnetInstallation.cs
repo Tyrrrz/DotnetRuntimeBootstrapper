@@ -2,7 +2,6 @@
 using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using Microsoft.Win32;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
@@ -16,11 +15,11 @@ internal static class DotnetInstallation
     private static string? TryGetDirectoryPathFromRegistry()
     {
         var dotnetRegistryKey = Registry.LocalMachine.OpenSubKey(
-            (OperatingSystem.ProcessorArchitecture.Is64Bit()
+            (OperatingSystemEx.ProcessorArchitecture.Is64Bit()
                 ? "SOFTWARE\\Wow6432Node\\"
                 : "SOFTWARE\\") +
             "dotnet\\Setup\\InstalledVersions\\" +
-            OperatingSystem.ProcessorArchitecture.GetMoniker(),
+            OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
             false
         );
 

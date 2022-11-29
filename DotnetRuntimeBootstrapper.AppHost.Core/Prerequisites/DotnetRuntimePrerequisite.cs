@@ -6,7 +6,6 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 using QuickJson;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
@@ -67,7 +66,7 @@ internal class DotnetRuntimePrerequisite : IPrerequisite
                 .Where(f =>
                     string.Equals(
                         f.TryGetChild("rid")?.TryGetString(),
-                        "win-" + OperatingSystem.ProcessorArchitecture.GetMoniker(),
+                        "win-" + OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
                         StringComparison.OrdinalIgnoreCase
                     )
                 )

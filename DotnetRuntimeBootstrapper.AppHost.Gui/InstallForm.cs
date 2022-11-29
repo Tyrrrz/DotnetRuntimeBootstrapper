@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
+using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
@@ -122,7 +122,7 @@ public partial class InstallForm : Form
             ) == DialogResult.Yes;
 
             if (isRebootAccepted)
-                OperatingSystem.Reboot();
+                OperatingSystemEx.Reboot();
 
             IsSuccess = false;
         }

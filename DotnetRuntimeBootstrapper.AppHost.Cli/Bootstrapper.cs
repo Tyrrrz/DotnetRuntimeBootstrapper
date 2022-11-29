@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Core;
+using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
-using OperatingSystem = DotnetRuntimeBootstrapper.AppHost.Core.Platform.OperatingSystem;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
@@ -139,7 +139,7 @@ public class Bootstrapper : BootstrapperBase
 
             var isRebootAccepted = Console.ReadKey(true).Key == ConsoleKey.Y;
             if (isRebootAccepted)
-                OperatingSystem.Reboot();
+                OperatingSystemEx.Reboot();
 
             return false;
         }
