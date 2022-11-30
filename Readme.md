@@ -206,6 +206,28 @@ You can override the default value (which is inferred from the `<TargetFramework
 </Project>
 ```
 
+#### Disable confirmation prompt
+
+By default, the bootstrapper will prompt the user to confirm the installation of missing prerequisites.
+You can disable this prompt by setting the `<BootstrapperPromptRequired>` project property to `false`:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <!-- ... -->
+
+    <!-- Skip the confirmation prompt and install prerequisites straight away -->
+    <BootstrapperPromptRequired>false</BootstrapperPromptRequired>
+  </PropertyGroup>
+
+  <!-- ... -->
+  
+</Project>
+```
+
 ### Troubleshooting
 
 #### Build task logs
