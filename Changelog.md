@@ -1,3 +1,11 @@
+### v2.4 (1-Dec-2022)
+
+- Changed the name of the environment variable used for accepting the installation prompt in the console bootstrapper from `DOTNET_INSTALL_PREREQUISITES` to `DOTNET_ENABLE_BOOTSTRAPPER`, for more consistency with existing .NET environment variables. The old environment variable will also continue to be supported for backwards compatibility.
+- Added support for accepting the installation prompt using an environment variable in the GUI bootstrapper as well. Setting the environment variable `DOTNET_ENABLE_BOOTSTRAPPER` to `true` will instruct the bootstrapper to skip the confirmation prompt and immediately begin installing the missing prerequisites.
+- Added an option to disable the installation prompt by setting the `<BootstrapperPromptRequired>` project property to `false`. This is particularly useful if you're bootstrapping an interactive console application, as it removes the requirement to set the environment variable. With this property set to `false`, bootstrapper will immediately begin installing the missing prerequisites without awaiting confirmation from the user.
+- Fixed an issue where the bootstrapper failed silently if the target assembly crashed with an unhandled exception. It now shows an error message indicating the failure and provides tips on how to diagnose it. Unfortunately, it's still not possible to retrieve the message or the stacktrace of the original exception. To avoid this issue altogether, it's recommended to add a global unhandled exception handler in your application, where you can provide a more relevant error message to the user.
+- Fixed an issue where the bootstrapper made insecure HTTP requests even on operating systems that support modern security protocols. Now it only downgrades HTTPS to HTTP if the current system doesn't support it.
+
 ### v2.3.1 (10-Jun-2022)
 
 - Fixed an issue where the CLI-based bootstrapper was incorrectly created for GUI applications.
