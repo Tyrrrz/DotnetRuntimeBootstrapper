@@ -66,7 +66,7 @@ public partial class TargetAssembly
 
     public int Run(string[] args)
     {
-        using var host = DotnetHost.Initialize();
+        using var host = DotnetHost.Load();
         return host.Run(FilePath, args);
     }
 }

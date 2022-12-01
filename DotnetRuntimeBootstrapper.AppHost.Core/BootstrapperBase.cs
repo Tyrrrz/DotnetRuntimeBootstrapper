@@ -93,7 +93,7 @@ public abstract class BootstrapperBase
         // - .NET host failed to initialize (ApplicationException)
         catch
         {
-            // Check for and install missing prerequisites
+            // Check for missing prerequisites and install them
             var missingPrerequisites = targetAssembly.GetMissingPrerequisites();
             if (missingPrerequisites.Any())
             {
@@ -103,13 +103,17 @@ public abstract class BootstrapperBase
                 if (!isReadyToRun)
                     return 0xB007;
 
-                // Reset environment to update PATH and other variables
+                // Reset the environment to update PATH and other variables
                 // that may have been changed by the installation process.
                 EnvironmentEx.RefreshEnvironmentVariables();
+
+                // Attempt to run the target again
+                return targetAssembly.Run(args);
             }
 
-            // Attempt to run the target again, this time without ignoring exceptions
-            return targetAssembly.Run(args);
+            // There are no missing prerequisites to install, meaning that the
+            // app failed to run for reasons unrelated to the bootstrapper.
+            throw;
         }
     }
 

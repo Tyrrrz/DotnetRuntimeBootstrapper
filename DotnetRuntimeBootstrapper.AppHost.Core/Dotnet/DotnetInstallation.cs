@@ -5,11 +5,6 @@ using Microsoft.Win32;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
-// .NET installation location design docs:
-// https://github.com/dotnet/designs/blob/main/accepted/2020/install-locations.md
-// - try to find the .NET Core installation directory by looking in the registry
-// - otherwise, try to find it by checking the default install location
-
 internal static class DotnetInstallation
 {
     private static string? TryGetDirectoryPathFromRegistry()
@@ -47,6 +42,8 @@ internal static class DotnetInstallation
             : null;
     }
 
+    // .NET installation location design docs:
+    // https://github.com/dotnet/designs/blob/main/accepted/2020/install-locations.md
     public static string GetDirectoryPath() =>
         // Try to resolve location from registry (covers both custom and default locations)
         TryGetDirectoryPathFromRegistry() ??
