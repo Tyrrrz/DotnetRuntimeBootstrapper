@@ -105,7 +105,8 @@ internal partial class DotnetHost : IDisposable
             throw new ApplicationException(
                 "Application crashed with an unhandled exception. " +
                 "Unfortunately, it was not possible to retrieve the exception message or its stacktrace. " +
-                "Please check the Windows Event Viewer to see if the runtime logged any additional information.",
+                "Please check the Windows Event Viewer to see if the runtime logged any additional information. " +
+                "If you are the developer of the application, consider adding a global unhandled exception handler to provide a more detailed error message to the user.",
                 ex
             );
         }
