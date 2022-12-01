@@ -1,4 +1,4 @@
-### v2.4 (1-Dec-2022)
+### v2.4 (01-Dec-2022)
 
 - Changed the name of the environment variable used for accepting the installation prompt in the console bootstrapper from `DOTNET_INSTALL_PREREQUISITES` to `DOTNET_ENABLE_BOOTSTRAPPER`, for more consistency with existing .NET environment variables. The old environment variable will also continue to be supported for backwards compatibility.
 - Added support for accepting the installation prompt using an environment variable in the GUI bootstrapper as well. Setting the environment variable `DOTNET_ENABLE_BOOTSTRAPPER` to `true` will instruct the bootstrapper to skip the confirmation prompt and immediately begin installing the missing prerequisites.
