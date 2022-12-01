@@ -33,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.3.2" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.3.2" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.4.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.4.0" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Ressy" Version="1.0.1" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
@@ -90,22 +90,14 @@
 
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
     <ItemGroup>
-      <BuildOutputInPackage
-        Include="@(ReferenceCopyLocalPaths)"
-        TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
     </ItemGroup>
   </Target>
 
   <!-- Embed the generated deps.json file inside this package -->
-  <Target
-    Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput"
-    BeforeTargets="BuiltProjectOutputGroup"
-    Condition="'$(GenerateDependencyFile)' == 'true'">
+  <Target Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput" BeforeTargets="BuiltProjectOutputGroup" Condition="'$(GenerateDependencyFile)' == 'true'">
     <ItemGroup>
-      <BuiltProjectOutputGroupOutput
-        Include="$(ProjectDepsFilePath)"
-        TargetPath="$(ProjectDepsFileName)"
-        FinalOutputPath="$(ProjectDepsFilePath)" />
+      <BuiltProjectOutputGroupOutput Include="$(ProjectDepsFilePath)" TargetPath="$(ProjectDepsFileName)" FinalOutputPath="$(ProjectDepsFilePath)" />
     </ItemGroup>
   </Target>
 
@@ -118,12 +110,8 @@
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll"
-        IncludeRuntimeDependency="false" />
-      <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGRessy)/lib/$(TargetFramework)/*.dll"
-        IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGRessy)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
 
