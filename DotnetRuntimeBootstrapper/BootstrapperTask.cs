@@ -60,11 +60,11 @@ public class BootstrapperTask : Task
 
     private void InjectConfiguration()
     {
-        var configuration = string.Join(
-            Environment.NewLine,
-            $"TargetFileName={TargetFileName}",
-            $"IsPromptRequired={IsPromptRequired}"
-        );
+        var configuration =
+            $"""
+            TargetFileName={TargetFileName}
+            IsPromptRequired={IsPromptRequired}
+            """;
 
         using var assembly = AssemblyDefinition.ReadAssembly(
             AppHostFilePath,

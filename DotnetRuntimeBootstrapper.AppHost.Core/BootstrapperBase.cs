@@ -22,17 +22,14 @@ public abstract class BootstrapperBase
             var applicationName = Path.GetFileName(applicationFilePath);
             var bootstrapperVersion = typeof(BootstrapperBase).Assembly.GetName().Version.ToString(3);
 
-            var content = string.Join(
-                Environment.NewLine,
-                new[]
-                {
-                    "Description: " + "Bootstrapper for a .NET application has failed.",
-                    "Application: " + applicationName,
-                    "Path: " + applicationFilePath,
-                    "AppHost: " + $".NET Runtime Bootstrapper v{bootstrapperVersion}",
-                    "Message: " + message
-                }
-            );
+            var content =
+                $"""
+                Description: Bootstrapper for a .NET application has failed.
+                Application: {applicationName}
+                Path: {applicationFilePath}
+                AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion}
+                Message: {message}
+                """;
 
             EventLog.WriteEntry(".NET Runtime", content, EventLogEntryType.Error, 1023);
         }

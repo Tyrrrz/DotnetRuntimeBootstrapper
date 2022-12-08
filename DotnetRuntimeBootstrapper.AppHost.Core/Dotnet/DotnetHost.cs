@@ -73,18 +73,18 @@ internal partial class DotnetHost : IDisposable
 
         if (status != 0)
         {
+            var error = errorBuffer.Length > 0
+                ? errorBuffer.ToString()
+                : "No error messages reported.";
+
             throw new ApplicationException(
-                string.Join(
-                    Environment.NewLine,
-                    new[]
-                    {
-                        "Failed to initialize .NET host.",
-                        "Target: " + targetFilePath,
-                        "Arguments: [" + string.Join(", ", args) + ']',
-                        "Status: " + status,
-                        errorBuffer.Length > 0 ? errorBuffer.ToString() : "No error messages reported."
-                    }
-                )
+                $"""
+                Failed to initialize .NET host.
+                Target: {targetFilePath}
+                Arguments: [{string.Join(", ", args)}]
+                Status: {status}
+                {error}
+                """
             );
         }
 
