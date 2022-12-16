@@ -1,7 +1,7 @@
 # .NET Runtime Bootstrapper
 
 [![Made in Ukraine](https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7)](https://vshymanskyy.github.io/StandWithUkraine)
-[![Build](https://img.shields.io/github/workflow/status/Tyrrrz/DotnetRuntimeBootstrapper/CI/master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/Tyrrrz/DotnetRuntimeBootstrapper/main.yml?branch=master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
 [![Version](https://img.shields.io/nuget/v/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Downloads](https://img.shields.io/nuget/dt/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Discord](https://img.shields.io/discord/869237470565392384?label=discord)](https://discord.gg/2SUWKFnHSm)
