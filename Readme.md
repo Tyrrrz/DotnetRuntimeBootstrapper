@@ -100,7 +100,7 @@ The client-facing side of **.NET Runtime Bootstrapper** is implemented as a [cus
 It's generated during the build process by injecting project-specific instructions into a special pre-compiled executable provided by the package.
 Internally, the host executable is a managed .NET Framework v3.5 assembly, which allows it to run out-of-the-box on all platforms starting with Windows 7.
 
-When the user executes the application through the bootstrapper, it goes through the following steps:
+When the user executes the application using the bootstrapper, it goes through the following steps:
 
 ```mermaid
 flowchart
@@ -119,6 +119,11 @@ flowchart
     6a -- Yes --> 6b[Prompt the user to reboot] --> 6c[Reboot] --> 1
     6a -- No --> 1
 ```
+
+> **Warning**:
+> The CLI-based bootstrapper (default for console applications) is designed to be non-interactive and performs the prompt step using an environment variable.
+> This is done so as to avoid imposing blocking operations, which may be undesirable in traditionally stateless command line applications.
+> If you want to change this behavior, you can disable the prompt entirely using the [`<BootstrapperPromptRequired>`](#disable-confirmation-prompt) project property.
 
 ### Application resources
 
