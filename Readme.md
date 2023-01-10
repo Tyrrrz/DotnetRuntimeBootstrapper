@@ -1,6 +1,6 @@
 # .NET Runtime Bootstrapper
 
-[![Made in Ukraine](https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7)](https://vshymanskyy.github.io/StandWithUkraine)
+[![Made in Ukraine](https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7)](https://tyrrrz.me/ukraine)
 [![Build](https://img.shields.io/github/actions/workflow/status/Tyrrrz/DotnetRuntimeBootstrapper/main.yml?branch=master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
 [![Version](https://img.shields.io/nuget/v/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Downloads](https://img.shields.io/nuget/dt/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
@@ -207,7 +207,7 @@ You can override the default value (which is inferred from the `<TargetFramework
   </PropertyGroup>
 
   <!-- ... -->
-  
+
 </Project>
 ```
 
@@ -229,7 +229,7 @@ You can disable this prompt by setting the `<BootstrapperPromptRequired>` projec
   </PropertyGroup>
 
   <!-- ... -->
-  
+
 </Project>
 ```
 
