@@ -1,4 +1,6 @@
-### v2.4 (01-Dec-2022)
+# Changelog
+
+## v2.4 (01-Dec-2022)
 
 - Changed the name of the environment variable used for accepting the installation prompt in the console bootstrapper from `DOTNET_INSTALL_PREREQUISITES` to `DOTNET_ENABLE_BOOTSTRAPPER`, for more consistency with existing .NET environment variables. The old environment variable will also continue to be supported for backwards compatibility.
 - Added support for accepting the installation prompt using an environment variable in the GUI bootstrapper as well. Setting the environment variable `DOTNET_ENABLE_BOOTSTRAPPER` to `true` will instruct the bootstrapper to skip the confirmation prompt and immediately begin installing the missing prerequisites.
@@ -6,44 +8,44 @@
 - Fixed an issue where the bootstrapper failed silently if the target assembly crashed with an unhandled exception. It now shows an error message indicating the failure and provides tips on how to diagnose it. Unfortunately, it's still not possible to retrieve the message or the stacktrace of the original exception. To avoid this issue altogether, it's recommended to add a global unhandled exception handler in your application, where you can provide a more relevant error message to the user.
 - Fixed an issue where the bootstrapper made insecure HTTP requests even on operating systems that support modern security protocols. Now it only downgrades HTTPS to HTTP if the current system doesn't support it.
 
-### v2.3.1 (10-Jun-2022)
+## v2.3.1 (10-Jun-2022)
 
 - Fixed an issue where the CLI-based bootstrapper was incorrectly created for GUI applications.
 - Fixed an issue where running the CLI-based bootstrapper with output redirected resulted in a crash.
 - Fixed minor stylistic issues in the GUI-based bootstrapper.
 
-### v2.3 (10-Jun-2022)
+## v2.3 (10-Jun-2022)
 
 - Added console variant of the application host. This variant will be used automatically for non-desktop applications (i.e. not `WinExe`). You can also specify the variant explicitly by setting the `<BootstrapperVariant>` project property to either `CLI` or `GUI`.
 - Fixed an issue where the base runtime was not installed for applications targeting the ASP.NET runtime.
 
-### v2.2 (10-Feb-2022)
+## v2.2 (10-Feb-2022)
 
 - Changed error logging approach to use Windows Event Log instead of relying on the file system. If the bootstrapper crashes with a fatal error, it will now write a new entry to the event log with `1023` as event ID and `.NET Runtime` as source. Readme has been updated with new troubleshooting instructions.
 - Improved error messages. When .NET host fails to initialize, the error will now also show the returned status code.
 - Fixed an issue which caused the bootstrapper to crash when running from a network directory.
 
-### v2.1 (06-Feb-2022)
+## v2.1 (06-Feb-2022)
 
 - Added support for bootstrapping applications that have multiple non-base frameworks declared in their `runtimeconfig.json` (for example `WindowsDesktop` together with `AspNetCore`). The bootstrapper will now install all of the corresponding runtimes instead of just one. (Thanks [@Tomasz](https://github.com/Misiu))
 - Added logic that determines whether a system restart is required after prerequisite installation based on the exit code provided by the installer process. Previously this behavior was hard-codded.
 - Added zero exit code assertion for prerequisite installers. If an installer terminates with a non-zero exit code (except when it signals a system restart), the bootstrapper will fail with an error.
 - Fixed an issue which caused the bootstrapper to show an error saying "Hosting components are already initialized. Re-initialization for an app is not allowed." when the target application crashed due to an unhandled exception. This error message should no longer be shown in such cases.
 
-### v2.0.3 (20-Dec-2021)
+## v2.0.3 (20-Dec-2021)
 
 - Extended "Failed to initialize .NET host..." error with additional information. It will now contain error messages logged by `hostfxr.dll`, if they are available. This should help clarify the reason for the error in most of the cases.
 
-### v2.0.2 (05-Dec-2021)
+## v2.0.2 (05-Dec-2021)
 
 - Fixed an issue where the application host was not writing error dumps to `%localappdata%` if the subdirectory didn't already exist.
 
-### v2.0.1 (05-Dec-2021)
+## v2.0.1 (05-Dec-2021)
 
 - Fixed an issue where the MSBuild task was refusing to execute under Visual Studio, incorrectly claiming that the project is not targeting .NET Core.
 - Fixed an issue where the MSBuild task warnings were not produced on build when `GenerateBootstrapperOnBuild` was enabled.
 
-### v2.0 (05-Dec-2021)
+## v2.0 (05-Dec-2021)
 
 - Reimplemented the bootstrapper executable as a custom .NET runtime host. It now executes the target application by leveraging `hostfxr.dll` instead of the .NET CLI. This means that it no longer creates a separate process to host the application.
 - Optimized bootstrapper's execution flow to prioritize hot path. It will now attempt to run the application first and only check for missing prerequisites if that attempt fails.
@@ -65,15 +67,15 @@ If you previously relied on `CurrentProcess.MainModule.FileName` or similar to g
 
 If you previously used a conditional package reference for DotnetRuntimeBootstrapper (e.g. using it only in `Release` configuration), note that it's not required anymore because the bootstrapper is no longer created for build targets (by default).
 
-### v1.1.2 (14-Jun-2021)
+## v1.1.2 (14-Jun-2021)
 
 - Fixed an issue where the package was missing some required files. Again. I really hate MSBuild.
 
-### v1.1.1 (14-Jun-2021)
+## v1.1.1 (14-Jun-2021)
 
 - Fixed an issue where the package was missing some required files.
 
-### v1.1 (14-Jun-2021)
+## v1.1 (14-Jun-2021)
 
 - Changed how the installation window displays .NET runtime in the list of missing components. Now it's displayed as `.NET Runtime (WindowsDesktop) v5.0.0` instead of `Microsoft.WindowsDesktop.App v5.0.0`.
 - Added "Ignore" button to the installation window that allows the user to bypass prerequisite checks and attempt to run the application anyway.
@@ -85,10 +87,10 @@ If you previously used a conditional package reference for DotnetRuntimeBootstra
 - Fixed an issue where the description label was slightly misaligned in the installation window.
 - Fixed an issue where the installation thread did not terminate if the installation window was closed.
 
-### v1.0.1 (08-Jun-2021)
+## v1.0.1 (08-Jun-2021)
 
 - Fixed an issue where the MSBuild task failed during publish if provided with an absolute path for the output directory.
 
-### v1.0 (08-Jun-2021)
+## v1.0 (08-Jun-2021)
 
 Initial release
