@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using DotnetRuntimeBootstrapper.Utils.Extensions;
 using Microsoft.Build.Framework;
@@ -33,8 +34,8 @@ public class BootstrapperTask : Task
 
     private void ExtractAppHost()
     {
-        var assembly = typeof(BootstrapperTask).Assembly;
-        var resourceName = typeof(BootstrapperTask).Namespace + Variant.ToUpperInvariant() switch
+        var assembly = Assembly.GetExecutingAssembly();
+        var resourceName = GetType().Namespace + Variant.ToUpperInvariant() switch
         {
             "CLI" => ".AppHost.Cli.exe",
             "GUI" => ".AppHost.Gui.exe",
@@ -144,7 +145,7 @@ public class BootstrapperTask : Task
 
         if (targetVersionInfo is not null)
         {
-            var bootstrapperVersion = typeof(BootstrapperTask).Assembly.GetName().Version.ToString(3);
+            var bootstrapperVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
             appHostPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
                 .SetAll(targetVersionInfo)

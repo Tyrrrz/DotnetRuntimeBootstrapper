@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
@@ -18,9 +19,9 @@ public abstract class BootstrapperBase
         // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
         try
         {
-            var applicationFilePath = typeof(BootstrapperBase).Assembly.Location;
+            var applicationFilePath = Assembly.GetExecutingAssembly().Location;
             var applicationName = Path.GetFileName(applicationFilePath);
-            var bootstrapperVersion = typeof(BootstrapperBase).Assembly.GetName().Version.ToString(3);
+            var bootstrapperVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
             var content =
                 $"""

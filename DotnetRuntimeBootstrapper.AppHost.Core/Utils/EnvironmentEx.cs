@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 internal static class EnvironmentEx
 {
-    public static string ProcessPath { get; } = typeof(EnvironmentEx).Assembly.Location;
+    public static string ProcessPath { get; } = Assembly.GetExecutingAssembly().Location;
 
     public static void RefreshEnvironmentVariables()
     {

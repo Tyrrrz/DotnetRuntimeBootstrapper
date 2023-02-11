@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
@@ -17,7 +18,7 @@ public partial class Configuration
 
     private static Configuration Resolve()
     {
-        var data = typeof(Configuration).Assembly.GetManifestResourceString(nameof(Configuration));
+        var data = Assembly.GetExecutingAssembly().GetManifestResourceString(nameof(Configuration));
         var parsed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var line in data.Split('\n'))
