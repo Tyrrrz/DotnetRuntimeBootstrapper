@@ -28,8 +28,8 @@
   <ItemGroup>
     <None Include="../Readme.md" Pack="true" PackagePath="" Visible="false" />
     <None Include="../favicon.png" Pack="true" PackagePath="" Visible="false" />
-    <None Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
-    <None Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
+    <Content Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
+    <Content Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
   </ItemGroup>
 
   <ItemGroup>
