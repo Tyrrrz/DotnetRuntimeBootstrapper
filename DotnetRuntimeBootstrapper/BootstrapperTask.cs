@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using DotnetRuntimeBootstrapper.Utils.Extensions;
@@ -8,15 +7,14 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
 using Ressy;
-using Ressy.HighLevel.Icons;
-using Ressy.HighLevel.Manifests;
 using Ressy.HighLevel.Versions;
-using ResourceType = Ressy.ResourceType;
 
 namespace DotnetRuntimeBootstrapper;
 
 public class BootstrapperTask : Task
 {
+    private Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
+
     [Required]
     public string Variant { get; set; } = default!;
 
@@ -87,84 +85,31 @@ public class BootstrapperTask : Task
         Log.LogMessage("Injected configuration into '{0}'.", AppHostFileName);
     }
 
-    private void InjectManifest()
+    private void InjectResources()
     {
-        var targetPortableExecutable = new PortableExecutable(TargetFilePath);
-        var targetManifest = targetPortableExecutable.TryGetManifest();
+        var sourcePortableExecutable = new PortableExecutable(TargetFilePath);
+        var targetPortableExecutable = new PortableExecutable(AppHostFilePath);
 
-        var appHostPortableExecutable = new PortableExecutable(AppHostFilePath);
-        appHostPortableExecutable.RemoveManifest();
+        targetPortableExecutable.ClearResources();
 
-        if (!string.IsNullOrWhiteSpace(targetManifest))
+        // Copy resources
+        foreach (var identifier in sourcePortableExecutable.GetResourceIdentifiers())
         {
-            appHostPortableExecutable.SetManifest(targetManifest);
-            Log.LogMessage("Injected manifest into '{0}'.", AppHostFileName);
-        }
-        else
-        {
-            Log.LogMessage("Could not find manifest resource in '{0}'.", TargetFileName);
-        }
-    }
-
-    private void InjectIcon()
-    {
-        var targetPortableExecutable = new PortableExecutable(TargetFilePath);
-
-        var targetIconResourceIdentifiers = targetPortableExecutable.GetResourceIdentifiers()
-            .Where(r => r.Type.Code == ResourceType.Icon.Code || r.Type.Code == ResourceType.IconGroup.Code)
-            .ToArray();
-
-        var appHostPortableExecutable = new PortableExecutable(AppHostFilePath);
-        appHostPortableExecutable.RemoveIcon();
-
-        if (targetIconResourceIdentifiers.Any())
-        {
-            foreach (var identifier in targetIconResourceIdentifiers)
-            {
-                appHostPortableExecutable.SetResource(
-                    identifier,
-                    targetPortableExecutable.GetResource(identifier).Data
-                );
-            }
-
-            Log.LogMessage("Injected icon into '{0}'.", AppHostFileName);
-        }
-        else
-        {
-            Log.LogMessage("Could not find icon resources in '{0}'.", TargetFileName);
-        }
-    }
-
-    private void InjectVersionInfo()
-    {
-        var targetPortableExecutable = new PortableExecutable(TargetFilePath);
-        var targetVersionInfo = targetPortableExecutable.TryGetVersionInfo();
-
-        var appHostPortableExecutable = new PortableExecutable(AppHostFilePath);
-        appHostPortableExecutable.RemoveVersionInfo();
-
-        if (targetVersionInfo is not null)
-        {
-            var bootstrapperVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-
-            appHostPortableExecutable.SetVersionInfo(new VersionInfoBuilder()
-                .SetAll(targetVersionInfo)
-                .SetFileFlags(FileFlags.None)
-                .SetFileType(FileType.Application)
-                .SetFileSubType(FileSubType.Unknown)
-                .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
-                .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
-                .SetAttribute("AppHost", $".NET Runtime Bootstrapper v{bootstrapperVersion} ({Variant})")
-                .Build()
+            targetPortableExecutable.SetResource(
+                identifier,
+                sourcePortableExecutable.GetResource(identifier).Data
             );
+        }
 
-            Log.LogMessage("Injected version info into '{0}'.", AppHostFileName);
-        }
-        else
-        {
-            // This is very unusual, so log a warning instead of info
-            Log.LogWarning("Could not read version info from '{0}'.", TargetFileName);
-        }
+        // Modify the version info resource
+        targetPortableExecutable.SetVersionInfo(v => v
+            .SetFileType(FileType.Application)
+            .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
+            .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
+            .SetAttribute("AppHost", $".NET Runtime Bootstrapper v{Version.ToString(3)} ({Variant})")
+        );
+
+        Log.LogMessage("Injected resources into '{0}'.", AppHostFileName);
     }
 
     public override bool Execute()
@@ -178,14 +123,8 @@ public class BootstrapperTask : Task
         Log.LogMessage("Injecting configuration...");
         InjectConfiguration();
 
-        Log.LogMessage("Injecting manifest...");
-        InjectManifest();
-
-        Log.LogMessage("Injecting icon...");
-        InjectIcon();
-
-        Log.LogMessage("Injecting version info...");
-        InjectVersionInfo();
+        Log.LogMessage("Injecting resources...");
+        InjectResources();
 
         Log.LogMessage("Bootstrapper created successfully.");
         return true;

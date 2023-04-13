@@ -127,7 +127,8 @@ flowchart
 
 ### Application resources
 
-When the bootstrapper is created, the build task copies important native resources from the target assembly into the application host:
+When the bootstrapper is created, the build task copies all native resources from the target assembly into the application host.
+This includes:
 
 - Application manifest (resource type: `24`). Configured by the `<ApplicationManifest>` project property.
 - Application icon (resource types: `3` and `14`). Configured by the `<ApplicationIcon>` project property.
