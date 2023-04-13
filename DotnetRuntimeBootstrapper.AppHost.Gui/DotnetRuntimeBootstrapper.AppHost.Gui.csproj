@@ -11,11 +11,11 @@
     <Compile Include="../DotnetRuntimeBootstrapper.AppHost.Core/**/*.cs" Exclude="**/bin/**;**/obj/**" Visible="false" />
     <None Include="../DotnetRuntimeBootstrapper.AppHost.Core/*.config" Visible="false" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
-    <PackageReference Include="QuickJson" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="PolyShim" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="QuickJson" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

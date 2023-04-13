@@ -8,12 +8,4 @@ internal static class CollectionExtensions
     {
         yield return value;
     }
-
-    public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, T item)
-    {
-        yield return item;
-
-        foreach (var i in source)
-            yield return i;
-    }
 }
