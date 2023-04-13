@@ -32,6 +32,8 @@ public class BootstrapperTask : Task
 
     private void ExtractAppHost()
     {
+        Log.LogMessage("Extracting apphost...");
+
         var assembly = Assembly.GetExecutingAssembly();
         var resourceName = GetType().Namespace + Variant.ToUpperInvariant() switch
         {
@@ -59,6 +61,8 @@ public class BootstrapperTask : Task
 
     private void InjectConfiguration()
     {
+        Log.LogMessage("Injecting configuration...");
+
         var configuration =
             $"""
             TargetFileName={TargetFileName}
@@ -87,6 +91,8 @@ public class BootstrapperTask : Task
 
     private void InjectResources()
     {
+        Log.LogMessage("Injecting resources...");
+
         var sourcePortableExecutable = new PortableExecutable(TargetFilePath);
         var targetPortableExecutable = new PortableExecutable(AppHostFilePath);
 
@@ -114,19 +120,16 @@ public class BootstrapperTask : Task
 
     public override bool Execute()
     {
-        Log.LogMessage("Bootstrapper target: '{0}'.", TargetFilePath);
-        Log.LogMessage("Bootstrapper variant: '{0}'.", Variant);
+        Log.LogMessage("Version: '{0}'.", Version);
+        Log.LogMessage("Variant: '{0}'.", Variant);
+        Log.LogMessage("Prompt required: '{0}'.", IsPromptRequired);
+        Log.LogMessage("Target: '{0}'.", TargetFilePath);
 
-        Log.LogMessage("Extracting apphost...");
         ExtractAppHost();
-
-        Log.LogMessage("Injecting configuration...");
         InjectConfiguration();
-
-        Log.LogMessage("Injecting resources...");
         InjectResources();
 
-        Log.LogMessage("Bootstrapper created successfully.");
+        Log.LogMessage("Bootstrapper successfully created.");
         return true;
     }
 }
