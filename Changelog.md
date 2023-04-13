@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.4.1 (13-Apr-2023)
+
+- Simplified the process of injecting native resources into the application host. Instead of searching for specific resource types and copying them, the build task now simply copies all resources from the target assembly to the host.
+
 ## v2.4 (01-Dec-2022)
 
 - Changed the name of the environment variable used for accepting the installation prompt in the console bootstrapper from `DOTNET_INSTALL_PREREQUISITES` to `DOTNET_ENABLE_BOOTSTRAPPER`, for more consistency with existing .NET environment variables. The old environment variable will also continue to be supported for backwards compatibility.
