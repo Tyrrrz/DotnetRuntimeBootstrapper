@@ -15,11 +15,12 @@ internal static class Url
         if (index < 0)
             return url;
 
-        return protocol + url.Substring(index);
+        return protocol + url[index..];
     }
 
-    public static string? TryExtractFileName(string url) => Regex.Match(
-        url,
-        @".+/([^?]*)"
-    ).Groups[1].Value.NullIfEmptyOrWhiteSpace();
+    public static string? TryExtractFileName(string url) => Regex
+        .Match(url, @".+/([^?]*)")
+        .Groups[1]
+        .Value
+        .NullIfEmptyOrWhiteSpace();
 }

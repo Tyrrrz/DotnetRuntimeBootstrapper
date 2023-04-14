@@ -17,7 +17,7 @@ internal static class StringExtensions
         var trimmed = str;
 
         while (trimmed.StartsWith(sub, comparison))
-            trimmed = trimmed.Substring(sub.Length);
+            trimmed = trimmed[sub.Length..];
 
         return trimmed;
     }
@@ -30,7 +30,7 @@ internal static class StringExtensions
         var trimmed = str;
 
         while (trimmed.EndsWith(sub, comparison))
-            trimmed = trimmed.Substring(0, trimmed.Length - sub.Length);
+            trimmed = trimmed[..^sub.Length];
 
         return trimmed;
     }
