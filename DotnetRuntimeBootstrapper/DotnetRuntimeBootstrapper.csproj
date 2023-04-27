@@ -15,7 +15,6 @@
     <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
     <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/blob/master/Changelog.md</PackageReleaseNotes>
-    <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageIcon>favicon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -26,7 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../Readme.md" Pack="true" PackagePath="" Visible="false" />
     <None Include="../favicon.png" Pack="true" PackagePath="" Visible="false" />
     <Content Include="DotnetRuntimeBootstrapper.props" Pack="true" PackagePath="build" />
     <Content Include="DotnetRuntimeBootstrapper.targets" Pack="true" PackagePath="build" />
@@ -35,7 +33,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="17.5.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.5.0" PrivateAssets="all" ExcludeAssets="runtime" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.5" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Ressy" Version="1.0.1" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
