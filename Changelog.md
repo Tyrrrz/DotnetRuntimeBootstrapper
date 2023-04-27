@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.4.2 (27-Apr-2023)
+
+- Improved bootstrapper performance when running on older operating systems.
+
 ## v2.4.1 (13-Apr-2023)
 
 - Simplified the process of injecting native resources into the application host. Instead of searching for specific resource types and copying them, the build task now simply copies all resources from the target assembly to the host.
