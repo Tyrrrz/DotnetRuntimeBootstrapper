@@ -13,6 +13,8 @@ public abstract class BootstrapperBase
     protected const string LegacyAcceptPromptEnvironmentVariable = "DOTNET_INSTALL_PREREQUISITES";
     protected const string AcceptPromptEnvironmentVariable = "DOTNET_ENABLE_BOOTSTRAPPER";
 
+    protected BootstrapperConfiguration Configuration { get; } = BootstrapperConfiguration.Resolve();
+
     protected virtual void ReportError(string message)
     {
         // Report to the Windows Event Log. Adapted from:
@@ -56,7 +58,7 @@ public abstract class BootstrapperBase
     {
         // Install prompt can be disabled in bootstrap configuration or via environment variable
         var isPromptPreAccepted =
-            !Configuration.Instance.IsPromptRequired
+            !Configuration.IsPromptRequired
             ||
             string.Equals(
                 Environment.GetEnvironmentVariable(AcceptPromptEnvironmentVariable),
@@ -126,7 +128,7 @@ public abstract class BootstrapperBase
                 Path.Combine(
                     Path.GetDirectoryName(EnvironmentEx.ProcessPath) ??
                     AppDomain.CurrentDomain.BaseDirectory,
-                    Configuration.Instance.TargetFileName
+                    Configuration.TargetFileName
                 )
             );
 

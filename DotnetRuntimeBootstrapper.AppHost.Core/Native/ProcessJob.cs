@@ -5,14 +5,12 @@ using System.Runtime.InteropServices;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
-internal partial class ProcessJob : IDisposable
+internal partial class ProcessJob : NativeResource
 {
-    private readonly IntPtr _handle;
-
-    public ProcessJob(IntPtr handle) =>
-        _handle = handle;
-
-    ~ProcessJob() => Dispose();
+    public ProcessJob(IntPtr handle)
+        : base(handle)
+    {
+    }
 
     public void Configure(JobObjectExtendedLimitInformation limitInfo)
     {
@@ -24,7 +22,7 @@ internal partial class ProcessJob : IDisposable
             Marshal.StructureToPtr(limitInfo, limitInfoHandle, false);
 
             if (!NativeMethods.SetInformationJobObject(
-                    _handle,
+                    Handle,
                     JobObjectInfoType.ExtendedLimitInformation,
                     limitInfoHandle,
                     (uint) limitInfoSize))
@@ -39,16 +37,13 @@ internal partial class ProcessJob : IDisposable
     }
 
     public void AddProcess(IntPtr processHandle) =>
-        NativeMethods.AssignProcessToJobObject(_handle, processHandle);
+        NativeMethods.AssignProcessToJobObject(Handle, processHandle);
 
     public void AddProcess(Process process) =>
         AddProcess(process.Handle);
 
-    public void Dispose()
-    {
-        NativeMethods.CloseHandle(_handle);
-        GC.SuppressFinalize(this);
-    }
+    protected override void Dispose(bool disposing) =>
+        NativeMethods.CloseHandle(Handle);
 }
 
 internal partial class ProcessJob

@@ -120,11 +120,6 @@ flowchart
     6a -- No --> 1
 ```
 
-> **Warning**:
-> The CLI-based bootstrapper (default for console applications) is designed to be non-interactive and performs the prompt step using an environment variable.
-> This is done so as to avoid imposing blocking operations, which may be undesirable in traditionally stateless command line applications.
-> If you want to change this behavior, you can disable the prompt entirely using the [`<BootstrapperPromptRequired>`](#disable-confirmation-prompt) project property.
-
 ### Application resources
 
 When the bootstrapper is created, the build task copies all native resources from the target assembly into the application host.

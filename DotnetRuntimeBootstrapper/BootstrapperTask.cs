@@ -16,13 +16,13 @@ public class BootstrapperTask : Task
     private Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
 
     [Required]
-    public string Variant { get; set; } = default!;
+    public required string Variant { get; init; }
 
     [Required]
-    public bool IsPromptRequired { get; set; } = true;
+    public required bool IsPromptRequired { get; init; }
 
     [Required]
-    public string TargetFilePath { get; set; } = default!;
+    public required string TargetFilePath { get; init; }
 
     public string TargetFileName => Path.GetFileName(TargetFilePath);
 
@@ -75,11 +75,11 @@ public class BootstrapperTask : Task
         );
 
         assembly.MainModule.Resources.RemoveAll(r =>
-            string.Equals(r.Name, "Configuration", StringComparison.OrdinalIgnoreCase)
+            string.Equals(r.Name, "BootstrapperConfiguration", StringComparison.OrdinalIgnoreCase)
         );
 
         assembly.MainModule.Resources.Add(new EmbeddedResource(
-            "Configuration",
+            "BootstrapperConfiguration",
             ManifestResourceAttributes.Public,
             Encoding.UTF8.GetBytes(configuration)
         ));

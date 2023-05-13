@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
@@ -80,10 +79,10 @@ internal partial class DotnetHost : IDisposable
             throw new ApplicationException(
                 $"""
                 Failed to initialize .NET host.
-                Target: {targetFilePath}
-                Arguments: [{string.Join(", ", args)}]
-                Status: {status}
-                {error}
+                - Target: {targetFilePath}
+                - Arguments: [{string.Join(", ", args)}]
+                - Status: {status}
+                - Error: {error}
                 """
             );
         }
@@ -115,7 +114,7 @@ internal partial class DotnetHost : IDisposable
     private void Close(IntPtr handle) =>
         // Closing the handle doesn't completely unload the host.
         // There are some native libraries loaded by the resolver
-        // that are purposefully leaked to preserve state.
+        // that are intentionally leaked to preserve state.
         // This means that we can't successfully initialize the host
         // twice, but that shouldn't matter since we'd only attempt
         // to do it again if the first attempt failed in the first place.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
@@ -29,19 +30,29 @@ public class Bootstrapper : BootstrapperBase
         TargetAssembly targetAssembly,
         IPrerequisite[] missingPrerequisites)
     {
-        // Command line bootstrapper relies only on the environment variable for accepting the prompt.
-        // If this method is called from the base class, it means that the environment variable is not set.
-        // In this case, just display instructions on how to set the environment variable and return false.
-
         using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
         {
             Console.Error.WriteLine($"Your system is missing runtime components required by {targetAssembly.Name}:");
+
             foreach (var prerequisite in missingPrerequisites)
                 Console.Error.WriteLine($"  - {prerequisite.DisplayName}");
+
             Console.Error.WriteLine();
         }
 
-        using (ConsoleEx.WithForegroundColor(ConsoleColor.Gray))
+        // When running in interactive mode, prompt the user directly
+        if (ConsoleEx.IsInteractive)
+        {
+            Console.Error.Write("Would you like to install the missing components now?");
+
+            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
+                Console.Error.Write(" [y/n]");
+            Console.Error.WriteLine();
+
+            return Console.ReadKey(true).Key == ConsoleKey.Y;
+        }
+        // When not running in interactive mode, instruct the user to set the environment variable instead
+        else
         {
             Console.Error.Write("To install the missing components automatically, set the environment variable ");
 
@@ -55,20 +66,17 @@ public class Bootstrapper : BootstrapperBase
 
             Console.Error.Write(", and then run the application again:");
             Console.Error.WriteLine();
-        }
 
-        using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
-        {
-            Console.Error.Write($"  set {AcceptPromptEnvironmentVariable}=true");
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkGray))
-                Console.Error.Write("      (Command Prompt)");
+            using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
+                Console.Error.Write($"  set {AcceptPromptEnvironmentVariable}=true");
 
+            Console.Error.Write("      (Command Prompt)");
             Console.Error.WriteLine();
 
-            Console.Error.Write($"  $env:{AcceptPromptEnvironmentVariable}=\"true\"");
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkGray))
-                Console.Error.Write("   (Powershell)");
+            using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
+                Console.Error.Write($"  $env:{AcceptPromptEnvironmentVariable}=\"true\"");
 
+            Console.Error.Write("   (Powershell)");
             Console.Error.WriteLine();
         }
 
@@ -92,7 +100,8 @@ public class Bootstrapper : BootstrapperBase
             Console.Out.Write($"[{currentStep}/{totalSteps}] ");
             Console.Out.Write($"Downloading {prerequisite.DisplayName}... ");
 
-            using (var progress = new ConsoleProgress(Console.Error))
+            // Only write progress if running in interactive mode
+            using (var progress = new ConsoleProgress(ConsoleEx.IsInteractive ? Console.Out : TextWriter.Null))
             {
                 var installer = prerequisite.DownloadInstaller(progress.Report);
                 installers.Add(installer);
@@ -132,14 +141,20 @@ public class Bootstrapper : BootstrapperBase
         if (isRebootRequired)
         {
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkYellow))
-            {
                 Console.Out.WriteLine($"You need to restart Windows before you can run {targetAssembly.Name}.");
-                Console.Out.WriteLine("Would you like to do it now? [y/n]");
-            }
 
-            var isRebootAccepted = Console.ReadKey(true).Key == ConsoleKey.Y;
-            if (isRebootAccepted)
-                OperatingSystemEx.Reboot();
+            // Only prompt for reboot if running in interactive mode
+            if (ConsoleEx.IsInteractive)
+            {
+                Console.Out.WriteLine("Would you like to do it now?");
+                using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
+                    Console.Out.Write(" [y/n]");
+                Console.Out.WriteLine();
+
+                var isRebootAccepted = Console.ReadKey(true).Key == ConsoleKey.Y;
+                if (isRebootAccepted)
+                    OperatingSystemEx.Reboot();
+            }
 
             return false;
         }

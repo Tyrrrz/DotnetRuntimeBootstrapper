@@ -5,20 +5,18 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
-public partial class Configuration
+public partial class BootstrapperConfiguration
 {
-    public string TargetFileName { get; init; } = default!;
+    public required string TargetFileName { get; init; }
 
-    public bool IsPromptRequired { get; init; } = true;
+    public required bool IsPromptRequired { get; init; }
 }
 
-public partial class Configuration
+public partial class BootstrapperConfiguration
 {
-    public static Configuration Instance { get; } = Resolve();
-
-    private static Configuration Resolve()
+    public static BootstrapperConfiguration Resolve()
     {
-        var data = Assembly.GetExecutingAssembly().GetManifestResourceString(nameof(Configuration));
+        var data = Assembly.GetExecutingAssembly().GetManifestResourceString(nameof(BootstrapperConfiguration));
         var parsed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var line in data.Split('\n'))
@@ -33,7 +31,7 @@ public partial class Configuration
             parsed[key] = value;
         }
 
-        return new Configuration
+        return new BootstrapperConfiguration
         {
             TargetFileName = parsed[nameof(TargetFileName)],
 
