@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
@@ -8,8 +7,8 @@ internal struct JobObjectExtendedLimitInformation
 {
     public JobObjectBasicLimitInformation BasicLimitInformation;
     public IOCounters IOInfo;
-    public IntPtr ProcessMemoryLimit;
-    public IntPtr JobMemoryLimit;
-    public IntPtr PeakProcessMemoryUsed;
-    public IntPtr PeakJobMemoryUsed;
+    public nint ProcessMemoryLimit;
+    public nint JobMemoryLimit;
+    public nint PeakProcessMemoryUsed;
+    public nint PeakJobMemoryUsed;
 }

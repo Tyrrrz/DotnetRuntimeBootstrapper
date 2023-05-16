@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -7,7 +6,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 internal partial class ProcessJob : NativeResource
 {
-    public ProcessJob(IntPtr handle)
+    public ProcessJob(nint handle)
         : base(handle)
     {
     }
@@ -36,7 +35,7 @@ internal partial class ProcessJob : NativeResource
         }
     }
 
-    public void AddProcess(IntPtr processHandle) =>
+    public void AddProcess(nint processHandle) =>
         NativeMethods.AssignProcessToJobObject(Handle, processHandle);
 
     public void AddProcess(Process process) =>
@@ -50,8 +49,8 @@ internal partial class ProcessJob
 {
     public static ProcessJob Create()
     {
-        var handle = NativeMethods.CreateJobObject(IntPtr.Zero, null);
-        return handle != IntPtr.Zero
+        var handle = NativeMethods.CreateJobObject(0, null);
+        return handle != 0
             ? new ProcessJob(handle)
             : throw new Win32Exception();
     }

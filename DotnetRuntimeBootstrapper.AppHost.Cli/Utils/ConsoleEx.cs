@@ -6,7 +6,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
 
 internal static class ConsoleEx
 {
-    public static bool IsInteractive => NativeMethods.GetConsoleWindow() != IntPtr.Zero;
+    public static bool IsInteractive => NativeMethods.GetConsoleWindow() != 0;
 
     public static IDisposable WithForegroundColor(ConsoleColor color)
     {

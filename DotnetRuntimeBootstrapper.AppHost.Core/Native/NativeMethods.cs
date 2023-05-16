@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
@@ -18,35 +17,35 @@ internal static class NativeMethods
     public static extern void GetNativeSystemInfo(ref SystemInfo lpSystemInfo);
 
     [DllImport(Kernel32, CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern IntPtr CreateJobObject(IntPtr hAttributes, string? lpName);
+    public static extern nint CreateJobObject(nint hAttributes, string? lpName);
 
     [DllImport(Kernel32, SetLastError = true)]
     public static extern bool SetInformationJobObject(
-        IntPtr hJob,
+        nint hJob,
         JobObjectInfoType infoType,
-        IntPtr lpJobObjectInfo,
+        nint lpJobObjectInfo,
         uint cbJobObjectInfoLength
     );
 
     [DllImport(Kernel32, SetLastError = true)]
-    public static extern bool AssignProcessToJobObject(IntPtr hJob, IntPtr hProcess);
+    public static extern bool AssignProcessToJobObject(nint hJob, nint hProcess);
 
     [DllImport(Kernel32, SetLastError = true)]
-    public static extern bool CloseHandle(IntPtr hObject);
+    public static extern bool CloseHandle(nint hObject);
 
     [DllImport(Kernel32, CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern IntPtr LoadLibrary(string lpFileName);
+    public static extern nint LoadLibrary(string lpFileName);
 
     [DllImport(Kernel32, SetLastError = true)]
-    public static extern bool FreeLibrary(IntPtr hModule);
+    public static extern bool FreeLibrary(nint hModule);
 
     // This function doesn't come in the Unicode variant
     [DllImport(Kernel32, CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-    public static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
+    public static extern nint GetProcAddress(nint hModule, string lpProcName);
 
     [DllImport(Kernel32, SetLastError = true)]
-    public static extern IntPtr GetConsoleWindow();
+    public static extern nint GetConsoleWindow();
 
     [DllImport(Shell32, CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern IntPtr ExtractAssociatedIcon(IntPtr hInst, string lpIconPath, out ushort lpiIcon);
+    public static extern nint ExtractAssociatedIcon(nint hInst, string lpIconPath, out ushort lpiIcon);
 }

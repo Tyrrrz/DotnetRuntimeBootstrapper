@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
@@ -10,8 +9,8 @@ internal static class IconEx
     // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/29
     public static Icon? TryExtractAssociatedIcon(string filePath)
     {
-        var handle = NativeMethods.ExtractAssociatedIcon(IntPtr.Zero, filePath, out _);
-        if (handle == IntPtr.Zero)
+        var handle = NativeMethods.ExtractAssociatedIcon(0, filePath, out _);
+        if (handle == 0)
             return null;
 
         try

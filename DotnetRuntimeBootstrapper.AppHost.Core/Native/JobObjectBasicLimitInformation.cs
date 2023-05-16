@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
@@ -9,10 +8,10 @@ internal struct JobObjectBasicLimitInformation
     public long PerProcessUserTimeLimit;
     public long PerJobUserTimeLimit;
     public uint LimitFlags;
-    public IntPtr MinimumWorkingSetSize;
-    public IntPtr MaximumWorkingSetSize;
+    public nint MinimumWorkingSetSize;
+    public nint MaximumWorkingSetSize;
     public uint ActiveProcessLimit;
-    public IntPtr Affinity;
+    public nint Affinity;
     public uint PriorityClass;
     public uint SchedulingClass;
 }

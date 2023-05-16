@@ -9,7 +9,7 @@ internal partial class NativeLibrary : NativeResource
 {
     private readonly Dictionary<string, Delegate> _functionTable = new(StringComparer.Ordinal);
 
-    public NativeLibrary(IntPtr handle)
+    public NativeLibrary(nint handle)
         : base(handle)
     {
     }
@@ -20,7 +20,7 @@ internal partial class NativeLibrary : NativeResource
             return (TDelegate)funcCached;
 
         var address = NativeMethods.GetProcAddress(Handle, functionName);
-        if (address == IntPtr.Zero)
+        if (address == 0)
             throw new Win32Exception();
 
         var func = (TDelegate)Marshal.GetDelegateForFunctionPointer(address, typeof(TDelegate));
@@ -38,7 +38,7 @@ internal partial class NativeLibrary
     public static NativeLibrary Load(string filePath)
     {
         var handle = NativeMethods.LoadLibrary(filePath);
-        return handle != IntPtr.Zero
+        return handle != 0
             ? new NativeLibrary(handle)
             : throw new Win32Exception();
     }

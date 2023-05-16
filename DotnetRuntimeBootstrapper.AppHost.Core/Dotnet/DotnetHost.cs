@@ -37,26 +37,26 @@ internal partial class DotnetHost : IDisposable
     private delegate int InitializeForCommandLineFn(
         int argc,
         string[] argv,
-        IntPtr parameters,
-        out IntPtr handle
+        nint parameters,
+        out nint handle
     );
 
     private InitializeForCommandLineFn GetInitializeForCommandLineFn() =>
         _hostResolverLibrary.GetFunction<InitializeForCommandLineFn>("hostfxr_initialize_for_dotnet_command_line");
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
-    private delegate int RunAppFn(IntPtr handle);
+    private delegate int RunAppFn(nint handle);
 
     private RunAppFn GetRunAppFn() =>
         _hostResolverLibrary.GetFunction<RunAppFn>("hostfxr_run_app");
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
-    private delegate int CloseFn(IntPtr handle);
+    private delegate int CloseFn(nint handle);
 
     private CloseFn GetCloseFn() =>
         _hostResolverLibrary.GetFunction<CloseFn>("hostfxr_close");
 
-    private IntPtr Initialize(string targetFilePath, string[] args)
+    private nint Initialize(string targetFilePath, string[] args)
     {
         // Route errors to a buffer
         var errorBuffer = new StringBuilder();
@@ -66,7 +66,7 @@ internal partial class DotnetHost : IDisposable
         var status = GetInitializeForCommandLineFn()(
             args.Length + 1,
             args.Prepend(targetFilePath).ToArray(),
-            IntPtr.Zero,
+            0,
             out var handle
         );
 
@@ -90,7 +90,7 @@ internal partial class DotnetHost : IDisposable
         return handle;
     }
 
-    private int Run(IntPtr handle)
+    private int Run(nint handle)
     {
         try
         {
@@ -111,7 +111,7 @@ internal partial class DotnetHost : IDisposable
         }
     }
 
-    private void Close(IntPtr handle) =>
+    private void Close(nint handle) =>
         // Closing the handle doesn't completely unload the host.
         // There are some native libraries loaded by the resolver
         // that are intentionally leaked to preserve state.

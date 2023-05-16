@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
@@ -9,9 +8,9 @@ internal readonly partial struct SystemInfo
     public readonly ushort ProcessorArchitecture;
     public readonly ushort Reserved;
     public readonly uint PageSize;
-    public readonly IntPtr MinimumApplicationAddress;
-    public readonly IntPtr MaximumApplicationAddress;
-    public readonly UIntPtr ActiveProcessorMask;
+    public readonly nint MinimumApplicationAddress;
+    public readonly nint MaximumApplicationAddress;
+    public readonly nuint ActiveProcessorMask;
     public readonly uint NumberOfProcessors;
     public readonly uint ProcessorType;
     public readonly uint AllocationGranularity;
