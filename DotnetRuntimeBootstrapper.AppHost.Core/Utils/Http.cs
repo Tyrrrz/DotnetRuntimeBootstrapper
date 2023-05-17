@@ -88,16 +88,17 @@ internal static class Http
         var buffer = new byte[81920];
 
         var totalBytesCopied = 0L;
-        int bytesCopied;
-        do
+        while (true)
         {
-            // Copy data
-            bytesCopied = source.Read(buffer, 0, buffer.Length);
+            var bytesCopied = source.Read(buffer, 0, buffer.Length);
+            if (bytesCopied <= 0)
+                break;
+
             destination.Write(buffer, 0, bytesCopied);
 
             // Report progress
             totalBytesCopied += bytesCopied;
             handleProgress?.Invoke(1.0 * totalBytesCopied / contentLength);
-        } while (bytesCopied > 0);
+        }
     }
 }

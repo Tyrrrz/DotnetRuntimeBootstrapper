@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <IsPackable>true</IsPackable>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>true</GenerateDependencyFile>
   </PropertyGroup>
@@ -19,6 +17,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
     <DevelopmentDependency>true</DevelopmentDependency>
