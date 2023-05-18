@@ -43,7 +43,7 @@ public class Bootstrapper : BootstrapperBase
         // When running in interactive mode, prompt the user directly
         if (ConsoleEx.IsInteractive)
         {
-            Console.Error.Write("Would you like to install the missing components now?");
+            Console.Error.Write("Would you like to download and install them now?");
 
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
                 Console.Error.Write(" [y/n]");
