@@ -31,11 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.5.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.5.0" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.6.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.6.3" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Mono.Cecil" Version="0.11.5" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="PolyShim" Version="1.2.0" PrivateAssets="all" />
-    <PackageReference Include="Ressy" Version="1.0.1" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="PolyShim" Version="1.3.0" PrivateAssets="all" />
+    <PackageReference Include="Ressy" Version="1.0.3" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <!-- Non-linking dependency on the apphost projects to ensure correct build order -->
