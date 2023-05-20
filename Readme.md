@@ -39,7 +39,7 @@ Both of them come with a set of obvious and somewhat less obvious drawbacks.
   - While eliminating the need for installing the correct runtime, this method comes at a significant file size overhead. A very basic WinForms application, for example, starts at around 100 MB in size. This can be very cumbersome when doing auto-updates, but also seems quite wasteful if you consider that the user may end up with multiple .NET applications each bringing their own runtime.
   - Targets a specific platform, which means that you have to provide separate binaries for each operating system and processor architecture that you intend to support. Additionally, it can also create confusion among non-technical users, who may have a hard time figuring out which of the release binaries they need to download.
   - Snapshots a specific version of the runtime when it's produced. This means that your application won't be able to benefit from newer releases of the runtime — which may potentially contain performance or security improvements — unless you deploy a new version of the application.
-  - Is, in fact, _not completely self-contained_. Depending on the user's machine, they might still need to install the Visual C++ runtime or certain Windows updates, neither of which are packaged with the application. Although this is only required for older operating systems, a big portion of your users may still be using them.
+  - Is, in fact, _not completely self-contained_. Depending on the user's machine, they might still need to install the Visual C++ runtime or certain Windows updates, neither of which are packaged with the application. Although this is only required for older operating systems, it may still affect a significant portion of your user base.
 
 **.NET Runtime Bootstrapper** seeks to solve all the above problems by providing an alternative, third deployment option — **bootstrapped** deployment.
 
@@ -52,7 +52,7 @@ Both of them come with a set of obvious and somewhat less obvious drawbacks.
 
 ## Features
 
-- Executes target assembly in-process using a custom runtime host
+- Executes the target assembly in-process using a custom runtime host
 - Provides GUI-based or CLI-based host, depending on the application
 - Detects and installs missing dependencies:
   - Required version of .NET runtime
@@ -234,7 +234,7 @@ You can disable this prompt by setting the `<BootstrapperPromptRequired>` projec
 #### Build task logs
 
 If the build process does not seem to generate the bootstrapper correctly, you may be able to get more information by running the command with higher verbosity.
-For example, running `dotnet publish --verbosity normal` should produce output that includes the following section:
+For example, running `dotnet publish --verbosity normal` should produce an output that includes the following section:
 
 ```txt
 CreateBootstrapperAfterPublish:
