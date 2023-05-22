@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
-
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 internal static class NativeMethods
@@ -45,6 +44,12 @@ internal static class NativeMethods
 
     [DllImport(Kernel32, SetLastError = true)]
     public static extern nint GetConsoleWindow();
+
+    [DllImport(Kernel32, SetLastError = true)]
+    public static extern nint GetStdHandle(int nStdHandle);
+
+    [DllImport(Kernel32, SetLastError = true)]
+    public static extern int GetFileType(nint hFile);
 
     [DllImport(Shell32, CharSet = CharSet.Auto, SetLastError = true)]
     public static extern nint ExtractAssociatedIcon(nint hInst, string lpIconPath, out ushort lpiIcon);
