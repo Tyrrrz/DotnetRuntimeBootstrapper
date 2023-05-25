@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.5.1 (25-May-2023)
+
+- Fixed an issue where the CLI-based bootstrapper crashed if one of the standard streams were redirected.
+
 ## v2.5 (18-May-2023)
 
 - Added an interactive installation prompt to the CLI-based bootstrapper. This prompt is only shown if the user is running the application in a console window, and won't be shown in headless scenarios, such as CI workflows. The previous behavior, which involves setting an environment variable to accept the prompt, is also supported and will bypass the interactive prompt.
