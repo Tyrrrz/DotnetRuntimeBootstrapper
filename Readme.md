@@ -10,6 +10,10 @@
 
 > 🟡 **Project status**: maintenance mode<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)</sup>
 
+<p align="center">
+    <img src="favicon.png" alt="Icon" />
+</p>
+
 **.NET Runtime Bootstrapper** is an MSBuild plugin that replaces the default application host `exe` file — generated for Windows executables during the build process — with a fully featured bootstrapper that can automatically download and install .NET runtime and other missing components required by your application.
 
 ## Terms of use<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/why-so-political.md)</sup>
