@@ -37,8 +37,7 @@
             //
             // TotalProgressBar
             //
-            this.TotalProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TotalProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.TotalProgressBar.Location = new System.Drawing.Point(12, 110);
             this.TotalProgressBar.Name = "TotalProgressBar";
             this.TotalProgressBar.Size = new System.Drawing.Size(489, 30);
@@ -46,8 +45,7 @@
             //
             // StatusLabel
             //
-            this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.StatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.StatusLabel.Location = new System.Drawing.Point(8, 10);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(490, 20);
@@ -56,8 +54,7 @@
             //
             // CurrentProgressBar
             //
-            this.CurrentProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CurrentProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.CurrentProgressBar.Location = new System.Drawing.Point(12, 40);
             this.CurrentProgressBar.Name = "CurrentProgressBar";
             this.CurrentProgressBar.Size = new System.Drawing.Size(489, 30);
@@ -65,15 +62,14 @@
             //
             // TotalProgressLabel
             //
-            this.TotalProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TotalProgressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.TotalProgressLabel.Location = new System.Drawing.Point(8, 80);
             this.TotalProgressLabel.Name = "TotalProgressLabel";
             this.TotalProgressLabel.Size = new System.Drawing.Size(490, 20);
             this.TotalProgressLabel.TabIndex = 3;
             this.TotalProgressLabel.Text = "Total progress: ...";
             //
-            // InstallationForm
+            // InstallForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -86,14 +82,13 @@
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(525, 200);
             this.MaximumSize = new System.Drawing.Size(525, 200);
+            this.MinimumSize = new System.Drawing.Size(525, 200);
             this.Name = "InstallForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = ".NET Runtime Bootstrapper";
             this.Load += new System.EventHandler(this.InstallationForm_Load);
             this.ResumeLayout(false);
-
         }
 
         #endregion

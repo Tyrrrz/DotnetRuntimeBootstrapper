@@ -74,9 +74,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Gui
             //
             // MainPanel
             //
-            this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.MainPanel.BackColor = System.Drawing.SystemColors.Window;
             this.MainPanel.Controls.Add(this.MissingComponentsLabel);
             this.MainPanel.Controls.Add(this.MissingPrerequisitesTextBox);
@@ -89,8 +87,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Gui
             //
             // MissingComponentsLabel
             //
-            this.MissingComponentsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MissingComponentsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.MissingComponentsLabel.Location = new System.Drawing.Point(8, 75);
             this.MissingComponentsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.MissingComponentsLabel.Name = "MissingComponentsLabel";
@@ -100,9 +97,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Gui
             //
             // MissingPrerequisitesTextBox
             //
-            this.MissingPrerequisitesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MissingPrerequisitesTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.MissingPrerequisitesTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.MissingPrerequisitesTextBox.Location = new System.Drawing.Point(12, 100);
             this.MissingPrerequisitesTextBox.Multiline = true;
@@ -115,26 +110,26 @@ namespace DotnetRuntimeBootstrapper.AppHost.Gui
             //
             // DescriptionLabel
             //
-            this.DescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DescriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.DescriptionLabel.Location = new System.Drawing.Point(56, 13);
             this.DescriptionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.DescriptionLabel.Name = "DescriptionLabel";
             this.DescriptionLabel.Size = new System.Drawing.Size(436, 45);
             this.DescriptionLabel.TabIndex = 6;
-            this.DescriptionLabel.Text = "Your system is missing runtime components required by this application. Would you" +
-    " like to download and install them now?";
+            this.DescriptionLabel.Text = "Your system is missing runtime components required by this application. Would you" + " like to download and install them now?";
             //
             // IconPictureBox
             //
+            this.IconPictureBox.Image = System.Drawing.SystemIcons.Warning.ToBitmap();
             this.IconPictureBox.Location = new System.Drawing.Point(16, 16);
             this.IconPictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.IconPictureBox.Name = "IconPictureBox";
             this.IconPictureBox.Size = new System.Drawing.Size(32, 32);
+            this.IconPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.IconPictureBox.TabIndex = 5;
             this.IconPictureBox.TabStop = false;
             //
-            // InstallationPromptForm
+            // PromptForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -154,7 +149,6 @@ namespace DotnetRuntimeBootstrapper.AppHost.Gui
             this.MainPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconPictureBox)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion
