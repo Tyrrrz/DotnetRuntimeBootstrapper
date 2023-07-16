@@ -1,14 +1,18 @@
 # .NET Runtime Bootstrapper
 
+[![Status](https://img.shields.io/badge/status-maintenance-ffd700.svg)](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)
 [![Made in Ukraine](https://img.shields.io/badge/made_in-ukraine-ffd700.svg?labelColor=0057b7)](https://tyrrrz.me/ukraine)
 [![Build](https://img.shields.io/github/actions/workflow/status/Tyrrrz/DotnetRuntimeBootstrapper/main.yml?branch=master)](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/actions)
 [![Version](https://img.shields.io/nuget/v/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Downloads](https://img.shields.io/nuget/dt/DotnetRuntimeBootstrapper.svg)](https://nuget.org/packages/DotnetRuntimeBootstrapper)
 [![Discord](https://img.shields.io/discord/869237470565392384?label=discord)](https://discord.gg/2SUWKFnHSm)
-[![Donate](https://img.shields.io/badge/donate-$$$-8a2be2.svg)](https://tyrrrz.me/donate)
 [![Fuck Russia](https://img.shields.io/badge/fuck-russia-e4181c.svg?labelColor=000000)](https://twitter.com/tyrrrz/status/1495972128977571848)
 
-> 🟡 **Project status**: maintenance mode<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/project-status.md)</sup>
+<table>
+    <tr>
+        <td width="99999" align="center">Development of this project is entirely funded by the community. <b><a href="https://tyrrrz.me/donate">Consider donating to support!</a></b></td>
+    </tr>
+</table>
 
 <p align="center">
     <img src="favicon.png" alt="Icon" />
