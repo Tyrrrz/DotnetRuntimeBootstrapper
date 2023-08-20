@@ -7,7 +7,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 internal partial class NativeLibrary : NativeResource
 {
-    private readonly Dictionary<string, Delegate> _functionTable = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Delegate> _functionsByName = new(StringComparer.Ordinal);
 
     public NativeLibrary(nint handle)
         : base(handle)
@@ -16,17 +16,17 @@ internal partial class NativeLibrary : NativeResource
 
     public TDelegate GetFunction<TDelegate>(string functionName) where TDelegate : Delegate
     {
-        if (_functionTable.TryGetValue(functionName, out var funcCached))
-            return (TDelegate)funcCached;
+        if (_functionsByName.TryGetValue(functionName, out var cached) && cached is TDelegate cachedCasted)
+            return cachedCasted;
 
         var address = NativeMethods.GetProcAddress(Handle, functionName);
         if (address == 0)
             throw new Win32Exception();
 
-        var func = (TDelegate)Marshal.GetDelegateForFunctionPointer(address, typeof(TDelegate));
-        _functionTable[functionName] = func;
+        var function = (TDelegate)Marshal.GetDelegateForFunctionPointer(address, typeof(TDelegate));
+        _functionsByName[functionName] = function;
 
-        return func;
+        return function;
     }
 
     protected override void Dispose(bool disposing) =>
