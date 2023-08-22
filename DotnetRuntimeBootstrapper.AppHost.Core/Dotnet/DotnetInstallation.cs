@@ -10,11 +10,13 @@ internal static class DotnetInstallation
     private static string? TryGetDirectoryPathFromRegistry()
     {
         var dotnetRegistryKey = Registry.LocalMachine.OpenSubKey(
-            (OperatingSystemEx.ProcessorArchitecture.Is64Bit()
-                ? "SOFTWARE\\Wow6432Node\\"
-                : "SOFTWARE\\") +
-            "dotnet\\Setup\\InstalledVersions\\" +
-            OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
+            (
+                OperatingSystemEx.ProcessorArchitecture.Is64Bit()
+                    ? "SOFTWARE\\Wow6432Node\\"
+                    : "SOFTWARE\\"
+            )
+                + "dotnet\\Setup\\InstalledVersions\\"
+                + OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
             false
         );
 
@@ -31,9 +33,9 @@ internal static class DotnetInstallation
         // if the apphost is running in x86 mode on an x64 system, so we rely
         // on an environment variable instead.
         var programFilesDirPath =
-            Environment.GetEnvironmentVariable("PROGRAMFILES") ??
-            Environment.GetEnvironmentVariable("ProgramW6432") ??
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            Environment.GetEnvironmentVariable("PROGRAMFILES")
+            ?? Environment.GetEnvironmentVariable("ProgramW6432")
+            ?? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
         var dotnetDirPath = Path.Combine(programFilesDirPath, "dotnet");
 
@@ -46,8 +48,9 @@ internal static class DotnetInstallation
     // https://github.com/dotnet/designs/blob/main/accepted/2020/install-locations.md
     public static string GetDirectoryPath() =>
         // Try to resolve location from registry (covers both custom and default locations)
-        TryGetDirectoryPathFromRegistry() ??
+        TryGetDirectoryPathFromRegistry()
+        ??
         // Try to resolve location from program files (default location)
-        TryGetDirectoryPathFromEnvironment() ??
-        throw new DirectoryNotFoundException("Could not find .NET installation directory.");
+        TryGetDirectoryPathFromEnvironment()
+        ?? throw new DirectoryNotFoundException("Could not find .NET installation directory.");
 }

@@ -28,11 +28,14 @@ public class Bootstrapper : BootstrapperBase
 
     protected override bool Prompt(
         TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
+        IPrerequisite[] missingPrerequisites
+    )
     {
         using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
         {
-            Console.Error.WriteLine($"Your system is missing runtime components required by {targetAssembly.Name}:");
+            Console.Error.WriteLine(
+                $"Your system is missing runtime components required by {targetAssembly.Name}:"
+            );
 
             foreach (var prerequisite in missingPrerequisites)
                 Console.Error.WriteLine($"  - {prerequisite.DisplayName}");
@@ -54,7 +57,9 @@ public class Bootstrapper : BootstrapperBase
         // When not running in interactive mode, instruct the user to set the environment variable instead
         else
         {
-            Console.Error.Write("To install the missing components automatically, set the environment variable ");
+            Console.Error.Write(
+                "To install the missing components automatically, set the environment variable "
+            );
 
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
                 Console.Error.Write(AcceptPromptEnvironmentVariable);
@@ -85,7 +90,8 @@ public class Bootstrapper : BootstrapperBase
 
     protected override bool Install(
         TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
+        IPrerequisite[] missingPrerequisites
+    )
     {
         using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
             Console.Out.WriteLine($"{targetAssembly.Name}: installing prerequisites");
@@ -101,7 +107,11 @@ public class Bootstrapper : BootstrapperBase
             Console.Out.Write($"Downloading {prerequisite.DisplayName}... ");
 
             // Only write progress if running in interactive mode
-            using (var progress = new ConsoleProgress(ConsoleEx.IsInteractive ? Console.Out : TextWriter.Null))
+            using (
+                var progress = new ConsoleProgress(
+                    ConsoleEx.IsInteractive ? Console.Out : TextWriter.Null
+                )
+            )
             {
                 var installer = prerequisite.DownloadInstaller(progress.Report);
                 installers.Add(installer);
@@ -141,7 +151,9 @@ public class Bootstrapper : BootstrapperBase
         if (isRebootRequired)
         {
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkYellow))
-                Console.Out.WriteLine($"You need to restart Windows before you can run {targetAssembly.Name}.");
+                Console.Out.WriteLine(
+                    $"You need to restart Windows before you can run {targetAssembly.Name}."
+                );
 
             // Only prompt for reboot if running in interactive mode
             if (ConsoleEx.IsInteractive)

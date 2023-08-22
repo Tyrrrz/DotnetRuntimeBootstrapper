@@ -35,26 +35,25 @@ public class BootstrapperTask : Task
         Log.LogMessage("Extracting apphost...");
 
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = GetType().Namespace + Variant.ToUpperInvariant() switch
-        {
-            "CLI" => ".AppHost.Cli.exe",
-            "GUI" => ".AppHost.Gui.exe",
-            _ => throw new InvalidOperationException($"Unknown bootstrapper variant '{Variant}'.")
-        };
+        var resourceName =
+            GetType().Namespace
+            + Variant.ToUpperInvariant() switch
+            {
+                "CLI" => ".AppHost.Cli.exe",
+                "GUI" => ".AppHost.Gui.exe",
+                _
+                    => throw new InvalidOperationException(
+                        $"Unknown bootstrapper variant '{Variant}'."
+                    )
+            };
 
         // Executable file
-        assembly.ExtractManifestResource(
-            resourceName,
-            AppHostFilePath
-        );
+        assembly.ExtractManifestResource(resourceName, AppHostFilePath);
 
         Log.LogMessage("Extracted apphost to '{0}'.", AppHostFilePath);
 
         // Config file
-        assembly.ExtractManifestResource(
-            resourceName + ".config",
-            AppHostFilePath + ".config"
-        );
+        assembly.ExtractManifestResource(resourceName + ".config", AppHostFilePath + ".config");
 
         Log.LogMessage("Extracted apphost config to '{0}'.", AppHostFilePath + ".config");
     }
@@ -63,8 +62,7 @@ public class BootstrapperTask : Task
     {
         Log.LogMessage("Injecting configuration...");
 
-        var configuration =
-            $"""
+        var configuration = $"""
             TargetFileName={TargetFileName}
             IsPromptRequired={IsPromptRequired}
             """;
@@ -74,15 +72,22 @@ public class BootstrapperTask : Task
             new ReaderParameters { ReadWrite = true }
         );
 
-        assembly.MainModule.Resources.RemoveAll(r =>
-            string.Equals(r.Name, "BootstrapperConfiguration", StringComparison.OrdinalIgnoreCase)
+        assembly.MainModule.Resources.RemoveAll(
+            r =>
+                string.Equals(
+                    r.Name,
+                    "BootstrapperConfiguration",
+                    StringComparison.OrdinalIgnoreCase
+                )
         );
 
-        assembly.MainModule.Resources.Add(new EmbeddedResource(
-            "BootstrapperConfiguration",
-            ManifestResourceAttributes.Public,
-            Encoding.UTF8.GetBytes(configuration)
-        ));
+        assembly.MainModule.Resources.Add(
+            new EmbeddedResource(
+                "BootstrapperConfiguration",
+                ManifestResourceAttributes.Public,
+                Encoding.UTF8.GetBytes(configuration)
+            )
+        );
 
         assembly.Write();
 
@@ -108,11 +113,15 @@ public class BootstrapperTask : Task
         }
 
         // Modify the version info resource
-        targetPortableExecutable.SetVersionInfo(v => v
-            .SetFileType(FileType.Application)
-            .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
-            .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
-            .SetAttribute("AppHost", $".NET Runtime Bootstrapper v{Version.ToString(3)} ({Variant})")
+        targetPortableExecutable.SetVersionInfo(
+            v =>
+                v.SetFileType(FileType.Application)
+                    .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
+                    .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
+                    .SetAttribute(
+                        "AppHost",
+                        $".NET Runtime Bootstrapper v{Version.ToString(3)} ({Variant})"
+                    )
         );
 
         Log.LogMessage("Injected resources into '{0}'.", AppHostFileName);

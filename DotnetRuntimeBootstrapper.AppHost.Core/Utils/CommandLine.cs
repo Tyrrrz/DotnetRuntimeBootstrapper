@@ -18,14 +18,16 @@ internal static class CommandLine
         {
             var processJob = ProcessJob.Create();
 
-            processJob.Configure(new JobObjectExtendedLimitInformation
-            {
-                BasicLimitInformation = new JobObjectBasicLimitInformation
+            processJob.Configure(
+                new JobObjectExtendedLimitInformation
                 {
-                    // JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
-                    LimitFlags = 0x2000
+                    BasicLimitInformation = new JobObjectBasicLimitInformation
+                    {
+                        // JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+                        LimitFlags = 0x2000
+                    }
                 }
-            });
+            );
 
             return processJob;
         }
@@ -39,7 +41,11 @@ internal static class CommandLine
     private static string EscapeArgument(string argument) =>
         '"' + argument.Replace("\"", "\\\"") + '"';
 
-    private static Process CreateProcess(string executableFilePath, string[] arguments, bool isElevated = false)
+    private static Process CreateProcess(
+        string executableFilePath,
+        string[] arguments,
+        bool isElevated = false
+    )
     {
         var process = new Process
         {

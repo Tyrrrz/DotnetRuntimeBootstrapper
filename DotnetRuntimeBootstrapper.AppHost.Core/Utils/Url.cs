@@ -18,9 +18,6 @@ internal static class Url
         return protocol + url[index..];
     }
 
-    public static string? TryExtractFileName(string url) => Regex
-        .Match(url, @".+/([^?]*)")
-        .Groups[1]
-        .Value
-        .NullIfEmptyOrWhiteSpace();
+    public static string? TryExtractFileName(string url) =>
+        Regex.Match(url, @".+/([^?]*)").Groups[1].Value.NullIfEmptyOrWhiteSpace();
 }

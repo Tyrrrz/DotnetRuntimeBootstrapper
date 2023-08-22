@@ -42,19 +42,19 @@ internal partial class DotnetHost : IDisposable
     );
 
     private InitializeForCommandLineFn GetInitializeForCommandLineFn() =>
-        _hostResolverLibrary.GetFunction<InitializeForCommandLineFn>("hostfxr_initialize_for_dotnet_command_line");
+        _hostResolverLibrary.GetFunction<InitializeForCommandLineFn>(
+            "hostfxr_initialize_for_dotnet_command_line"
+        );
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
     private delegate int RunAppFn(nint handle);
 
-    private RunAppFn GetRunAppFn() =>
-        _hostResolverLibrary.GetFunction<RunAppFn>("hostfxr_run_app");
+    private RunAppFn GetRunAppFn() => _hostResolverLibrary.GetFunction<RunAppFn>("hostfxr_run_app");
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
     private delegate int CloseFn(nint handle);
 
-    private CloseFn GetCloseFn() =>
-        _hostResolverLibrary.GetFunction<CloseFn>("hostfxr_close");
+    private CloseFn GetCloseFn() => _hostResolverLibrary.GetFunction<CloseFn>("hostfxr_close");
 
     private nint Initialize(string targetFilePath, string[] args)
     {
@@ -72,9 +72,8 @@ internal partial class DotnetHost : IDisposable
 
         if (status != 0)
         {
-            var error = errorBuffer.Length > 0
-                ? errorBuffer.ToString()
-                : "No error messages reported.";
+            var error =
+                errorBuffer.Length > 0 ? errorBuffer.ToString() : "No error messages reported.";
 
             throw new ApplicationException(
                 $"""
@@ -102,10 +101,10 @@ internal partial class DotnetHost : IDisposable
             // Unfortunately, there is no way to get the original exception or its message.
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/23
             throw new ApplicationException(
-                "Application crashed with an unhandled exception. " +
-                "Unfortunately, it was not possible to retrieve the exception message or its stacktrace. " +
-                "Please check the Windows Event Viewer to see if the runtime logged any additional information. " +
-                "If you are the developer of the application, consider adding a global exception handler to provide a more detailed error message to the user.",
+                "Application crashed with an unhandled exception. "
+                    + "Unfortunately, it was not possible to retrieve the exception message or its stacktrace. "
+                    + "Please check the Windows Event Viewer to see if the runtime logged any additional information. "
+                    + "If you are the developer of the application, consider adding a global exception handler to provide a more detailed error message to the user.",
                 ex
             );
         }
@@ -146,9 +145,15 @@ internal partial class DotnetHost
         // 1. Find the hostfxr directory containing versioned subdirectories
         // 2. Get the hostfxr.dll from the subdirectory with the highest version number
 
-        var hostResolverRootDirPath = PathEx.Combine(DotnetInstallation.GetDirectoryPath(), "host", "fxr");
+        var hostResolverRootDirPath = PathEx.Combine(
+            DotnetInstallation.GetDirectoryPath(),
+            "host",
+            "fxr"
+        );
         if (!Directory.Exists(hostResolverRootDirPath))
-            throw new DirectoryNotFoundException("Could not find directory containing hostfxr.dll.");
+            throw new DirectoryNotFoundException(
+                "Could not find directory containing hostfxr.dll."
+            );
 
         var hostResolverFilePath = (
             from dirPath in Directory.GetDirectories(hostResolverRootDirPath)
@@ -160,12 +165,9 @@ internal partial class DotnetHost
             select filePath
         ).FirstOrDefault();
 
-        return
-            hostResolverFilePath ??
-            throw new FileNotFoundException("Could not find hostfxr.dll.");
+        return hostResolverFilePath
+            ?? throw new FileNotFoundException("Could not find hostfxr.dll.");
     }
 
-    public static DotnetHost Load() => new(
-        NativeLibrary.Load(GetHostResolverFilePath())
-    );
+    public static DotnetHost Load() => new(NativeLibrary.Load(GetHostResolverFilePath()));
 }

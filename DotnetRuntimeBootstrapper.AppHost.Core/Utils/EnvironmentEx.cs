@@ -17,8 +17,8 @@ internal static class EnvironmentEx
 
         foreach (var environmentVariable in machineEnvironmentVariables)
         {
-            var key = (string) environmentVariable.Key;
-            var value = (string?) environmentVariable.Value;
+            var key = (string)environmentVariable.Key;
+            var value = (string?)environmentVariable.Value;
 
             Environment.SetEnvironmentVariable(key, value);
         }

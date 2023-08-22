@@ -37,36 +37,36 @@ public partial class InstallForm : Form
 
     private void InvokeOnUI(Action action) => Invoke(action);
 
-    private void UpdateStatus(string status) => InvokeOnUI(() =>
-        StatusLabel.Text = status
-    );
+    private void UpdateStatus(string status) => InvokeOnUI(() => StatusLabel.Text = status);
 
-    private void UpdateCurrentProgress(double progress) => InvokeOnUI(() =>
-    {
-        if (progress >= 0)
+    private void UpdateCurrentProgress(double progress) =>
+        InvokeOnUI(() =>
         {
-            CurrentProgressBar.Style = ProgressBarStyle.Continuous;
-            CurrentProgressBar.Value = (int) (progress * 100);
-        }
-        else
-        {
-            CurrentProgressBar.Style = ProgressBarStyle.Marquee;
-        }
-    });
+            if (progress >= 0)
+            {
+                CurrentProgressBar.Style = ProgressBarStyle.Continuous;
+                CurrentProgressBar.Value = (int)(progress * 100);
+            }
+            else
+            {
+                CurrentProgressBar.Style = ProgressBarStyle.Marquee;
+            }
+        });
 
-    private void UpdateTotalProgress(double totalProgress) => InvokeOnUI(() =>
-    {
-        if (totalProgress >= 0)
+    private void UpdateTotalProgress(double totalProgress) =>
+        InvokeOnUI(() =>
         {
-            TotalProgressBar.Style = ProgressBarStyle.Continuous;
-            TotalProgressBar.Value = (int) (totalProgress * 100);
-            TotalProgressLabel.Text = @$"Total progress: {totalProgress:P0}";
-        }
-        else
-        {
-            TotalProgressBar.Style = ProgressBarStyle.Marquee;
-        }
-    });
+            if (totalProgress >= 0)
+            {
+                TotalProgressBar.Style = ProgressBarStyle.Continuous;
+                TotalProgressBar.Value = (int)(totalProgress * 100);
+                TotalProgressLabel.Text = @$"Total progress: {totalProgress:P0}";
+            }
+            else
+            {
+                TotalProgressBar.Style = ProgressBarStyle.Marquee;
+            }
+        });
 
     private void Execute()
     {
@@ -77,7 +77,9 @@ public partial class InstallForm : Form
         var installers = new List<IPrerequisiteInstaller>();
         foreach (var prerequisite in _missingPrerequisites)
         {
-            UpdateStatus(@$"[{currentStep}/{totalSteps}] Downloading {prerequisite.DisplayName}...");
+            UpdateStatus(
+                @$"[{currentStep}/{totalSteps}] Downloading {prerequisite.DisplayName}..."
+            );
             UpdateCurrentProgress(0);
 
             var installer = prerequisite.DownloadInstaller(p =>
@@ -96,7 +98,9 @@ public partial class InstallForm : Form
         var installersFinishedCount = 0;
         foreach (var installer in installers)
         {
-            UpdateStatus(@$"[{currentStep}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}...");
+            UpdateStatus(
+                @$"[{currentStep}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}..."
+            );
             UpdateCurrentProgress(-1);
 
             var installationResult = installer.Run();
@@ -113,13 +117,14 @@ public partial class InstallForm : Form
         // Finalize
         if (isRebootRequired)
         {
-            var isRebootAccepted = MessageBox.Show(
-                @$"You need to restart Windows before you can run {_targetAssembly.Name}. " +
-                @"Would you like to do it now?",
-                @"Restart required",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning
-            ) == DialogResult.Yes;
+            var isRebootAccepted =
+                MessageBox.Show(
+                    @$"You need to restart Windows before you can run {_targetAssembly.Name}. "
+                        + @"Would you like to do it now?",
+                    @"Restart required",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                ) == DialogResult.Yes;
 
             if (isRebootAccepted)
                 OperatingSystemEx.Reboot();
@@ -141,10 +146,6 @@ public partial class InstallForm : Form
 
         UpdateStatus(@"Preparing installation");
 
-        new Thread(Execute)
-        {
-            Name = nameof(Execute),
-            IsBackground = true
-        }.Start();
+        new Thread(Execute) { Name = nameof(Execute), IsBackground = true }.Start();
     }
 }

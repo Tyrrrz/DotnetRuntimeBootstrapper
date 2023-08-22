@@ -52,5 +52,9 @@ internal static class NativeMethods
     public static extern int GetFileType(nint hFile);
 
     [DllImport(Shell32, CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern nint ExtractAssociatedIcon(nint hInst, string lpIconPath, out ushort lpiIcon);
+    public static extern nint ExtractAssociatedIcon(
+        nint hInst,
+        string lpIconPath,
+        out ushort lpiIcon
+    );
 }

@@ -7,9 +7,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 internal partial class ProcessJob : NativeResource
 {
     public ProcessJob(nint handle)
-        : base(handle)
-    {
-    }
+        : base(handle) { }
 
     public void Configure(JobObjectExtendedLimitInformation limitInfo)
     {
@@ -20,11 +18,14 @@ internal partial class ProcessJob : NativeResource
         {
             Marshal.StructureToPtr(limitInfo, limitInfoHandle, false);
 
-            if (!NativeMethods.SetInformationJobObject(
+            if (
+                !NativeMethods.SetInformationJobObject(
                     Handle,
                     JobObjectInfoType.ExtendedLimitInformation,
                     limitInfoHandle,
-                    (uint) limitInfoSize))
+                    (uint)limitInfoSize
+                )
+            )
             {
                 throw new Win32Exception();
             }
@@ -38,11 +39,9 @@ internal partial class ProcessJob : NativeResource
     public void AddProcess(nint processHandle) =>
         NativeMethods.AssignProcessToJobObject(Handle, processHandle);
 
-    public void AddProcess(Process process) =>
-        AddProcess(process.Handle);
+    public void AddProcess(Process process) => AddProcess(process.Handle);
 
-    protected override void Dispose(bool disposing) =>
-        NativeMethods.CloseHandle(Handle);
+    protected override void Dispose(bool disposing) => NativeMethods.CloseHandle(Handle);
 }
 
 internal partial class ProcessJob
@@ -50,8 +49,6 @@ internal partial class ProcessJob
     public static ProcessJob Create()
     {
         var handle = NativeMethods.CreateJobObject(0, null);
-        return handle != 0
-            ? new ProcessJob(handle)
-            : throw new Win32Exception();
+        return handle != 0 ? new ProcessJob(handle) : throw new Win32Exception();
     }
 }

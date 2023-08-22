@@ -13,7 +13,8 @@ public abstract class BootstrapperBase
     protected const string LegacyAcceptPromptEnvironmentVariable = "DOTNET_INSTALL_PREREQUISITES";
     protected const string AcceptPromptEnvironmentVariable = "DOTNET_ENABLE_BOOTSTRAPPER";
 
-    protected BootstrapperConfiguration Configuration { get; } = BootstrapperConfiguration.Resolve();
+    protected BootstrapperConfiguration Configuration { get; } =
+        BootstrapperConfiguration.Resolve();
 
     protected virtual void ReportError(string message)
     {
@@ -25,8 +26,7 @@ public abstract class BootstrapperBase
             var applicationName = Path.GetFileName(applicationFilePath);
             var bootstrapperVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
-            var content =
-                $"""
+            var content = $"""
                 Description: Bootstrapper for a .NET application has failed.
                 Application: {applicationName}
                 Path: {applicationFilePath}
@@ -54,31 +54,26 @@ public abstract class BootstrapperBase
 
     private bool PromptAndInstall(
         TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
+        IPrerequisite[] missingPrerequisites
+    )
     {
         // Install prompt can be disabled in bootstrap configuration or via environment variable
         var isPromptPreAccepted =
             !Configuration.IsPromptRequired
-            ||
-            string.Equals(
+            || string.Equals(
                 Environment.GetEnvironmentVariable(AcceptPromptEnvironmentVariable),
                 "true",
                 StringComparison.OrdinalIgnoreCase
             )
-            ||
-            string.Equals(
+            || string.Equals(
                 Environment.GetEnvironmentVariable(LegacyAcceptPromptEnvironmentVariable),
                 "true",
                 StringComparison.OrdinalIgnoreCase
             );
 
-        var isPromptAccepted =
-            isPromptPreAccepted ||
-            Prompt(targetAssembly, missingPrerequisites);
+        var isPromptAccepted = isPromptPreAccepted || Prompt(targetAssembly, missingPrerequisites);
 
-        return
-            isPromptAccepted &&
-            Install(targetAssembly, missingPrerequisites);
+        return isPromptAccepted && Install(targetAssembly, missingPrerequisites);
     }
 
     private int Run(TargetAssembly targetAssembly, string[] args)
@@ -126,8 +121,8 @@ public abstract class BootstrapperBase
         {
             var targetAssembly = TargetAssembly.Resolve(
                 Path.Combine(
-                    Path.GetDirectoryName(EnvironmentEx.ProcessPath) ??
-                    AppDomain.CurrentDomain.BaseDirectory,
+                    Path.GetDirectoryName(EnvironmentEx.ProcessPath)
+                        ?? AppDomain.CurrentDomain.BaseDirectory,
                     Configuration.TargetFileName
                 )
             );

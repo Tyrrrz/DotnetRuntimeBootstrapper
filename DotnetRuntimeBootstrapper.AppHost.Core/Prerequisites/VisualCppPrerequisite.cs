@@ -12,11 +12,13 @@ internal class VisualCppPrerequisite : IPrerequisite
 
     public bool IsInstalled() =>
         Registry.LocalMachine.ContainsSubKey(
-            (OperatingSystemEx.ProcessorArchitecture.Is64Bit()
-                ? "SOFTWARE\\Wow6432Node\\"
-                : "SOFTWARE\\") +
-            "Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\" +
-            OperatingSystemEx.ProcessorArchitecture.GetMoniker()
+            (
+                OperatingSystemEx.ProcessorArchitecture.Is64Bit()
+                    ? "SOFTWARE\\Wow6432Node\\"
+                    : "SOFTWARE\\"
+            )
+                + "Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\"
+                + OperatingSystemEx.ProcessorArchitecture.GetMoniker()
         );
 
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)

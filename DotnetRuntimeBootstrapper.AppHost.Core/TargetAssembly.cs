@@ -35,10 +35,11 @@ public partial class TargetAssembly
                 // If the app targets .NET 5 desktop and .NET 6 base,
                 // we still need to keep the base.
                 // Very unlikely that such a situation will happen though.
-                runtimes.RemoveAll(r =>
-                    r.IsBase &&
-                    r.Version.Major == desktopRuntime.Version.Major &&
-                    r.Version <= desktopRuntime.Version
+                runtimes.RemoveAll(
+                    r =>
+                        r.IsBase
+                        && r.Version.Major == desktopRuntime.Version.Major
+                        && r.Version <= desktopRuntime.Version
                 );
             }
         }
@@ -76,11 +77,13 @@ public partial class TargetAssembly
     public static TargetAssembly Resolve(string filePath)
     {
         if (!File.Exists(filePath))
-            throw new FileNotFoundException($"Could not find target assembly '{Path.GetFileName(filePath)}'.");
+            throw new FileNotFoundException(
+                $"Could not find target assembly '{Path.GetFileName(filePath)}'."
+            );
 
         var name =
-            FileVersionInfo.GetVersionInfo(filePath).ProductName?.NullIfEmptyOrWhiteSpace() ??
-            Path.GetFileNameWithoutExtension(filePath);
+            FileVersionInfo.GetVersionInfo(filePath).ProductName?.NullIfEmptyOrWhiteSpace()
+            ?? Path.GetFileNameWithoutExtension(filePath);
 
         return new TargetAssembly(filePath, name);
     }

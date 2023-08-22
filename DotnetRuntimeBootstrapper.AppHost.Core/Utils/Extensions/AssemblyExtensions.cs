@@ -10,8 +10,10 @@ internal static class AssemblyExtensions
     public static string GetManifestResourceString(this Assembly assembly, string resourceName)
     {
         using var stream =
-            assembly.GetManifestResourceStream(resourceName) ??
-            throw new MissingManifestResourceException($"Could not resolve resource '{resourceName}'.");
+            assembly.GetManifestResourceStream(resourceName)
+            ?? throw new MissingManifestResourceException(
+                $"Could not resolve resource '{resourceName}'."
+            );
 
         using var reader = new StreamReader(stream, Encoding.UTF8);
 

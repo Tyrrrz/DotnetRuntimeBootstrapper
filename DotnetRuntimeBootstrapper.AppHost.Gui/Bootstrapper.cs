@@ -24,7 +24,8 @@ public class Bootstrapper : BootstrapperBase
 
     protected override bool Prompt(
         TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
+        IPrerequisite[] missingPrerequisites
+    )
     {
         ApplicationEx.EnsureInitialized();
 
@@ -36,7 +37,8 @@ public class Bootstrapper : BootstrapperBase
 
     protected override bool Install(
         TargetAssembly targetAssembly,
-        IPrerequisite[] missingPrerequisites)
+        IPrerequisite[] missingPrerequisites
+    )
     {
         ApplicationEx.EnsureInitialized();
 

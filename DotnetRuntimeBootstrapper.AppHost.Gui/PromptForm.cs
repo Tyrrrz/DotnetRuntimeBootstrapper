@@ -27,7 +27,9 @@ public partial class PromptForm : Form
     {
         Text = @$"{_targetAssembly.Name}: prerequisites missing";
         Icon = IconEx.TryExtractAssociatedIcon(Application.ExecutablePath);
-        MissingPrerequisitesTextBox.Lines = _missingPrerequisites.Select(c => $"• {c.DisplayName}").ToArray();
+        MissingPrerequisitesTextBox.Lines = _missingPrerequisites
+            .Select(c => $"• {c.DisplayName}")
+            .ToArray();
     }
 
     private void InstallButton_Click(object sender, EventArgs e)

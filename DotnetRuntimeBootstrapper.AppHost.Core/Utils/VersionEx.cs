@@ -6,9 +6,7 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 internal static class VersionEx
 {
     public static Version? TryParse(string value) =>
-        Regex.IsMatch(value, @"^\d+\.\d+(?:\.\d+)?(?:\.\d+)?$")
-            ? Parse(value)
-            : null;
+        Regex.IsMatch(value, @"^\d+\.\d+(?:\.\d+)?(?:\.\d+)?$") ? Parse(value) : null;
 
     public static Version Parse(string value) => new(value);
 }

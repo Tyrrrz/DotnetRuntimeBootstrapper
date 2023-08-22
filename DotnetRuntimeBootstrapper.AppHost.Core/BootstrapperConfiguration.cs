@@ -16,7 +16,9 @@ public partial class BootstrapperConfiguration
 {
     public static BootstrapperConfiguration Resolve()
     {
-        var data = Assembly.GetExecutingAssembly().GetManifestResourceString(nameof(BootstrapperConfiguration));
+        var data = Assembly
+            .GetExecutingAssembly()
+            .GetManifestResourceString(nameof(BootstrapperConfiguration));
         var parsed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var line in data.Split('\n'))
@@ -34,7 +36,6 @@ public partial class BootstrapperConfiguration
         return new BootstrapperConfiguration
         {
             TargetFileName = parsed[nameof(TargetFileName)],
-
             IsPromptRequired = string.Equals(
                 parsed[nameof(IsPromptRequired)],
                 "true",

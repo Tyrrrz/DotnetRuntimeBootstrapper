@@ -29,9 +29,9 @@ internal partial class DotnetRuntime
     }
 
     public bool IsSupersededBy(DotnetRuntime other) =>
-        string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) &&
-        Version.Major == other.Version.Major &&
-        Version <= other.Version;
+        string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase)
+        && Version.Major == other.Version.Major
+        && Version <= other.Version;
 }
 
 internal partial class DotnetRuntime
@@ -40,7 +40,9 @@ internal partial class DotnetRuntime
     {
         var sharedDirPath = Path.Combine(DotnetInstallation.GetDirectoryPath(), "shared");
         if (!Directory.Exists(sharedDirPath))
-            throw new DirectoryNotFoundException("Could not find directory containing .NET runtime binaries.");
+            throw new DirectoryNotFoundException(
+                "Could not find directory containing .NET runtime binaries."
+            );
 
         return (
             from runtimeDirPath in Directory.GetDirectories(sharedDirPath)
@@ -61,30 +63,33 @@ internal partial class DotnetRuntime
 
             return !string.IsNullOrEmpty(name) && version is not null
                 ? new DotnetRuntime(name, version)
-                : throw new ApplicationException("Could not parse runtime info from runtime config.");
+                : throw new ApplicationException(
+                    "Could not parse runtime info from runtime config."
+                );
         }
 
         var json =
-            Json.TryParse(File.ReadAllText(runtimeConfigFilePath)) ??
-            throw new ApplicationException($"Failed to parse runtime config '{runtimeConfigFilePath}'.");
+            Json.TryParse(File.ReadAllText(runtimeConfigFilePath))
+            ?? throw new ApplicationException(
+                $"Failed to parse runtime config '{runtimeConfigFilePath}'."
+            );
 
         return
             // Multiple targets
-            json
-                .TryGetChild("runtimeOptions")?
-                .TryGetChild("frameworks")?
-                .EnumerateChildren()
+            json.TryGetChild("runtimeOptions")
+                ?.TryGetChild("frameworks")
+                ?.EnumerateChildren()
                 .Select(ParseRuntime)
-                .ToArray() ??
-
+                .ToArray()
+            ??
             // Single target
-            json
-                .TryGetChild("runtimeOptions")?
-                .TryGetChild("framework")?
-                .ToSingletonEnumerable()
+            json.TryGetChild("runtimeOptions")
+                ?.TryGetChild("framework")
+                ?.ToSingletonEnumerable()
                 .Select(ParseRuntime)
-                .ToArray() ??
-
-            throw new ApplicationException("Could not resolve target runtime from runtime config.");
+                .ToArray()
+            ?? throw new ApplicationException(
+                "Could not resolve target runtime from runtime config."
+            );
     }
 }

@@ -23,9 +23,9 @@ internal static class Http
             // it ourselves because it would require a reboot in the middle of installation).
             // On Windows 8 and higher this should succeed.
             ServicePointManager.SecurityProtocol =
-                (SecurityProtocolType) 0x00000C00 |
-                SecurityProtocolType.Tls |
-                SecurityProtocolType.Ssl3;
+                (SecurityProtocolType)0x00000C00
+                | SecurityProtocolType.Tls
+                | SecurityProtocolType.Ssl3;
 
             IsHttpsSupported = true;
         }
@@ -37,13 +37,12 @@ internal static class Http
 
     private static HttpWebRequest CreateRequest(string url, string method = "GET")
     {
-        var request = (HttpWebRequest) WebRequest.Create(
-            // Certain older systems don't support HTTPS protocols required by most web servers.
-            // If we're running on such a system, we have to downgrade to HTTP.
-            IsHttpsSupported
-                ? url
-                : Url.ReplaceProtocol(url, "http")
-        );
+        var request = (HttpWebRequest)
+            WebRequest.Create(
+                // Certain older systems don't support HTTPS protocols required by most web servers.
+                // If we're running on such a system, we have to downgrade to HTTP.
+                IsHttpsSupported ? url : Url.ReplaceProtocol(url, "http")
+            );
 
         request.Method = method;
 
@@ -62,15 +61,11 @@ internal static class Http
         }
         catch (WebException ex)
         {
-            throw new WebException(
-                $"Failed to send HTTP request to '{url}'.",
-                ex
-            );
+            throw new WebException($"Failed to send HTTP request to '{url}'.", ex);
         }
     }
 
-    public static Stream GetContentStream(string url) =>
-        GetContentStream(url, out _);
+    public static Stream GetContentStream(string url) => GetContentStream(url, out _);
 
     public static string GetContentString(string url)
     {
@@ -80,7 +75,11 @@ internal static class Http
         return reader.ReadToEnd();
     }
 
-    public static void DownloadFile(string url, string outputFilePath, Action<double>? handleProgress = null)
+    public static void DownloadFile(
+        string url,
+        string outputFilePath,
+        Action<double>? handleProgress = null
+    )
     {
         using var source = GetContentStream(url, out var contentLength);
         using var destination = File.Create(outputFilePath);

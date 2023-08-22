@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CSharpier.MsBuild" Version="0.25.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Framework" Version="17.6.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.6.3" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Mono.Cecil" Version="0.11.5" PrivateAssets="all" GeneratePathProperty="true" />

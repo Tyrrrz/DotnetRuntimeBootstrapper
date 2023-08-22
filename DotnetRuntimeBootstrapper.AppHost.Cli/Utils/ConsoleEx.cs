@@ -7,10 +7,10 @@ namespace DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
 internal static class ConsoleEx
 {
     public static bool IsInteractive =>
-        NativeMethods.GetConsoleWindow() != 0 &&
-        NativeMethods.GetFileType(NativeMethods.GetStdHandle(-10)) == 2 &&
-        NativeMethods.GetFileType(NativeMethods.GetStdHandle(-11)) == 2 &&
-        NativeMethods.GetFileType(NativeMethods.GetStdHandle(-12)) == 2;
+        NativeMethods.GetConsoleWindow() != 0
+        && NativeMethods.GetFileType(NativeMethods.GetStdHandle(-10)) == 2
+        && NativeMethods.GetFileType(NativeMethods.GetStdHandle(-11)) == 2
+        && NativeMethods.GetFileType(NativeMethods.GetStdHandle(-12)) == 2;
 
     public static IDisposable WithForegroundColor(ConsoleColor color)
     {
