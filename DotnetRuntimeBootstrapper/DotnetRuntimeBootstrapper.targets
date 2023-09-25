@@ -9,13 +9,13 @@
 
     <!-- Warning: not Windows target platform -->
     <Warning
-      Condition="'$(OS)' != 'Windows_NT'"
+      Condition="!$([MSBuild]::IsOsPlatform('Windows'))"
       Code="DRB_NOT_WINDOWS"
       Text="Target platform is not Windows. Boostrapper will not be created." />
   </Target>
 
   <Target
-    Condition="$(GenerateBootstrapperOnBuild) AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OS)' == 'Windows_NT'"
+    Condition="$(GenerateBootstrapperOnBuild) AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::IsOsPlatform('Windows'))"
     Name="CreateBootstrapperAfterBuild"
     AfterTargets="Build">
     <PropertyGroup>
@@ -32,7 +32,7 @@
   </Target>
 
   <Target
-    Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND '$(OS)' == 'Windows_NT'"
+    Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::IsOsPlatform('Windows'))"
     Name="CreateBootstrapperAfterPublish"
     AfterTargets="Publish">
     <PropertyGroup>
