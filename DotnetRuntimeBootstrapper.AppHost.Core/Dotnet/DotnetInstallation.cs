@@ -9,16 +9,18 @@ internal static class DotnetInstallation
 {
     private static string? TryGetDirectoryPathFromRegistry()
     {
-        var dotnetRegistryKey = Registry.LocalMachine.OpenSubKey(
-            (
-                OperatingSystemEx.ProcessorArchitecture.Is64Bit()
-                    ? "SOFTWARE\\Wow6432Node\\"
-                    : "SOFTWARE\\"
-            )
-                + "dotnet\\Setup\\InstalledVersions\\"
-                + OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
-            false
-        );
+        var dotnetRegistryKey = Registry
+            .LocalMachine
+            .OpenSubKey(
+                (
+                    OperatingSystemEx.ProcessorArchitecture.Is64Bit()
+                        ? "SOFTWARE\\Wow6432Node\\"
+                        : "SOFTWARE\\"
+                )
+                    + "dotnet\\Setup\\InstalledVersions\\"
+                    + OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
+                false
+            );
 
         var dotnetDirPath = dotnetRegistryKey?.GetValue("InstallLocation", null) as string;
 
