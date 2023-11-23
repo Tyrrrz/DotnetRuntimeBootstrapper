@@ -2,7 +2,7 @@
 
 > **Important**:
 > This changelog is no longer maintained and will be removed in the future.
-> Going forward, new versions of this package will have the corresponding release notes published on [GitHub Releases](https://githu.com/Tyrrrz/DotnetRuntimeBootstrapper/releases).
+> Going forward, new versions of this package will have the corresponding release notes published on [GitHub Releases](https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/releases).
 
 ## v2.5.1 (25-May-2023)
 
