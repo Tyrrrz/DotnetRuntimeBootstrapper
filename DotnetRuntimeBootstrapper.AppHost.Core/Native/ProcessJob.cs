@@ -4,11 +4,8 @@ using System.Runtime.InteropServices;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
-internal partial class ProcessJob : NativeResource
+internal partial class ProcessJob(nint handle) : NativeResource(handle)
 {
-    public ProcessJob(nint handle)
-        : base(handle) { }
-
     public void Configure(JobObjectExtendedLimitInformation limitInfo)
     {
         var limitInfoSize = Marshal.SizeOf(typeof(JobObjectExtendedLimitInformation));

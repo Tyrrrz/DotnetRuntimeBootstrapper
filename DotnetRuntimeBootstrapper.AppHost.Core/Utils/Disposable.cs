@@ -2,16 +2,9 @@
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
-internal partial class Disposable : IDisposable
+internal class Disposable(Action dispose) : IDisposable
 {
-    private readonly Action _dispose;
+    public void Dispose() => dispose();
 
-    public Disposable(Action dispose) => _dispose = dispose;
-
-    public void Dispose() => _dispose();
-}
-
-internal partial class Disposable
-{
     public static IDisposable Create(Action dispose) => new Disposable(dispose);
 }

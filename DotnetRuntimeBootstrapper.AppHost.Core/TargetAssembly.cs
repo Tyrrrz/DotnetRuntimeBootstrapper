@@ -8,17 +8,11 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
-public partial class TargetAssembly
+public partial class TargetAssembly(string filePath, string name)
 {
-    public string FilePath { get; }
+    public string FilePath { get; } = filePath;
 
-    public string Name { get; }
-
-    public TargetAssembly(string filePath, string name)
-    {
-        FilePath = filePath;
-        Name = name;
-    }
+    public string Name { get; } = name;
 
     private DotnetRuntime[] GetRuntimes()
     {

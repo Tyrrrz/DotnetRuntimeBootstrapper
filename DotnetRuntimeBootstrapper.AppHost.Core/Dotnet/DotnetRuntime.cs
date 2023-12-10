@@ -7,11 +7,11 @@ using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
-internal partial class DotnetRuntime
+internal partial class DotnetRuntime(string name, Version version)
 {
-    public string Name { get; }
+    public string Name { get; } = name;
 
-    public Version Version { get; }
+    public Version Version { get; } = version;
 
     public bool IsBase =>
         string.Equals(Name, "Microsoft.NETCore.App", StringComparison.OrdinalIgnoreCase);
@@ -21,12 +21,6 @@ internal partial class DotnetRuntime
 
     public bool IsAspNet =>
         string.Equals(Name, "Microsoft.AspNetCore.App", StringComparison.OrdinalIgnoreCase);
-
-    public DotnetRuntime(string name, Version version)
-    {
-        Name = name;
-        Version = version;
-    }
 
     public bool IsSupersededBy(DotnetRuntime other) =>
         string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase)

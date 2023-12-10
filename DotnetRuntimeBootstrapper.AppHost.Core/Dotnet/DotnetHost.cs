@@ -17,13 +17,8 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 // .NET CLI host implementation:
 // https://github.com/dotnet/runtime/blob/57bfe47451/src/native/corehost/corehost.cpp
 
-internal partial class DotnetHost : IDisposable
+internal partial class DotnetHost(NativeLibrary hostResolverLibrary) : IDisposable
 {
-    private readonly NativeLibrary _hostResolverLibrary;
-
-    public DotnetHost(NativeLibrary hostResolverLibrary) =>
-        _hostResolverLibrary = hostResolverLibrary;
-
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto, SetLastError = true)]
     private delegate void ErrorWriterFn(string message);
 
@@ -31,7 +26,7 @@ internal partial class DotnetHost : IDisposable
     private delegate void SetErrorWriterFn(ErrorWriterFn errorWriterFn);
 
     private SetErrorWriterFn GetSetErrorWriterFn() =>
-        _hostResolverLibrary.GetFunction<SetErrorWriterFn>("hostfxr_set_error_writer");
+        hostResolverLibrary.GetFunction<SetErrorWriterFn>("hostfxr_set_error_writer");
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto, SetLastError = true)]
     private delegate int InitializeForCommandLineFn(
@@ -42,19 +37,19 @@ internal partial class DotnetHost : IDisposable
     );
 
     private InitializeForCommandLineFn GetInitializeForCommandLineFn() =>
-        _hostResolverLibrary.GetFunction<InitializeForCommandLineFn>(
+        hostResolverLibrary.GetFunction<InitializeForCommandLineFn>(
             "hostfxr_initialize_for_dotnet_command_line"
         );
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
     private delegate int RunAppFn(nint handle);
 
-    private RunAppFn GetRunAppFn() => _hostResolverLibrary.GetFunction<RunAppFn>("hostfxr_run_app");
+    private RunAppFn GetRunAppFn() => hostResolverLibrary.GetFunction<RunAppFn>("hostfxr_run_app");
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, SetLastError = true)]
     private delegate int CloseFn(nint handle);
 
-    private CloseFn GetCloseFn() => _hostResolverLibrary.GetFunction<CloseFn>("hostfxr_close");
+    private CloseFn GetCloseFn() => hostResolverLibrary.GetFunction<CloseFn>("hostfxr_close");
 
     private nint Initialize(string targetFilePath, string[] args)
     {
@@ -133,7 +128,7 @@ internal partial class DotnetHost : IDisposable
         }
     }
 
-    public void Dispose() => _hostResolverLibrary.Dispose();
+    public void Dispose() => hostResolverLibrary.Dispose();
 }
 
 internal partial class DotnetHost

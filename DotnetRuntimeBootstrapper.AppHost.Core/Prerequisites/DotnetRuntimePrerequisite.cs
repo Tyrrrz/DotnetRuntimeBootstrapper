@@ -9,22 +9,18 @@ using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
-internal class DotnetRuntimePrerequisite : IPrerequisite
+internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
 {
-    private readonly DotnetRuntime _runtime;
-
     private string ShortName =>
-        _runtime switch
+        runtime switch
         {
             { IsWindowsDesktop: true } => "Desktop",
             { IsAspNet: true } => "ASP.NET",
             { IsBase: true } => "Base",
-            _ => _runtime.Name
+            _ => runtime.Name
         };
 
-    public string DisplayName => $".NET Runtime ({ShortName}) v{_runtime.Version}";
-
-    public DotnetRuntimePrerequisite(DotnetRuntime runtime) => _runtime = runtime;
+    public string DisplayName => $".NET Runtime ({ShortName}) v{runtime.Version}";
 
     // We are looking for a runtime with the same name and the same major version.
     // Installed runtime may have higher minor version than the target runtime, but not lower.
@@ -32,7 +28,7 @@ internal class DotnetRuntimePrerequisite : IPrerequisite
     {
         try
         {
-            return DotnetRuntime.GetAllInstalled().Any(_runtime.IsSupersededBy);
+            return DotnetRuntime.GetAllInstalled().Any(runtime.IsSupersededBy);
         }
         catch (Exception ex) when (ex is DirectoryNotFoundException or FileNotFoundException)
         {
@@ -45,7 +41,7 @@ internal class DotnetRuntimePrerequisite : IPrerequisite
     {
         var manifest = Http.GetContentString(
             "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/"
-                + $"{_runtime.Version.ToString(2)}/releases.json"
+                + $"{runtime.Version.ToString(2)}/releases.json"
         );
 
         // Find the installer download URL applicable for the current system
@@ -55,7 +51,7 @@ internal class DotnetRuntimePrerequisite : IPrerequisite
                 ?.TryGetChild("releases")
                 ?.TryGetChild(0)
                 ?.TryGetChild(
-                    _runtime switch
+                    runtime switch
                     {
                         { IsWindowsDesktop: true } => "windowsdesktop",
                         { IsAspNet: true } => "aspnetcore-runtime",
@@ -87,7 +83,7 @@ internal class DotnetRuntimePrerequisite : IPrerequisite
             ?? throw new ApplicationException(
                 "Failed to resolve download URL for the required .NET runtime. "
                     + $"Please try to download ${DisplayName} manually "
-                    + $"from https://dotnet.microsoft.com/download/dotnet/{_runtime.Version.ToString(2)} or "
+                    + $"from https://dotnet.microsoft.com/download/dotnet/{runtime.Version.ToString(2)} or "
                     + "from https://get.dot.net."
             );
     }

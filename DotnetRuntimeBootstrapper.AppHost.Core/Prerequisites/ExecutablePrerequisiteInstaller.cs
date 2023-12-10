@@ -3,17 +3,12 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
-internal class ExecutablePrerequisiteInstaller : IPrerequisiteInstaller
+internal class ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, string filePath)
+    : IPrerequisiteInstaller
 {
-    public IPrerequisite Prerequisite { get; }
+    public IPrerequisite Prerequisite { get; } = prerequisite;
 
-    public string FilePath { get; }
-
-    public ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, string filePath)
-    {
-        Prerequisite = prerequisite;
-        FilePath = filePath;
-    }
+    public string FilePath { get; } = filePath;
 
     public PrerequisiteInstallerResult Run()
     {

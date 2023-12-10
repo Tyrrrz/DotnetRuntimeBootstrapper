@@ -5,12 +5,9 @@ using System.Runtime.InteropServices;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
-internal partial class NativeLibrary : NativeResource
+internal partial class NativeLibrary(nint handle) : NativeResource(handle)
 {
     private readonly Dictionary<string, Delegate> _functionsByName = new(StringComparer.Ordinal);
-
-    public NativeLibrary(nint handle)
-        : base(handle) { }
 
     public TDelegate GetFunction<TDelegate>(string functionName)
         where TDelegate : Delegate
