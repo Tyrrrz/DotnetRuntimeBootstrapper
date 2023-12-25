@@ -42,7 +42,7 @@ internal class WindowsUpdate3063858Prerequisite : IPrerequisite
             return "https://download.microsoft.com/download/C/9/6/C96CD606-3E05-4E1C-B201-51211AE80B1E/Windows6.1-KB3063858-x86.msu";
         }
 
-        throw new ApplicationException("Unsupported operating system version.");
+        throw new InvalidOperationException("Unsupported operating system version.");
     }
 
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)

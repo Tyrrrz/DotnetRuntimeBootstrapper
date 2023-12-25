@@ -54,5 +54,7 @@ internal static class DotnetInstallation
         ??
         // Try to resolve location from program files (default location)
         TryGetDirectoryPathFromEnvironment()
-        ?? throw new DirectoryNotFoundException("Could not find .NET installation directory.");
+        ?? throw new DirectoryNotFoundException(
+            "Failed to locate the .NET installation directory."
+        );
 }

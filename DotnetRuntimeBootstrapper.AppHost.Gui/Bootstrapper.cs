@@ -8,19 +8,8 @@ namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
 public class Bootstrapper : BootstrapperBase
 {
-    protected override void ReportError(string message)
-    {
-        base.ReportError(message);
-
-        try
-        {
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        catch
-        {
-            // Ignore
-        }
-    }
+    protected override void ReportError(string message) =>
+        MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
     protected override bool Prompt(
         TargetAssembly targetAssembly,

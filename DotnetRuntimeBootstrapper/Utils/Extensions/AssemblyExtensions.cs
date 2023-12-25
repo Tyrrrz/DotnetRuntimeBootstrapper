@@ -15,7 +15,7 @@ internal static class AssemblyExtensions
         var resourceStream =
             assembly.GetManifestResourceStream(resourceName)
             ?? throw new MissingManifestResourceException(
-                $"Could not find resource '{resourceName}'."
+                $"Failed to find resource '{resourceName}'."
             );
 
         using var fileStream = File.Create(filePath);

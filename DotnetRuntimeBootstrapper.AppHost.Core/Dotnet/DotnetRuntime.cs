@@ -33,10 +33,13 @@ internal partial class DotnetRuntime
     public static DotnetRuntime[] GetAllInstalled()
     {
         var sharedDirPath = Path.Combine(DotnetInstallation.GetDirectoryPath(), "shared");
+
         if (!Directory.Exists(sharedDirPath))
+        {
             throw new DirectoryNotFoundException(
-                "Could not find directory containing .NET runtime binaries."
+                "Failed to find the directory containing .NET runtime binaries."
             );
+        }
 
         return (
             from runtimeDirPath in Directory.GetDirectories(sharedDirPath)
@@ -57,15 +60,15 @@ internal partial class DotnetRuntime
 
             return !string.IsNullOrEmpty(name) && version is not null
                 ? new DotnetRuntime(name, version)
-                : throw new ApplicationException(
-                    "Could not parse runtime info from runtime config."
+                : throw new InvalidOperationException(
+                    "Failed to extract runtime information from the provided runtime configuration."
                 );
         }
 
         var json =
             Json.TryParse(File.ReadAllText(runtimeConfigFilePath))
-            ?? throw new ApplicationException(
-                $"Failed to parse runtime config '{runtimeConfigFilePath}'."
+            ?? throw new InvalidOperationException(
+                $"Failed to parse runtime configuration at '{runtimeConfigFilePath}'."
             );
 
         return
@@ -82,8 +85,8 @@ internal partial class DotnetRuntime
                 ?.ToSingletonEnumerable()
                 .Select(ParseRuntime)
                 .ToArray()
-            ?? throw new ApplicationException(
-                "Could not resolve target runtime from runtime config."
+            ?? throw new InvalidOperationException(
+                "Failed to resolve the target runtime from runtime configuration."
             );
     }
 }

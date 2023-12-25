@@ -80,8 +80,8 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
                 )
                 .Select(f => f.TryGetChild("url")?.TryGetString())
                 .FirstOrDefault()
-            ?? throw new ApplicationException(
-                "Failed to resolve download URL for the required .NET runtime. "
+            ?? throw new InvalidOperationException(
+                "Failed to resolve the download URL for the required .NET runtime. "
                     + $"Please try to download ${DisplayName} manually "
                     + $"from https://dotnet.microsoft.com/download/dotnet/{runtime.Version.ToString(2)} or "
                     + "from https://get.dot.net."

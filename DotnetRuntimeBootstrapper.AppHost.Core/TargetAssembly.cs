@@ -70,15 +70,20 @@ public partial class TargetAssembly
 {
     public static TargetAssembly Resolve(string filePath)
     {
-        if (!File.Exists(filePath))
+        try
+        {
+            var name =
+                FileVersionInfo.GetVersionInfo(filePath).ProductName?.NullIfEmptyOrWhiteSpace()
+                ?? Path.GetFileNameWithoutExtension(filePath);
+
+            return new TargetAssembly(filePath, name);
+        }
+        catch (FileNotFoundException ex)
+        {
             throw new FileNotFoundException(
-                $"Could not find target assembly '{Path.GetFileName(filePath)}'."
+                $"Failed to locate the target assembly at '{Path.GetFileName(filePath)}'.",
+                ex
             );
-
-        var name =
-            FileVersionInfo.GetVersionInfo(filePath).ProductName?.NullIfEmptyOrWhiteSpace()
-            ?? Path.GetFileNameWithoutExtension(filePath);
-
-        return new TargetAssembly(filePath, name);
+        }
     }
 }

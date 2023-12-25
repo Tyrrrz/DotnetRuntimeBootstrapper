@@ -13,17 +13,8 @@ public class Bootstrapper : BootstrapperBase
 {
     protected override void ReportError(string message)
     {
-        base.ReportError(message);
-
-        try
-        {
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
-                Console.Error.WriteLine("ERROR: " + message);
-        }
-        catch
-        {
-            // Ignore
-        }
+        using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
+            Console.Error.WriteLine("ERROR: " + message);
     }
 
     protected override bool Prompt(

@@ -66,7 +66,7 @@ internal class WindowsUpdate2999226Prerequisite : IPrerequisite
             return "https://download.microsoft.com/download/E/4/6/E4694323-8290-4A08-82DB-81F2EB9452C2/Windows8.1-KB2999226-x86.msu";
         }
 
-        throw new ApplicationException("Unsupported operating system version.");
+        throw new InvalidOperationException("Unsupported operating system version.");
     }
 
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)

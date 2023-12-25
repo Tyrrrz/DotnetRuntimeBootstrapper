@@ -16,29 +16,63 @@ public abstract class BootstrapperBase
     protected BootstrapperConfiguration Configuration { get; } =
         BootstrapperConfiguration.Resolve();
 
-    protected virtual void ReportError(string message)
+    protected abstract void ReportError(string message);
+
+    private void HandleException(Exception exception)
     {
-        // Report to the Windows Event Log. Adapted from:
-        // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
-        try
+        // For domain-level exceptions, report only the message
+        if (exception is BootstrapperException bootstrapperException)
         {
-            var applicationFilePath = Assembly.GetExecutingAssembly().Location;
-            var applicationName = Path.GetFileName(applicationFilePath);
-            var bootstrapperVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-
-            var content = $"""
-                Description: Bootstrapper for a .NET application has failed.
-                Application: {applicationName}
-                Path: {applicationFilePath}
-                AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion}
-                Message: {message}
-                """;
-
-            EventLog.WriteEntry(".NET Runtime", content, EventLogEntryType.Error, 1023);
+            try
+            {
+                ReportError(bootstrapperException.Message);
+            }
+            catch
+            {
+                // Ignore
+            }
         }
-        catch
+        // For other (unexpected) exceptions, report the full stack trace and
+        // record the error to the Windows Event Log.
+        else
         {
-            // Ignore
+            try
+            {
+                ReportError(exception.ToString());
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            // Report to the Windows Event Log. Adapted from:
+            // https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/native/corehost/apphost/apphost.windows.cpp#L37-L51
+            try
+            {
+                var applicationFilePath = Assembly.GetExecutingAssembly().Location;
+                var applicationName = Path.GetFileName(applicationFilePath);
+
+                var bootstrapperVersion = Assembly
+                    .GetExecutingAssembly()
+                    .GetName()
+                    .Version
+                    .ToString(3);
+
+                var content = $"""
+                     Description: Bootstrapper for a .NET application has failed.
+                     Application: {applicationName}
+                     Path: {applicationFilePath}
+                     AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion}
+
+                     {exception}
+                     """;
+
+                EventLog.WriteEntry(".NET Runtime", content, EventLogEntryType.Error, 1023);
+            }
+            catch
+            {
+                // Ignore
+            }
         }
     }
 
@@ -85,7 +119,7 @@ public abstract class BootstrapperBase
         }
         // Possible exception causes:
         // - .NET host not found (DirectoryNotFoundException)
-        // - .NET host failed to initialize (ApplicationException)
+        // - .NET host failed to initialize (BootstrapperException)
         catch
         {
             // Check for missing prerequisites and install them
@@ -115,7 +149,7 @@ public abstract class BootstrapperBase
     public int Run(string[] args)
     {
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
-            ReportError(e.ExceptionObject.ToString());
+            HandleException((Exception)e.ExceptionObject);
 
         try
         {
@@ -131,7 +165,7 @@ public abstract class BootstrapperBase
         }
         catch (Exception ex)
         {
-            ReportError(ex.ToString());
+            HandleException(ex);
             return 0xDEAD;
         }
     }

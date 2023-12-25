@@ -70,14 +70,14 @@ internal partial class DotnetHost(NativeLibrary hostResolverLibrary) : IDisposab
             var error =
                 errorBuffer.Length > 0 ? errorBuffer.ToString() : "No error messages reported.";
 
-            throw new ApplicationException(
+            throw new BootstrapperException(
                 $"""
-                Failed to initialize .NET host.
-                - Target: {targetFilePath}
-                - Arguments: [{string.Join(", ", args)}]
-                - Status: {status}
-                - Error: {error}
-                """
+                 Failed to initialize .NET host.
+                 - Target: {targetFilePath}
+                 - Arguments: [{string.Join(", ", args)}]
+                 - Status: {status}
+                 - Error: {error}
+                 """
             );
         }
 
@@ -95,7 +95,7 @@ internal partial class DotnetHost(NativeLibrary hostResolverLibrary) : IDisposab
             // This is thrown when the app crashes with an unhandled exception.
             // Unfortunately, there is no way to get the original exception or its message.
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/23
-            throw new ApplicationException(
+            throw new BootstrapperException(
                 "Application crashed with an unhandled exception. "
                     + "Unfortunately, it was not possible to retrieve the exception message or its stacktrace. "
                     + "Please check the Windows Event Viewer to see if the runtime logged any additional information. "
@@ -145,10 +145,13 @@ internal partial class DotnetHost
             "host",
             "fxr"
         );
+
         if (!Directory.Exists(hostResolverRootDirPath))
+        {
             throw new DirectoryNotFoundException(
-                "Could not find directory containing hostfxr.dll."
+                "Failed to locate the host resolver directory ('host/fxr')."
             );
+        }
 
         var hostResolverFilePath = (
             from dirPath in Directory.GetDirectories(hostResolverRootDirPath)
@@ -161,7 +164,9 @@ internal partial class DotnetHost
         ).FirstOrDefault();
 
         return hostResolverFilePath
-            ?? throw new FileNotFoundException("Could not find hostfxr.dll.");
+            ?? throw new FileNotFoundException(
+                "Failed to locate the host resolver file ('hostfxr.dll')."
+            );
     }
 
     public static DotnetHost Load() => new(NativeLibrary.Load(GetHostResolverFilePath()));
