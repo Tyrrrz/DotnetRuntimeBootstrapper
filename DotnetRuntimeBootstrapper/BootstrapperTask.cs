@@ -72,28 +72,22 @@ public class BootstrapperTask : Task
             new ReaderParameters { ReadWrite = true }
         );
 
-        assembly
-            .MainModule
-            .Resources
-            .RemoveAll(
-                r =>
-                    string.Equals(
-                        r.Name,
-                        "BootstrapperConfiguration",
-                        StringComparison.OrdinalIgnoreCase
-                    )
-            );
-
-        assembly
-            .MainModule
-            .Resources
-            .Add(
-                new EmbeddedResource(
+        assembly.MainModule.Resources.RemoveAll(
+            r =>
+                string.Equals(
+                    r.Name,
                     "BootstrapperConfiguration",
-                    ManifestResourceAttributes.Public,
-                    Encoding.UTF8.GetBytes(configuration)
+                    StringComparison.OrdinalIgnoreCase
                 )
-            );
+        );
+
+        assembly.MainModule.Resources.Add(
+            new EmbeddedResource(
+                "BootstrapperConfiguration",
+                ManifestResourceAttributes.Public,
+                Encoding.UTF8.GetBytes(configuration)
+            )
+        );
 
         assembly.Write();
 

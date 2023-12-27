@@ -24,11 +24,9 @@ public class Bootstrapper : BootstrapperBase
     {
         using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
         {
-            Console
-                .Error
-                .WriteLine(
-                    $"Your system is missing runtime components required by {targetAssembly.Name}:"
-                );
+            Console.Error.WriteLine(
+                $"Your system is missing runtime components required by {targetAssembly.Name}:"
+            );
 
             foreach (var prerequisite in missingPrerequisites)
                 Console.Error.WriteLine($"  - {prerequisite.DisplayName}");
@@ -50,11 +48,9 @@ public class Bootstrapper : BootstrapperBase
         // When not running in interactive mode, instruct the user to set the environment variable instead
         else
         {
-            Console
-                .Error
-                .Write(
-                    "To install the missing components automatically, set the environment variable "
-                );
+            Console.Error.Write(
+                "To install the missing components automatically, set the environment variable "
+            );
 
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
                 Console.Error.Write(AcceptPromptEnvironmentVariable);
@@ -146,11 +142,9 @@ public class Bootstrapper : BootstrapperBase
         if (isRebootRequired)
         {
             using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkYellow))
-                Console
-                    .Out
-                    .WriteLine(
-                        $"You need to restart Windows before you can run {targetAssembly.Name}."
-                    );
+                Console.Out.WriteLine(
+                    $"You need to restart Windows before you can run {targetAssembly.Name}."
+                );
 
             // Only prompt for reboot if running in interactive mode
             if (ConsoleEx.IsInteractive)

@@ -11,17 +11,15 @@ internal class VisualCppPrerequisite : IPrerequisite
     public string DisplayName => "Visual C++ Redistributable 2015-2019";
 
     public bool IsInstalled() =>
-        Registry
-            .LocalMachine
-            .ContainsSubKey(
-                (
-                    OperatingSystemEx.ProcessorArchitecture.Is64Bit()
-                        ? "SOFTWARE\\Wow6432Node\\"
-                        : "SOFTWARE\\"
-                )
-                    + "Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\"
-                    + OperatingSystemEx.ProcessorArchitecture.GetMoniker()
-            );
+        Registry.LocalMachine.ContainsSubKey(
+            (
+                OperatingSystemEx.ProcessorArchitecture.Is64Bit()
+                    ? "SOFTWARE\\Wow6432Node\\"
+                    : "SOFTWARE\\"
+            )
+                + "Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\"
+                + OperatingSystemEx.ProcessorArchitecture.GetMoniker()
+        );
 
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {

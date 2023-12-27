@@ -55,8 +55,7 @@ public abstract class BootstrapperBase
                 var bootstrapperVersion = Assembly
                     .GetExecutingAssembly()
                     .GetName()
-                    .Version
-                    .ToString(3);
+                    .Version.ToString(3);
 
                 var content = $"""
                      Description: Bootstrapper for a .NET application has failed.
