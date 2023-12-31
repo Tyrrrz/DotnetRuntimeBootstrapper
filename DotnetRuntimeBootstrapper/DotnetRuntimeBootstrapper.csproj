@@ -31,7 +31,7 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="17.8.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.8.3" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Mono.Cecil" Version="0.11.5" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="PolyShim" Version="1.8.0" PrivateAssets="all" />
+    <PackageReference Include="PolyShim" Version="1.9.0" PrivateAssets="all" />
     <PackageReference Include="Ressy" Version="1.0.3" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 

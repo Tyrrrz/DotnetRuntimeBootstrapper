@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
@@ -39,7 +40,7 @@ internal static class CommandLine
     }
 
     private static string EscapeArgument(string argument) =>
-        '"' + argument.Replace("\"", "\\\"") + '"';
+        '"' + argument.Replace("\"", "\\\"", StringComparison.Ordinal) + '"';
 
     private static Process CreateProcess(
         string executableFilePath,

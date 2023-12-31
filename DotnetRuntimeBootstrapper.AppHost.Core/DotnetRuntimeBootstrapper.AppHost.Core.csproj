@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="CSharpier.MsBuild" Version="0.26.7" PrivateAssets="all" />
-    <PackageReference Include="PolyShim" Version="1.8.0" PrivateAssets="all" />
+    <PackageReference Include="PolyShim" Version="1.9.0" PrivateAssets="all" />
     <PackageReference Include="QuickJson" Version="1.1.0" PrivateAssets="all" />
   </ItemGroup>
 
