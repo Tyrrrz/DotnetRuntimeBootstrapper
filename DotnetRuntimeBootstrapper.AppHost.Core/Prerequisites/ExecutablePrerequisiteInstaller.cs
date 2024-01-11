@@ -14,11 +14,7 @@ internal class ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, strin
     {
         try
         {
-            var exitCode = CommandLine.Run(
-                FilePath,
-                new[] { "/install", "/quiet", "/norestart" },
-                true
-            );
+            var exitCode = CommandLine.Run(FilePath, ["/install", "/quiet", "/norestart"], true);
 
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/24#issuecomment-1021447102
             if (exitCode is 3010 or 3011 or 1641)

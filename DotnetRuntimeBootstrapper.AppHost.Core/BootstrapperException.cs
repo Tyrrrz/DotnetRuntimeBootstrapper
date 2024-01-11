@@ -2,8 +2,5 @@
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
-public class BootstrapperException : Exception
-{
-    public BootstrapperException(string message, Exception? innerException = null)
-        : base(message, innerException) { }
-}
+public class BootstrapperException(string message, Exception? innerException = null)
+    : Exception(message, innerException);

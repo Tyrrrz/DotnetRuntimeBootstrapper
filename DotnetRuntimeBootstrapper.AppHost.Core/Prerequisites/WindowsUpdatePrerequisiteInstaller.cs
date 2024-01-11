@@ -14,11 +14,7 @@ internal class WindowsUpdatePrerequisiteInstaller(IPrerequisite prerequisite, st
     {
         try
         {
-            var exitCode = CommandLine.Run(
-                "wusa",
-                new[] { FilePath, "/quiet", "/norestart" },
-                true
-            );
+            var exitCode = CommandLine.Run("wusa", [FilePath, "/quiet", "/norestart"], true);
 
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/24#issuecomment-1021447102
             if (exitCode is 3010 or 3011 or 1641)

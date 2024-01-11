@@ -37,5 +37,5 @@ internal static class OperatingSystemEx
         }
     }
 
-    public static void Reboot() => CommandLine.Run("shutdown", new[] { "/r", "/t", "0" });
+    public static void Reboot() => CommandLine.Run("shutdown", ["/r", "/t", "0"]);
 }
