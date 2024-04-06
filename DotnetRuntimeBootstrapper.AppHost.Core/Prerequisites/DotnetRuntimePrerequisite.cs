@@ -14,9 +14,9 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
     public string DisplayName =>
         runtime switch
         {
+            { IsBase: true } => ".NET Runtime",
             { IsWindowsDesktop: true } => ".NET Desktop Runtime",
             { IsAspNet: true } => ".NET ASP.NET Runtime",
-            { IsBase: true } => ".NET Runtime",
             _ => runtime.Name
         } + $" v{runtime.Version}";
 
