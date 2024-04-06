@@ -11,16 +11,14 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
 {
-    private string ShortName =>
+    public string DisplayName =>
         runtime switch
         {
-            { IsWindowsDesktop: true } => "Desktop",
-            { IsAspNet: true } => "ASP.NET",
-            { IsBase: true } => "Base",
+            { IsWindowsDesktop: true } => ".NET Desktop Runtime",
+            { IsAspNet: true } => ".NET ASP.NET Runtime",
+            { IsBase: true } => ".NET Runtime",
             _ => runtime.Name
-        };
-
-    public string DisplayName => $".NET Runtime ({ShortName}) v{runtime.Version}";
+        } + $" v{runtime.Version}";
 
     // We are looking for a runtime with the same name and the same major version.
     // Installed runtime may have higher minor version than the target runtime, but not lower.
