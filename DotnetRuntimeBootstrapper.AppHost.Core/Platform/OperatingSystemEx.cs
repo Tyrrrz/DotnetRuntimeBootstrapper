@@ -27,6 +27,7 @@ internal static class OperatingSystemEx
         using var search = new ManagementObjectSearcher(
             "SELECT HotFixID FROM Win32_QuickFixEngineering"
         );
+
         using var results = search.Get();
 
         foreach (var result in results)
