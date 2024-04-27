@@ -1,21 +1,8 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="IsNetCoreApp;IsWindowsTarget;CanGenerateBootstrapper">
 
-  <Target Name="CheckBootstrapperPrerequisites" BeforeTargets="CreateBootstrapperAfterBuild;CreateBootstrapperAfterPublish">
-    <!-- Warning: not .NET Core -->
-    <Warning
-      Condition="'$(TargetFrameworkIdentifier)' != '.NETCoreApp'"
-      Code="DRB_NOT_NETCORE"
-      Text="Project is not targeting .NET Core. Bootstrapper will not be created." />
-
-    <!-- Warning: not Windows target platform -->
-    <Warning
-      Condition="!$([MSBuild]::IsOsPlatform('Windows'))"
-      Code="DRB_NOT_WINDOWS"
-      Text="Target platform is not Windows. Boostrapper will not be created." />
-  </Target>
-
+  <!-- Bootstrapper on build -->
   <Target
-    Condition="$(GenerateBootstrapperOnBuild) AND '$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::IsOsPlatform('Windows'))"
+    Condition="$(GenerateBootstrapperOnBuild)"
     Name="CreateBootstrapperAfterBuild"
     AfterTargets="Build">
     <PropertyGroup>
@@ -26,13 +13,14 @@
     </PropertyGroup>
 
     <BootstrapperTask
+      RuntimeIdentifier="$(RuntimeIdentifier)"
       Variant="$(BootstrapperVariant)"
       IsPromptRequired="$(BootstrapperPromptRequired)"
       TargetFilePath="$(TargetPath)" />
   </Target>
 
+  <!-- Bootstrapper on publish -->
   <Target
-    Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::IsOsPlatform('Windows'))"
     Name="CreateBootstrapperAfterPublish"
     AfterTargets="Publish">
     <PropertyGroup>
@@ -43,6 +31,7 @@
     </PropertyGroup>
 
     <BootstrapperTask
+      RuntimeIdentifier="$(RuntimeIdentifier)"
       Variant="$(BootstrapperVariant)"
       IsPromptRequired="$(BootstrapperPromptRequired)"
       TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))" />

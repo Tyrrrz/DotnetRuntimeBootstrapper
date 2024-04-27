@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using DotnetRuntimeBootstrapper.Utils.Extensions;
 using Microsoft.Build.Framework;
@@ -14,6 +15,13 @@ namespace DotnetRuntimeBootstrapper;
 public class BootstrapperTask : Task
 {
     private Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
+
+    public string? RuntimeIdentifier { get; init; }
+
+    public bool IsWindowsTarget =>
+        string.IsNullOrWhiteSpace(RuntimeIdentifier)
+            && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        || RuntimeIdentifier?.StartsWith("win", StringComparison.OrdinalIgnoreCase) == true;
 
     [Required]
     public required string Variant { get; init; }
@@ -130,9 +138,17 @@ public class BootstrapperTask : Task
     public override bool Execute()
     {
         Log.LogMessage("Version: '{0}'.", Version);
+        Log.LogMessage("Runtime identifier: '{0}'.", RuntimeIdentifier);
         Log.LogMessage("Variant: '{0}'.", Variant);
         Log.LogMessage("Prompt required: '{0}'.", IsPromptRequired);
         Log.LogMessage("Target: '{0}'.", TargetFilePath);
+
+        // Currently only Windows is supported
+        if (!IsWindowsTarget)
+        {
+            Log.LogMessage("Target platform is not Windows. Boostrapper will not be created.");
+            return true;
+        }
 
         ExtractAppHost();
         InjectConfiguration();
