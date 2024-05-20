@@ -72,12 +72,12 @@ internal partial class DotnetHost(NativeLibrary hostResolverLibrary) : IDisposab
 
             throw new BootstrapperException(
                 $"""
-                 Failed to initialize .NET host.
-                 - Target: {targetFilePath}
-                 - Arguments: [{string.Join(", ", args)}]
-                 - Status: {status}
-                 - Error: {error}
-                 """
+                Failed to initialize .NET host.
+                - Target: {targetFilePath}
+                - Arguments: [{string.Join(", ", args)}]
+                - Status: {status}
+                - Error: {error}
+                """
             );
         }
 

@@ -80,13 +80,8 @@ public class BootstrapperTask : Task
             new ReaderParameters { ReadWrite = true }
         );
 
-        assembly.MainModule.Resources.RemoveAll(
-            r =>
-                string.Equals(
-                    r.Name,
-                    "BootstrapperConfiguration",
-                    StringComparison.OrdinalIgnoreCase
-                )
+        assembly.MainModule.Resources.RemoveAll(r =>
+            string.Equals(r.Name, "BootstrapperConfiguration", StringComparison.OrdinalIgnoreCase)
         );
 
         assembly.MainModule.Resources.Add(
@@ -121,15 +116,14 @@ public class BootstrapperTask : Task
         }
 
         // Modify the version info resource
-        targetPortableExecutable.SetVersionInfo(
-            v =>
-                v.SetFileType(FileType.Application)
-                    .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
-                    .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
-                    .SetAttribute(
-                        "AppHost",
-                        $".NET Runtime Bootstrapper v{Version.ToString(3)} ({Variant})"
-                    )
+        targetPortableExecutable.SetVersionInfo(v =>
+            v.SetFileType(FileType.Application)
+                .SetAttribute(VersionAttributeName.InternalName, AppHostFileName)
+                .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
+                .SetAttribute(
+                    "AppHost",
+                    $".NET Runtime Bootstrapper v{Version.ToString(3)} ({Variant})"
+                )
         );
 
         Log.LogMessage("Injected resources into '{0}'.", AppHostFileName);

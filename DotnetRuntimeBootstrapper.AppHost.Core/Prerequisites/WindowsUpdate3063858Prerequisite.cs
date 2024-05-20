@@ -16,12 +16,11 @@ internal class WindowsUpdate3063858Prerequisite : IPrerequisite
         OperatingSystemEx.Version >= OperatingSystemVersion.Windows8
         || OperatingSystemEx
             .GetInstalledUpdates()
-            .Any(
-                u =>
-                    string.Equals(u, Id, StringComparison.OrdinalIgnoreCase)
-                    ||
-                    // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
-                    string.Equals(u, "KB3068708", StringComparison.OrdinalIgnoreCase)
+            .Any(u =>
+                string.Equals(u, Id, StringComparison.OrdinalIgnoreCase)
+                ||
+                // Supersession (https://github.com/Tyrrrz/LightBulb/issues/209)
+                string.Equals(u, "KB3068708", StringComparison.OrdinalIgnoreCase)
             );
 
     private string GetInstallerDownloadUrl()

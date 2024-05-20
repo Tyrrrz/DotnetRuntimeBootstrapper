@@ -58,13 +58,13 @@ public abstract class BootstrapperBase
                     .Version.ToString(3);
 
                 var content = $"""
-                     Description: Bootstrapper for a .NET application has failed.
-                     Application: {applicationName}
-                     Path: {applicationFilePath}
-                     AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion}
+                    Description: Bootstrapper for a .NET application has failed.
+                    Application: {applicationName}
+                    Path: {applicationFilePath}
+                    AppHost: .NET Runtime Bootstrapper v{bootstrapperVersion}
 
-                     {exception}
-                     """;
+                    {exception}
+                    """;
 
                 EventLog.WriteEntry(".NET Runtime", content, EventLogEntryType.Error, 1023);
             }

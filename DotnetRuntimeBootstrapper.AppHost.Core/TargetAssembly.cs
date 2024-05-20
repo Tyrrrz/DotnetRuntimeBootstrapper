@@ -29,11 +29,10 @@ public partial class TargetAssembly(string filePath, string name)
                 // If the app targets .NET 5 desktop and .NET 6 base,
                 // we still need to keep the base.
                 // Very unlikely that such a situation will happen though.
-                runtimes.RemoveAll(
-                    r =>
-                        r.IsBase
-                        && r.Version.Major == desktopRuntime.Version.Major
-                        && r.Version <= desktopRuntime.Version
+                runtimes.RemoveAll(r =>
+                    r.IsBase
+                    && r.Version.Major == desktopRuntime.Version.Major
+                    && r.Version <= desktopRuntime.Version
                 );
             }
         }

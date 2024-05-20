@@ -44,8 +44,8 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
 
         // Find the installer download URL applicable for the current system
         return Json
-            // Find the list of files for the latest release
-            .TryParse(manifest)
+                // Find the list of files for the latest release
+                .TryParse(manifest)
                 ?.TryGetChild("releases")
                 ?.TryGetChild(0)
                 ?.TryGetChild(
@@ -59,22 +59,20 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
                 ?.TryGetChild("files")
                 ?.EnumerateChildren()
                 // Filter by processor architecture
-                .Where(
-                    f =>
-                        string.Equals(
-                            f.TryGetChild("rid")?.TryGetString(),
-                            "win-" + OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
-                            StringComparison.OrdinalIgnoreCase
-                        )
+                .Where(f =>
+                    string.Equals(
+                        f.TryGetChild("rid")?.TryGetString(),
+                        "win-" + OperatingSystemEx.ProcessorArchitecture.GetMoniker(),
+                        StringComparison.OrdinalIgnoreCase
+                    )
                 )
                 // Filter by file type
-                .Where(
-                    f =>
-                        string.Equals(
-                            f.TryGetChild("name")?.TryGetString()?.Pipe(Path.GetExtension),
-                            ".exe",
-                            StringComparison.OrdinalIgnoreCase
-                        )
+                .Where(f =>
+                    string.Equals(
+                        f.TryGetChild("name")?.TryGetString()?.Pipe(Path.GetExtension),
+                        ".exe",
+                        StringComparison.OrdinalIgnoreCase
+                    )
                 )
                 .Select(f => f.TryGetChild("url")?.TryGetString())
                 .FirstOrDefault()
