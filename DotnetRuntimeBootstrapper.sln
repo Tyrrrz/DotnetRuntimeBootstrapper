@@ -6,7 +6,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{ADC60863-6275-4C58-9223-C8CCDBB7D12D}"
 ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
-	Changelog.md = Changelog.md
 	License.txt = License.txt
 	Readme.md = Readme.md
 EndProjectSection
