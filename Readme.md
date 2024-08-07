@@ -18,7 +18,7 @@
     <img src="favicon.png" alt="Icon" />
 </p>
 
-**.NET Runtime Bootstrapper** is an MSBuild plugin that replaces the default application host `exe` file — generated for Windows executables during the build process — with a fully featured bootstrapper that can automatically download and install .NET runtime and other missing components required by your application.
+**.NET Runtime Bootstrapper** is an MSBuild plugin that replaces the default application host `exe` file — generated for Windows executables during the build process — with a fully featured bootstrapper that can automatically download and install the .NET runtime and other missing components required by your application.
 
 ## Terms of use<sup>[[?]](https://github.com/Tyrrrz/.github/blob/master/docs/why-so-political.md)</sup>
 
@@ -41,7 +41,7 @@ Currently, .NET offers two main ways of [distributing applications](https://docs
 Both of them come with a set of obvious and somewhat less obvious drawbacks.
 
 - **Framework-dependent** deployment:
-  - Requires the user to have the correct .NET runtime installed on their machine. Not only will many users inevitably miss or ignore this requirement, the task of installing the _correct_ .NET runtime can be very challenging for non-technical individuals. Depending on their machine and the specifics of your application, they will need to carefully examine the [download page](https://dotnet.microsoft.com/download/dotnet/6.0/runtime) to find the installer for the right version, framework (i.e. base, desktop, or aspnet), CPU architecture, and operating system.
+  - Requires the user to have the correct .NET runtime installed on their machine. Not only will many users inevitably miss or ignore this requirement, the task of installing the _correct_ .NET runtime can be very challenging for non-technical individuals. Depending on their machine and the specifics of your application, they will need to carefully examine the [download page](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) to find the installer for the right version, framework (i.e. base, desktop, or aspnet), CPU architecture, and operating system.
   - Comes with an application host that is _not platform-agnostic_. Even though the application itself (the `dll` file) is portable in the sense that it can run on any platform where the target runtime is supported, the application host (the `exe` file) is a native executable built for a specific platform (by default, the same platform as the dev machine). This means that if the application was built on Windows x64, a user running on Windows x86 will not be able to launch the application through the `exe` file, even if they have the correct runtime installed (`dotnet myapp.dll` will still work, however).
 - **Self-contained** deployment:
   - While eliminating the need for installing the correct runtime, this method comes at a significant file size overhead. A very basic WinForms application, for example, starts at around 100 MB in size. This can be very cumbersome when doing auto-updates, but also seems quite wasteful if you consider that the user may end up with multiple .NET applications each bringing their own runtime.
@@ -53,7 +53,7 @@ Both of them come with a set of obvious and somewhat less obvious drawbacks.
 
 - **Bootstrapped** deployment:
   - Takes care of installing the target .NET runtime automatically. All the user has to do is accept the prompt and the bootstrapper will download and install the correct version of the runtime on its own.
-  - Can also automatically install the Visual C++ runtime and missing Windows updates, when running on older operating systems. This means that users who are still using Windows 7 will have just as seamless experience as those running on Windows 10.
+  - Can also automatically install the Visual C++ runtime and missing Windows updates, when running on older operating systems. This means that users who are still using Windows 7 will have just as seamless experience as those running on Windows 11.
   - Does not impose any file size overhead as it does not package additional files. Missing prerequisites are downloaded on-demand.
   - Allows your application to benefit from newer releases of the runtime that the user might install in the future. When deploying your application, you are only tying it to a _minimum_ .NET version within the same major.
   - Is _truly portable_ because the provided application host is a platform-agnostic .NET Framework 3.5 executable that works out-of-the-box on all environments starting with Windows 7. This means that you only need to share a single distribution of your application, without worrying about different CPU architectures or other details.
@@ -61,9 +61,9 @@ Both of them come with a set of obvious and somewhat less obvious drawbacks.
 ## Features
 
 - Executes the target assembly in-process using a custom runtime host
-- Provides GUI-based or CLI-based host, depending on the application
+- Provides a GUI-based or a CLI-based host, depending on the application
 - Detects and installs missing dependencies:
-  - Required version of .NET runtime
+  - Required version of the .NET runtime
   - Required Visual C++ binaries
   - Required Windows updates
 - Works out-of-the-box on Windows 7 and higher
@@ -155,7 +155,7 @@ If you want to also have it created on regular builds as well, set the `<Generat
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Create bootstrapper on every build, in addition to every publish -->
@@ -181,7 +181,7 @@ You can override the default behavior and specify the preferred variant explicit
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Specify bootstrapper variant explicitly (GUI or CLI) -->
@@ -203,11 +203,11 @@ You can override the default value (which is inferred from the `<TargetFramework
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Specify target runtime version explicitly -->
-    <RuntimeFrameworkVersion>6.0.9</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.1</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <!-- ... -->
@@ -225,7 +225,7 @@ You can disable this prompt by setting the `<BootstrapperPromptRequired>` projec
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Skip the confirmation prompt and install prerequisites straight away -->
