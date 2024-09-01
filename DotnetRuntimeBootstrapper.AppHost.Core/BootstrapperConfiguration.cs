@@ -40,7 +40,7 @@ public partial class BootstrapperConfiguration
                 parsed[nameof(IsPromptRequired)],
                 "true",
                 StringComparison.OrdinalIgnoreCase
-            )
+            ),
         };
     }
 }

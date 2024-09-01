@@ -5,7 +5,7 @@ internal enum ProcessorArchitecture
     X86,
     X64,
     Arm,
-    Arm64
+    Arm64,
 }
 
 internal static class ProcessorArchitectureExtensions

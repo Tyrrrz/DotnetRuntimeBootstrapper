@@ -46,7 +46,7 @@ public partial class TargetAssembly(string filePath, string name)
         {
             new WindowsUpdate2999226Prerequisite(),
             new WindowsUpdate3063858Prerequisite(),
-            new VisualCppPrerequisite()
+            new VisualCppPrerequisite(),
         };
 
         foreach (var runtime in GetRuntimes())

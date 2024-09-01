@@ -17,7 +17,7 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
             { IsBase: true } => ".NET Runtime",
             { IsWindowsDesktop: true } => ".NET Desktop Runtime",
             { IsAspNet: true } => ".NET ASP.NET Runtime",
-            _ => runtime.Name
+            _ => runtime.Name,
         } + $" v{runtime.Version}";
 
     // We are looking for a runtime with the same name and the same major version.
@@ -53,7 +53,7 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
                     {
                         { IsWindowsDesktop: true } => "windowsdesktop",
                         { IsAspNet: true } => "aspnetcore-runtime",
-                        _ => "runtime"
+                        _ => "runtime",
                     }
                 )
                 ?.TryGetChild("files")

@@ -49,10 +49,9 @@ public class BootstrapperTask : Task
             {
                 "CLI" => ".AppHost.Cli.exe",
                 "GUI" => ".AppHost.Gui.exe",
-                _
-                    => throw new InvalidOperationException(
-                        $"Unknown bootstrapper variant '{Variant}'."
-                    )
+                _ => throw new InvalidOperationException(
+                    $"Unknown bootstrapper variant '{Variant}'."
+                ),
             };
 
         // Executable file

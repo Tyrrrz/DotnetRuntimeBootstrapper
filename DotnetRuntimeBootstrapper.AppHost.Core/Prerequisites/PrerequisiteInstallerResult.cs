@@ -3,5 +3,5 @@
 public enum PrerequisiteInstallerResult
 {
     Success,
-    RebootRequired
+    RebootRequired,
 }

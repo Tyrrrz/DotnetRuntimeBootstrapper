@@ -25,8 +25,8 @@ internal static class CommandLine
                     BasicLimitInformation = new JobObjectBasicLimitInformation
                     {
                         // JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
-                        LimitFlags = 0x2000
-                    }
+                        LimitFlags = 0x2000,
+                    },
                 }
             );
 
@@ -55,8 +55,8 @@ internal static class CommandLine
                 FileName = executableFilePath,
                 Arguments = string.Join(" ", arguments.Select(EscapeArgument).ToArray()),
                 UseShellExecute = false,
-                CreateNoWindow = true
-            }
+                CreateNoWindow = true,
+            },
         };
 
         if (isElevated)

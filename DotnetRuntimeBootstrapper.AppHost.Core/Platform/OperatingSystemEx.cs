@@ -19,7 +19,7 @@ internal static class OperatingSystemEx
             9 => ProcessorArchitecture.X64,
             5 => ProcessorArchitecture.Arm,
             12 => ProcessorArchitecture.Arm64,
-            _ => throw new InvalidOperationException("Unknown processor architecture.")
+            _ => throw new InvalidOperationException("Unknown processor architecture."),
         };
 
     public static IEnumerable<string> GetInstalledUpdates()
