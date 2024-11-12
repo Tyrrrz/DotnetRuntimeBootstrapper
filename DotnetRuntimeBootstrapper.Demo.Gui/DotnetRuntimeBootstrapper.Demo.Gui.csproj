@@ -7,7 +7,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Version>1.2.3</Version>
     <ApplicationIcon>../favicon.ico</ApplicationIcon>
