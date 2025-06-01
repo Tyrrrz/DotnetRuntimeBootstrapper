@@ -28,8 +28,8 @@
 
   <ItemGroup>
     <PackageReference Include="CSharpier.MsBuild" Version="0.30.6" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.13.9" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.12.6" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" PrivateAssets="all" ExcludeAssets="runtime" />
     <PackageReference Include="Mono.Cecil" Version="0.11.6" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="PolyShim" Version="1.15.0" PrivateAssets="all" />
     <PackageReference Include="Ressy" Version="1.0.3" PrivateAssets="all" GeneratePathProperty="true" />
