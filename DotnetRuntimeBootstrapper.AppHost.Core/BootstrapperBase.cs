@@ -111,38 +111,28 @@ public abstract class BootstrapperBase
 
     private int Run(TargetAssembly targetAssembly, string[] args)
     {
-        try
-        {
-            // Hot path: attempt to run the target first without any checks
-            return targetAssembly.Run(args);
-        }
-        // Possible exception causes:
-        // - .NET host not found (DirectoryNotFoundException)
-        // - .NET host failed to initialize (BootstrapperException)
-        catch
-        {
-            // Check for missing prerequisites and install them
-            var missingPrerequisites = targetAssembly.GetMissingPrerequisites();
-            if (missingPrerequisites.Any())
-            {
-                var isReadyToRun = PromptAndInstall(targetAssembly, missingPrerequisites);
+        // need to check the prerequisites first, otherwise the application may start but fail later
+        // e.g. VS runtime 2019 are installed, but app needs 2022
+        // e.g. .NET 8.0.4 is installed but 8.0.20 is desired
+        // both conditions does not prevent starting the app, but is not what the dev desired.
 
-                // User did not accept the installation or reboot is required
-                if (!isReadyToRun)
-                    return 0xB007;
+	    // Check for missing prerequisites and install them
+	    var missingPrerequisites = targetAssembly.GetMissingPrerequisites();
+	    if (!missingPrerequisites.Any()) 
+		    return targetAssembly.Run(args);
 
-                // Reset the environment to update PATH and other variables
-                // that may have been changed by the installation process.
-                EnvironmentEx.RefreshEnvironmentVariables();
+	    var isReadyToRun = PromptAndInstall(targetAssembly, missingPrerequisites);
 
-                // Attempt to run the target again
-                return targetAssembly.Run(args);
-            }
+	    // User did not accept the installation or reboot is required
+	    if (!isReadyToRun)
+		    return 0xB007;
 
-            // There are no missing prerequisites to install, meaning that the
-            // app failed to run for reasons unrelated to the bootstrapper.
-            throw;
-        }
+	    // Reset the environment to update PATH and other variables
+	    // that may have been changed by the installation process.
+	    EnvironmentEx.RefreshEnvironmentVariables();
+
+	    // Attempt to run the target
+	    return targetAssembly.Run(args);
     }
 
     public int Run(string[] args)
