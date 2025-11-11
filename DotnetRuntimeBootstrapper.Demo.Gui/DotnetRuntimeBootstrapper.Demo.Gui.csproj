@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <!-- Props/targets are automatically imported by NuGet, but here we need to do it manually. -->
   <!-- This needs to be done before any other props or targets, to match NuGet's behavior. -->
   <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />
@@ -16,11 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpier.MsBuild" Version="0.30.6" PrivateAssets="all" />
+    <PackageReference Include="CSharpier.MsBuild" Version="1.2.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />
   </ItemGroup>
-
 </Project>

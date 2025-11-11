@@ -1,40 +1,57 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="IsNetCoreApp;IsWindowsTarget;CanGenerateBootstrapper">
-
+﻿<Project
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  ToolsVersion="4.0"
+  TreatAsLocalProperty="IsNetCoreApp;IsWindowsTarget;CanGenerateBootstrapper"
+>
   <!-- Bootstrapper on build -->
   <Target
     Condition="$(GenerateBootstrapperOnBuild)"
     Name="CreateBootstrapperAfterBuild"
-    AfterTargets="Build">
+    AfterTargets="Build"
+  >
     <PropertyGroup>
-      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
-      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'"
+        >CLI</BootstrapperVariant
+      >
+      <BootstrapperVariant
+        Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'"
+        >GUI</BootstrapperVariant
+      >
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == ''">GUI</BootstrapperVariant>
-      <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''">true</BootstrapperPromptRequired>
+      <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''"
+        >true</BootstrapperPromptRequired
+      >
     </PropertyGroup>
 
     <BootstrapperTask
       RuntimeIdentifier="$(RuntimeIdentifier)"
       Variant="$(BootstrapperVariant)"
       IsPromptRequired="$(BootstrapperPromptRequired)"
-      TargetFilePath="$(TargetPath)" />
+      TargetFilePath="$(TargetPath)"
+    />
   </Target>
 
   <!-- Bootstrapper on publish -->
-  <Target
-    Name="CreateBootstrapperAfterPublish"
-    AfterTargets="Publish">
+  <Target Name="CreateBootstrapperAfterPublish" AfterTargets="Publish">
     <PropertyGroup>
-      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'">CLI</BootstrapperVariant>
-      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'">GUI</BootstrapperVariant>
+      <BootstrapperVariant Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'Exe'"
+        >CLI</BootstrapperVariant
+      >
+      <BootstrapperVariant
+        Condition="'$(BootstrapperVariant)' == '' AND '$(OutputType)' == 'WinExe'"
+        >GUI</BootstrapperVariant
+      >
       <BootstrapperVariant Condition="'$(BootstrapperVariant)' == ''">GUI</BootstrapperVariant>
-      <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''">true</BootstrapperPromptRequired>
+      <BootstrapperPromptRequired Condition="'$(BootstrapperPromptRequired)' == ''"
+        >true</BootstrapperPromptRequired
+      >
     </PropertyGroup>
 
     <BootstrapperTask
       RuntimeIdentifier="$(RuntimeIdentifier)"
       Variant="$(BootstrapperVariant)"
       IsPromptRequired="$(BootstrapperPromptRequired)"
-      TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))" />
+      TargetFilePath="$([System.IO.Path]::Combine('$(ProjectDir)', '$(PublishDir)/$(AssemblyName).dll'))"
+    />
   </Target>
-
 </Project>

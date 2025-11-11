@@ -1,14 +1,22 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="TaskAssembly">
-
+<Project
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  ToolsVersion="4.0"
+  TreatAsLocalProperty="TaskAssembly"
+>
   <PropertyGroup>
-    <GenerateBootstrapperOnBuild Condition="'$(GenerateBootstrapperOnBuild)' == ''">false</GenerateBootstrapperOnBuild>
+    <GenerateBootstrapperOnBuild Condition="'$(GenerateBootstrapperOnBuild)' == ''"
+      >false</GenerateBootstrapperOnBuild
+    >
   </PropertyGroup>
 
   <PropertyGroup>
-    <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)/../tasks/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
-    <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)/../tasks/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'"
+      >$(MSBuildThisFileDirectory)/../tasks/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly
+    >
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'"
+      >$(MSBuildThisFileDirectory)/../tasks/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly
+    >
   </PropertyGroup>
 
   <UsingTask TaskName="DotnetRuntimeBootstrapper.BootstrapperTask" AssemblyFile="$(TaskAssembly)" />
-
 </Project>

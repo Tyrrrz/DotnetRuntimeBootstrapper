@@ -1,11 +1,17 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" TreatAsLocalProperty="TaskAssembly">
-
+<Project
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  ToolsVersion="4.0"
+  TreatAsLocalProperty="TaskAssembly"
+>
   <Import Project="DotnetRuntimeBootstrapper.props" />
 
   <!-- Props for local testing, used by the demo projects -->
   <PropertyGroup>
-    <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)/bin/$(Configuration)/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly>
-    <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)/bin/$(Configuration)/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly>
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'"
+      >$(MSBuildThisFileDirectory)/bin/$(Configuration)/netstandard2.0/DotnetRuntimeBootstrapper.dll</TaskAssembly
+    >
+    <TaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'"
+      >$(MSBuildThisFileDirectory)/bin/$(Configuration)/net472/DotnetRuntimeBootstrapper.dll</TaskAssembly
+    >
   </PropertyGroup>
-
 </Project>

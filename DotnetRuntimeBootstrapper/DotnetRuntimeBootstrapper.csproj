@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <IsPackable>true</IsPackable>
@@ -27,12 +26,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpier.MsBuild" Version="0.30.6" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.8" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" PrivateAssets="all" ExcludeAssets="runtime" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.6" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="CSharpier.MsBuild" Version="1.2.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.28" PrivateAssets="all" />
+    <PackageReference
+      Include="Microsoft.Build.Utilities.Core"
+      Version="17.14.28"
+      PrivateAssets="all"
+      ExcludeAssets="runtime"
+    >
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference
+      Include="Mono.Cecil"
+      Version="0.11.6"
+      PrivateAssets="all"
+      GeneratePathProperty="true"
+    />
     <PackageReference Include="PolyShim" Version="1.15.0" PrivateAssets="all" />
-    <PackageReference Include="Ressy" Version="1.0.3" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference
+      Include="Ressy"
+      Version="1.0.3"
+      PrivateAssets="all"
+      GeneratePathProperty="true"
+    />
   </ItemGroup>
 
   <!-- Non-linking dependency on the apphost projects to ensure correct build order -->
@@ -86,14 +102,25 @@
 
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)" TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)" />
+      <BuildOutputInPackage
+        Include="@(ReferenceCopyLocalPaths)"
+        TargetPath="%(ReferenceCopyLocalPaths.DestinationSubPath)"
+      />
     </ItemGroup>
   </Target>
 
   <!-- Embed the generated deps.json file inside this package -->
-  <Target Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput" BeforeTargets="BuiltProjectOutputGroup" Condition="$(GenerateDependencyFile)">
+  <Target
+    Name="AddBuildDependencyFileToBuiltProjectOutputGroupOutput"
+    BeforeTargets="BuiltProjectOutputGroup"
+    Condition="$(GenerateDependencyFile)"
+  >
     <ItemGroup>
-      <BuiltProjectOutputGroupOutput Include="$(ProjectDepsFilePath)" TargetPath="$(ProjectDepsFileName)" FinalOutputPath="$(ProjectDepsFilePath)" />
+      <BuiltProjectOutputGroupOutput
+        Include="$(ProjectDepsFilePath)"
+        TargetPath="$(ProjectDepsFileName)"
+        FinalOutputPath="$(ProjectDepsFilePath)"
+      />
     </ItemGroup>
   </Target>
 
@@ -106,9 +133,14 @@
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGRessy)/lib/$(TargetFramework)/*.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker
+        Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll"
+        IncludeRuntimeDependency="false"
+      />
+      <TargetPathWithTargetPlatformMoniker
+        Include="$(PKGRessy)/lib/$(TargetFramework)/*.dll"
+        IncludeRuntimeDependency="false"
+      />
     </ItemGroup>
   </Target>
-
 </Project>
