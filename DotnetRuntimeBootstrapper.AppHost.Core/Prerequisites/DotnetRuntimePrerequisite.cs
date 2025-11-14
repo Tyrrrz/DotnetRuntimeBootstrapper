@@ -87,7 +87,7 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {
         var downloadUrl = GetInstallerDownloadUrl();
-        var filePath = FileEx.GenerateTempFilePath(
+        var filePath = Path.GenerateTempFilePath(
             Url.TryExtractFileName(downloadUrl) ?? "installer.exe"
         );
 

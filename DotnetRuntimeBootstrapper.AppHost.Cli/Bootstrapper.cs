@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Cli.Utils.Extensions;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
@@ -13,7 +14,7 @@ public class Bootstrapper : BootstrapperBase
 {
     protected override void ReportError(string message)
     {
-        using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
+        using (Console.WithForegroundColor(ConsoleColor.DarkRed))
             Console.Error.WriteLine("ERROR: " + message);
     }
 
@@ -22,7 +23,7 @@ public class Bootstrapper : BootstrapperBase
         IPrerequisite[] missingPrerequisites
     )
     {
-        using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkRed))
+        using (Console.WithForegroundColor(ConsoleColor.DarkRed))
         {
             Console.Error.WriteLine(
                 $"Your system is missing runtime components required by {targetAssembly.Name}:"
@@ -35,11 +36,11 @@ public class Bootstrapper : BootstrapperBase
         }
 
         // When running in interactive mode, prompt the user directly
-        if (ConsoleEx.IsInteractive)
+        if (Console.IsInteractive)
         {
             Console.Error.Write("Would you like to download and install them now?");
 
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
+            using (Console.WithForegroundColor(ConsoleColor.DarkCyan))
                 Console.Error.Write(" [y/n]");
             Console.Error.WriteLine();
 
@@ -52,24 +53,24 @@ public class Bootstrapper : BootstrapperBase
                 "To install the missing components automatically, set the environment variable "
             );
 
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
+            using (Console.WithForegroundColor(ConsoleColor.DarkCyan))
                 Console.Error.Write(AcceptPromptEnvironmentVariable);
 
             Console.Error.Write(" to ");
 
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
+            using (Console.WithForegroundColor(ConsoleColor.DarkCyan))
                 Console.Error.Write("true");
 
             Console.Error.Write(", and then run the application again:");
             Console.Error.WriteLine();
 
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
+            using (Console.WithForegroundColor(ConsoleColor.White))
                 Console.Error.Write($"  set {AcceptPromptEnvironmentVariable}=true");
 
             Console.Error.Write("      (Command Prompt)");
             Console.Error.WriteLine();
 
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
+            using (Console.WithForegroundColor(ConsoleColor.White))
                 Console.Error.Write($"  $env:{AcceptPromptEnvironmentVariable}=\"true\"");
 
             Console.Error.Write("   (Powershell)");
@@ -84,7 +85,7 @@ public class Bootstrapper : BootstrapperBase
         IPrerequisite[] missingPrerequisites
     )
     {
-        using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
+        using (Console.WithForegroundColor(ConsoleColor.White))
             Console.Out.WriteLine($"{targetAssembly.Name}: installing prerequisites");
 
         var currentStep = 1;
@@ -100,7 +101,7 @@ public class Bootstrapper : BootstrapperBase
             // Only write progress if running in interactive mode
             using (
                 var progress = new ConsoleProgress(
-                    ConsoleEx.IsInteractive ? Console.Out : TextWriter.Null
+                    Console.IsInteractive ? Console.Out : TextWriter.Null
                 )
             )
             {
@@ -126,7 +127,7 @@ public class Bootstrapper : BootstrapperBase
             Console.Out.Write("Done");
             Console.Out.WriteLine();
 
-            FileEx.TryDelete(installer.FilePath);
+            File.TryDelete(installer.FilePath);
 
             if (installationResult == PrerequisiteInstallerResult.RebootRequired)
                 isRebootRequired = true;
@@ -134,23 +135,23 @@ public class Bootstrapper : BootstrapperBase
             currentStep++;
         }
 
-        using (ConsoleEx.WithForegroundColor(ConsoleColor.White))
+        using (Console.WithForegroundColor(ConsoleColor.White))
             Console.Out.WriteLine("Prerequisites installed successfully.");
         Console.Out.WriteLine();
 
         // Finalize
         if (isRebootRequired)
         {
-            using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkYellow))
+            using (Console.WithForegroundColor(ConsoleColor.DarkYellow))
                 Console.Out.WriteLine(
                     $"You need to restart Windows before you can run {targetAssembly.Name}."
                 );
 
             // Only prompt for reboot if running in interactive mode
-            if (ConsoleEx.IsInteractive)
+            if (Console.IsInteractive)
             {
                 Console.Out.WriteLine("Would you like to do it now?");
-                using (ConsoleEx.WithForegroundColor(ConsoleColor.DarkCyan))
+                using (Console.WithForegroundColor(ConsoleColor.DarkCyan))
                     Console.Out.Write(" [y/n]");
                 Console.Out.WriteLine();
 

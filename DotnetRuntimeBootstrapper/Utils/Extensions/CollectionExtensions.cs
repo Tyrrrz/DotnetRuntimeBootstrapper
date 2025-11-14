@@ -6,12 +6,15 @@ namespace DotnetRuntimeBootstrapper.Utils.Extensions;
 
 internal static class CollectionExtensions
 {
-    public static void RemoveAll<T>(this ICollection<T> source, Func<T, bool> predicate)
+    extension<T>(ICollection<T> source)
     {
-        foreach (var i in source.ToArray())
+        public void RemoveAll(Func<T, bool> predicate)
         {
-            if (predicate(i))
-                source.Remove(i);
+            foreach (var i in source.ToArray())
+            {
+                if (predicate(i))
+                    source.Remove(i);
+            }
         }
     }
 }

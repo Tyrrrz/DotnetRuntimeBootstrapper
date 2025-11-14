@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
@@ -24,7 +25,7 @@ internal class VisualCppPrerequisite : IPrerequisite
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {
         var fileName = $"VC_redist.{OperatingSystemEx.ProcessorArchitecture.GetMoniker()}.exe";
-        var filePath = FileEx.GenerateTempFilePath(fileName);
+        var filePath = Path.GenerateTempFilePath(fileName);
 
         Http.DownloadFile($"https://aka.ms/vs/16/release/{fileName}", filePath, handleProgress);
 

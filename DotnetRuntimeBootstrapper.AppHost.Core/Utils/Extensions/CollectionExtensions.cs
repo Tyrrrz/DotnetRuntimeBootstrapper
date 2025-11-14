@@ -4,8 +4,11 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 internal static class CollectionExtensions
 {
-    public static IEnumerable<T> ToSingletonEnumerable<T>(this T value)
+    extension<T>(T value)
     {
-        yield return value;
+        public IEnumerable<T> ToSingletonEnumerable()
+        {
+            yield return value;
+        }
     }
 }

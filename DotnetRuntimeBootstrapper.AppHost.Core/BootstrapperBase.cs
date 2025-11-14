@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
@@ -133,7 +133,7 @@ public abstract class BootstrapperBase
 
                 // Reset the environment to update PATH and other variables
                 // that may have been changed by the installation process.
-                EnvironmentEx.RefreshEnvironmentVariables();
+                Environment.RefreshEnvironmentVariables();
 
                 // Attempt to run the target again
                 return targetAssembly.Run(args);
@@ -154,7 +154,7 @@ public abstract class BootstrapperBase
         {
             var targetAssembly = TargetAssembly.Resolve(
                 Path.Combine(
-                    Path.GetDirectoryName(EnvironmentEx.ProcessPath)
+                    Path.GetDirectoryName(Environment.GetProcessPath())
                         ?? AppDomain.CurrentDomain.BaseDirectory,
                     Configuration.TargetFileName
                 )

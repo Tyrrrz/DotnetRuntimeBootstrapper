@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
@@ -25,7 +25,7 @@ public partial class PromptForm : Form
     private void InstallationPromptForm_Load(object sender, EventArgs e)
     {
         Text = @$"{_targetAssembly.Name}: prerequisites missing";
-        Icon = IconEx.TryExtractAssociatedIcon(Application.ExecutablePath);
+        Icon = System.Drawing.Icon.TryExtractAssociatedIcon(Application.ExecutablePath);
         MissingPrerequisitesTextBox.Lines = _missingPrerequisites
             .Select(c => $"• {c.DisplayName}")
             .ToArray();

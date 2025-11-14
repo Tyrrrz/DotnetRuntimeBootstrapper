@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
@@ -105,7 +106,7 @@ public partial class InstallForm : Form
 
             var installationResult = installer.Run();
 
-            FileEx.TryDelete(installer.FilePath);
+            File.TryDelete(installer.FilePath);
 
             if (installationResult == PrerequisiteInstallerResult.RebootRequired)
                 isRebootRequired = true;
@@ -142,7 +143,7 @@ public partial class InstallForm : Form
     private void InstallationForm_Load(object sender, EventArgs e)
     {
         Text = @$"{_targetAssembly.Name}: installing prerequisites";
-        Icon = IconEx.TryExtractAssociatedIcon(Application.ExecutablePath);
+        Icon = System.Drawing.Icon.TryExtractAssociatedIcon(Application.ExecutablePath);
 
         UpdateStatus(@"Preparing installation");
 

@@ -4,6 +4,8 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 internal static class RegistryExtensions
 {
-    public static bool ContainsSubKey(this RegistryKey key, string name) =>
-        key.OpenSubKey(name, false) is not null;
+    extension(RegistryKey key)
+    {
+        public bool ContainsSubKey(string name) => key.OpenSubKey(name, false) is not null;
+    }
 }

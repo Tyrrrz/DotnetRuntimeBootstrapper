@@ -7,16 +7,19 @@ namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 internal static class AssemblyExtensions
 {
-    public static string GetManifestResourceString(this Assembly assembly, string resourceName)
+    extension(Assembly assembly)
     {
-        using var stream =
-            assembly.GetManifestResourceStream(resourceName)
-            ?? throw new MissingManifestResourceException(
-                $"Failed to resolve resource '{resourceName}'."
-            );
+        public string GetManifestResourceString(string resourceName)
+        {
+            using var stream =
+                assembly.GetManifestResourceStream(resourceName)
+                ?? throw new MissingManifestResourceException(
+                    $"Failed to resolve resource '{resourceName}'."
+                );
 
-        using var reader = new StreamReader(stream, Encoding.UTF8);
+            using var reader = new StreamReader(stream, Encoding.UTF8);
 
-        return reader.ReadToEnd();
+            return reader.ReadToEnd();
+        }
     }
 }

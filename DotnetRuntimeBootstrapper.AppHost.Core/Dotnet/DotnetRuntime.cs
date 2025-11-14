@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 using QuickJson;
 
@@ -45,7 +44,7 @@ internal partial class DotnetRuntime
             from runtimeDirPath in Directory.GetDirectories(sharedDirPath)
             let name = Path.GetFileName(runtimeDirPath)
             from runtimeVersionDirPath in Directory.GetDirectories(runtimeDirPath)
-            let version = VersionEx.TryParse(Path.GetFileName(runtimeVersionDirPath))
+            let version = Version.TryParse(Path.GetFileName(runtimeVersionDirPath))
             where version is not null
             select new DotnetRuntime(name, version)
         ).ToArray();
@@ -56,7 +55,7 @@ internal partial class DotnetRuntime
         static DotnetRuntime ParseRuntime(JsonNode json)
         {
             var name = json.TryGetChild("name")?.TryGetString();
-            var version = json.TryGetChild("version")?.TryGetString()?.Pipe(VersionEx.TryParse);
+            var version = json.TryGetChild("version")?.TryGetString()?.Pipe(Version.TryParse);
 
             return !string.IsNullOrEmpty(name) && version is not null
                 ? new DotnetRuntime(name, version)

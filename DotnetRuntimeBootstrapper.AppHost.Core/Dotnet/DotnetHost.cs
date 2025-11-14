@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
@@ -140,7 +140,7 @@ internal partial class DotnetHost
         // 1. Find the hostfxr directory containing versioned subdirectories
         // 2. Get the hostfxr.dll from the subdirectory with the highest version number
 
-        var hostResolverRootDirPath = PathEx.Combine(
+        var hostResolverRootDirPath = Path.Combine(
             DotnetInstallation.GetDirectoryPath(),
             "host",
             "fxr"
@@ -155,7 +155,7 @@ internal partial class DotnetHost
 
         var hostResolverFilePath = (
             from dirPath in Directory.GetDirectories(hostResolverRootDirPath)
-            let version = VersionEx.TryParse(Path.GetFileName(dirPath))
+            let version = Version.TryParse(Path.GetFileName(dirPath))
             let filePath = Path.Combine(dirPath, "hostfxr.dll")
             where version is not null
             where File.Exists(filePath)
