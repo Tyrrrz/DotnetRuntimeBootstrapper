@@ -62,7 +62,7 @@ internal partial class DotnetRuntime
                 ?.TryGetString()
                 ?.Pipe(s => Version.TryParse(s, out var v) ? v : null);
 
-            return !string.IsNullOrEmpty(name) && version is not null
+            return !string.IsNullOrWhiteSpace(name) && version is not null
                 ? new DotnetRuntime(name, version)
                 : throw new InvalidOperationException(
                     "Failed to extract runtime information from the provided runtime configuration."

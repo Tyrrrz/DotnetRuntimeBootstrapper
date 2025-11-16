@@ -22,7 +22,7 @@ internal static class DotnetInstallation
 
         var dotnetDirPath = dotnetRegistryKey?.GetValue("InstallLocation", null) as string;
 
-        return !string.IsNullOrEmpty(dotnetDirPath) && Directory.Exists(dotnetDirPath)
+        return !string.IsNullOrWhiteSpace(dotnetDirPath) && Directory.Exists(dotnetDirPath)
             ? dotnetDirPath
             : null;
     }
@@ -39,7 +39,7 @@ internal static class DotnetInstallation
 
         var dotnetDirPath = Path.Combine(programFilesDirPath, "dotnet");
 
-        return !string.IsNullOrEmpty(dotnetDirPath) && Directory.Exists(dotnetDirPath)
+        return !string.IsNullOrWhiteSpace(dotnetDirPath) && Directory.Exists(dotnetDirPath)
             ? dotnetDirPath
             : null;
     }

@@ -33,7 +33,7 @@ internal static class OperatingSystemEx
         foreach (var result in results)
         {
             var id = result["HotFixID"] as string;
-            if (!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrWhiteSpace(id))
                 yield return id;
         }
     }
