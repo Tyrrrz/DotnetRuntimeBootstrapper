@@ -8,6 +8,8 @@ ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
 	License.txt = License.txt
 	Readme.md = Readme.md
+	global.json = global.json
+	NuGet.config = NuGet.config
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetRuntimeBootstrapper.Demo.Gui", "DotnetRuntimeBootstrapper.Demo.Gui\DotnetRuntimeBootstrapper.Demo.Gui.csproj", "{E3B1C334-C7BC-41C5-BE94-F15A4A77346D}"
