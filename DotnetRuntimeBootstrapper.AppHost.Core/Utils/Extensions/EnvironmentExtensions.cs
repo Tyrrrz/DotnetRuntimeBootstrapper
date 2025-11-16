@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using System.Reflection;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
@@ -9,8 +8,6 @@ internal static class EnvironmentExtensions
 {
     extension(Environment)
     {
-        public static string GetProcessPath() => Assembly.GetExecutingAssembly().Location;
-
         public static void RefreshEnvironmentVariables()
         {
             var machineEnvironmentVariables = Environment

@@ -44,7 +44,9 @@ internal partial class DotnetRuntime
             from runtimeDirPath in Directory.GetDirectories(sharedDirPath)
             let name = Path.GetFileName(runtimeDirPath)
             from runtimeVersionDirPath in Directory.GetDirectories(runtimeDirPath)
-            let version = Version.TryParse(Path.GetFileName(runtimeVersionDirPath))
+            let version = Version.TryParse(Path.GetFileName(runtimeVersionDirPath), out var v)
+                ? v
+                : null
             where version is not null
             select new DotnetRuntime(name, version)
         ).ToArray();
@@ -55,7 +57,10 @@ internal partial class DotnetRuntime
         static DotnetRuntime ParseRuntime(JsonNode json)
         {
             var name = json.TryGetChild("name")?.TryGetString();
-            var version = json.TryGetChild("version")?.TryGetString()?.Pipe(Version.TryParse);
+
+            var version = json.TryGetChild("version")
+                ?.TryGetString()
+                ?.Pipe(s => Version.TryParse(s, out var v) ? v : null);
 
             return !string.IsNullOrEmpty(name) && version is not null
                 ? new DotnetRuntime(name, version)

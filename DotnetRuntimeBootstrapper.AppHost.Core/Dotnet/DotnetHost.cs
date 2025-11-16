@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 
@@ -155,7 +154,7 @@ internal partial class DotnetHost
 
         var hostResolverFilePath = (
             from dirPath in Directory.GetDirectories(hostResolverRootDirPath)
-            let version = Version.TryParse(Path.GetFileName(dirPath))
+            let version = Version.TryParse(Path.GetFileName(dirPath), out var v) ? v : null
             let filePath = Path.Combine(dirPath, "hostfxr.dll")
             where version is not null
             where File.Exists(filePath)

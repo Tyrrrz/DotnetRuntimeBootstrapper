@@ -154,7 +154,7 @@ public abstract class BootstrapperBase
         {
             var targetAssembly = TargetAssembly.Resolve(
                 Path.Combine(
-                    Path.GetDirectoryName(Environment.GetProcessPath())
+                    Path.GetDirectoryName(Environment.ProcessPath)
                         ?? AppDomain.CurrentDomain.BaseDirectory,
                     Configuration.TargetFileName
                 )
