@@ -7,13 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>$(Company)</Authors>
-    <Description>.NET runtime bootstrapper for Windows applications</Description>
-    <PackageTags>windows desktop dotnet runtime install bootstrapper</PackageTags>
-    <PackageProjectUrl>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/releases</PackageReleaseNotes>
     <PackageIcon>favicon.png</PackageIcon>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <DevelopmentDependency>true</DevelopmentDependency>
