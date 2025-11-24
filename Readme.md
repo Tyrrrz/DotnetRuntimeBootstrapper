@@ -37,7 +37,7 @@ To learn more about the war and how you can help, [click here](https://tyrrrz.me
 
 ## Why?
 
-Currently, .NET offers two main ways of [distributing applications](https://docs.microsoft.com/en-us/dotnet/core/deploying): **framework-dependent** deployment and **self-contained** deployment.
+Currently, .NET offers two main ways of [distributing applications](https://docs.microsoft.com/dotnet/core/deploying): **framework-dependent** deployment and **self-contained** deployment.
 Both of them come with a set of obvious and somewhat less obvious drawbacks.
 
 - **Framework-dependent** deployment:
@@ -99,12 +99,12 @@ MyApp.deps.json
 
 Make sure to include all highlighted files in your application distribution.
 
-> **Warning**:
+> [!WARNING]
 > Single-file deployment (`/p:PublishSingleFile=true`) is not supported by the bootstrapper.
 
 ### Application host
 
-The client-facing side of **.NET Runtime Bootstrapper** is implemented as a [custom .NET runtime host](https://docs.microsoft.com/en-us/dotnet/core/tutorials/netcore-hosting).
+The client-facing side of **.NET Runtime Bootstrapper** is implemented as a [custom .NET runtime host](https://docs.microsoft.com/dotnet/core/tutorials/netcore-hosting).
 It's generated during the build process by injecting project-specific instructions into a special pre-compiled executable provided by the package.
 Internally, the host executable is a managed .NET Framework v3.5 assembly, which allows it to run out-of-the-box on all platforms starting with Windows 7.
 
@@ -167,7 +167,7 @@ If you want to also have it created on regular builds as well, set the `<Generat
 </Project>
 ```
 
-> **Warning**:
+> [!WARNING]
 > Bootstrapper's application host does not support debugging.
 > In order to retain debugging capabilities of your application during local development, keep `<GenerateBootstrapperOnBuild>` set to `false` (default).
 
