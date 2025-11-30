@@ -36,7 +36,7 @@
       PrivateAssets="all"
       GeneratePathProperty="true"
     />
-    <PackageReference Include="PolyShim" Version="2.0.0" PrivateAssets="all" />
+    <PackageReference Include="PolyShim" Version="2.2.0" PrivateAssets="all" />
     <PackageReference
       Include="Ressy"
       Version="1.0.3"
