@@ -12,10 +12,8 @@ internal static class ProcessorArchitectureExtensions
 {
     extension(ProcessorArchitecture arch)
     {
-        public bool Is64Bit() =>
-            arch is ProcessorArchitecture.X64 or ProcessorArchitecture.Arm64;
+        public bool Is64Bit() => arch is ProcessorArchitecture.X64 or ProcessorArchitecture.Arm64;
 
-        public string GetMoniker() =>
-            arch.ToString().ToLowerInvariant();
+        public string GetMoniker() => arch.ToString().ToLowerInvariant();
     }
 }
