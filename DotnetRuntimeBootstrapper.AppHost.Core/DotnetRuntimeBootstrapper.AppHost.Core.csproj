@@ -4,9 +4,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpier.MsBuild" Version="1.2.1" PrivateAssets="all" />
-    <PackageReference Include="PolyShim" Version="2.2.0" PrivateAssets="all" />
-    <PackageReference Include="QuickJson" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="CSharpier.MsBuild" PrivateAssets="all" />
+    <PackageReference Include="PolyShim" PrivateAssets="all" />
+    <PackageReference Include="QuickJson" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
