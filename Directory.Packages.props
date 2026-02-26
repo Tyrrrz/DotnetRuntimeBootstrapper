@@ -1,4 +1,5 @@
 <Project>
+
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
@@ -12,4 +13,5 @@
     <PackageVersion Include="QuickJson" Version="1.1.0" />
     <PackageVersion Include="Ressy" Version="1.0.3" />
   </ItemGroup>
+
 </Project>
