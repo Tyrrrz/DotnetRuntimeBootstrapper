@@ -72,7 +72,7 @@ public partial class TargetAssembly
         try
         {
             var name =
-                FileVersionInfo.GetVersionInfo(filePath).ProductName?.NullIfEmptyOrWhiteSpace()
+                FileVersionInfo.GetVersionInfo(filePath).ProductName?.NullIfWhiteSpace()
                 ?? Path.GetFileNameWithoutExtension(filePath);
 
             return new TargetAssembly(filePath, name);

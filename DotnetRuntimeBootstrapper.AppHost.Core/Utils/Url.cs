@@ -19,5 +19,5 @@ internal static class Url
     }
 
     public static string? TryExtractFileName(string url) =>
-        Regex.Match(url, @".+/([^?]*)").Groups[1].Value.NullIfEmptyOrWhiteSpace();
+        Regex.Match(url, @".+/([^?]*)").Groups[1].Value.NullIfWhiteSpace();
 }
