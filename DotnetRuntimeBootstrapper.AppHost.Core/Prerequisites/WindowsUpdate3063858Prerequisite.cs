@@ -48,12 +48,10 @@ internal class WindowsUpdate3063858Prerequisite : IPrerequisite
 
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {
-        var tempFile = new TempFile(
-            Path.Combine(Path.GetTempPath(), $"{Id}.{Guid.NewGuid().ToString("N")}.msu")
-        );
+        var filePath = Path.ChangeExtension(TempFile.GeneratePath(), ".msu");
 
-        Http.DownloadFile(GetInstallerDownloadUrl(), tempFile.Path, handleProgress);
+        Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
 
-        return new WindowsUpdatePrerequisiteInstaller(this, tempFile);
+        return new WindowsUpdatePrerequisiteInstaller(this, filePath);
     }
 }

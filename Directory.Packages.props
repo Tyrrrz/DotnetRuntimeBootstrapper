@@ -1,18 +1,15 @@
 <Project>
-
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageVersion Include="CSharpier.MsBuild" Version="1.2.1" />
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.14.28" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.14.28" />
     <PackageVersion Include="Mono.Cecil" Version="0.11.6" />
     <PackageVersion Include="PolyShim" Version="2.9.0" />
-    <PackageVersion Include="PowerKit" Version="0.0.0-a.3" />
+    <PackageVersion Include="PowerKit" Version="0.0.0-a.4" />
     <PackageVersion Include="QuickJson" Version="1.1.0" />
     <PackageVersion Include="Ressy" Version="1.0.3" />
   </ItemGroup>
-
 </Project>

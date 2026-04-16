@@ -1,25 +1,22 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
-using PowerKit;
+using PowerKit.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
-internal class ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, TempFile tempFile)
+internal class ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, string filePath)
     : IPrerequisiteInstaller
 {
     public IPrerequisite Prerequisite { get; } = prerequisite;
 
-    public void Dispose() => tempFile.Dispose();
+    public void Dispose() => File.TryDelete(filePath);
 
     public PrerequisiteInstallerResult Run()
     {
         try
         {
-            var exitCode = CommandLine.Run(
-                tempFile.Path,
-                ["/install", "/quiet", "/norestart"],
-                true
-            );
+            var exitCode = CommandLine.Run(filePath, ["/install", "/quiet", "/norestart"], true);
 
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/24#issuecomment-1021447102
             if (exitCode is 3010 or 3011 or 1641)
