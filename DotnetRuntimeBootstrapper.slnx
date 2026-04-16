@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Misc/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="License.txt" />
+    <File Path="NuGet.config" />
+    <File Path="Readme.md" />
+  </Folder>
+
+  <Project Path="DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.csproj" />
+  <Project Path="DotnetRuntimeBootstrapper.AppHost.Cli/DotnetRuntimeBootstrapper.AppHost.Cli.csproj" />
+  <Project Path="DotnetRuntimeBootstrapper.AppHost.Core/DotnetRuntimeBootstrapper.AppHost.Core.csproj" />
+  <Project Path="DotnetRuntimeBootstrapper.AppHost.Gui/DotnetRuntimeBootstrapper.AppHost.Gui.csproj" />
+  <Project Path="DotnetRuntimeBootstrapper.Demo.Cli/DotnetRuntimeBootstrapper.Demo.Cli.csproj" />
+  <Project Path="DotnetRuntimeBootstrapper.Demo.Gui/DotnetRuntimeBootstrapper.Demo.Gui.csproj" />
+</Solution>

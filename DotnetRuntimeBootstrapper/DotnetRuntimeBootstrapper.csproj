@@ -36,14 +36,14 @@
 
   <!-- Non-linking dependency on the apphost projects to ensure correct build order -->
   <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Cli\DotnetRuntimeBootstrapper.AppHost.Cli.csproj">
+    <ProjectReference Include="../DotnetRuntimeBootstrapper.AppHost.Cli/DotnetRuntimeBootstrapper.AppHost.Cli.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <CopyLocal>false</CopyLocal>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper.AppHost.Gui\DotnetRuntimeBootstrapper.AppHost.Gui.csproj">
+    <ProjectReference Include="../DotnetRuntimeBootstrapper.AppHost.Gui/DotnetRuntimeBootstrapper.AppHost.Gui.csproj">
       <GlobalPropertiesToRemove>TargetFramework</GlobalPropertiesToRemove>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
       <CopyLocal>false</CopyLocal>

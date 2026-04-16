@@ -17,6 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotnetRuntimeBootstrapper\DotnetRuntimeBootstrapper.csproj" />
+    <ProjectReference Include="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.csproj" />
   </ItemGroup>
 </Project>
