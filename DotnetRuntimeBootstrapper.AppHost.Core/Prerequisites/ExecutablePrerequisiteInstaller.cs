@@ -10,8 +10,6 @@ internal class ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, strin
 {
     public IPrerequisite Prerequisite { get; } = prerequisite;
 
-    public void Dispose() => File.TryDelete(filePath);
-
     public PrerequisiteInstallerResult Run()
     {
         try
@@ -44,4 +42,6 @@ internal class ExecutablePrerequisiteInstaller(IPrerequisite prerequisite, strin
             );
         }
     }
+
+    public void Dispose() => File.TryDelete(filePath);
 }

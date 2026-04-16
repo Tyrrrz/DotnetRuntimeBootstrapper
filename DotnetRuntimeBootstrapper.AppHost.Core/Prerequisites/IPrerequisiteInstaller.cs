@@ -7,4 +7,6 @@ public interface IPrerequisiteInstaller : IDisposable
     IPrerequisite Prerequisite { get; }
 
     PrerequisiteInstallerResult Run();
+
+    new void Dispose();
 }
