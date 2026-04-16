@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
+using PowerKit;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
@@ -73,10 +73,12 @@ internal class WindowsUpdate2999226Prerequisite : IPrerequisite
 
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {
-        var filePath = Path.GenerateTempFilePath($"{Id}.msu");
+        var tempFile = new TempFile(
+            Path.Combine(Path.GetTempPath(), $"{Id}.{Guid.NewGuid().ToString("N")}.msu")
+        );
 
-        Http.DownloadFile(GetInstallerDownloadUrl(), filePath, handleProgress);
+        Http.DownloadFile(GetInstallerDownloadUrl(), tempFile.Path, handleProgress);
 
-        return new WindowsUpdatePrerequisiteInstaller(this, filePath);
+        return new WindowsUpdatePrerequisiteInstaller(this, tempFile);
     }
 }

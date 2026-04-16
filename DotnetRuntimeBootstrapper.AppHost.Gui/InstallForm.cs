@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
@@ -99,20 +98,21 @@ public partial class InstallForm : Form
         var installersFinishedCount = 0;
         foreach (var installer in installers)
         {
-            UpdateStatus(
-                @$"[{currentStep}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}..."
-            );
-            UpdateCurrentProgress(-1);
+            using (installer)
+            {
+                UpdateStatus(
+                    @$"[{currentStep}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}..."
+                );
+                UpdateCurrentProgress(-1);
 
-            var installationResult = installer.Run();
+                var installationResult = installer.Run();
 
-            File.TryDelete(installer.FilePath);
+                if (installationResult == PrerequisiteInstallerResult.RebootRequired)
+                    isRebootRequired = true;
 
-            if (installationResult == PrerequisiteInstallerResult.RebootRequired)
-                isRebootRequired = true;
-
-            UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
-            currentStep++;
+                UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
+                currentStep++;
+            }
         }
 
         // Finalize

@@ -6,7 +6,6 @@ using DotnetRuntimeBootstrapper.AppHost.Cli.Utils.Extensions;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
@@ -119,20 +118,21 @@ public class Bootstrapper : BootstrapperBase
         var isRebootRequired = false;
         foreach (var installer in installers)
         {
-            Console.Out.Write($"[{currentStep}/{totalSteps}] ");
-            Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
+            using (installer)
+            {
+                Console.Out.Write($"[{currentStep}/{totalSteps}] ");
+                Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
 
-            var installationResult = installer.Run();
+                var installationResult = installer.Run();
 
-            Console.Out.Write("Done");
-            Console.Out.WriteLine();
+                Console.Out.Write("Done");
+                Console.Out.WriteLine();
 
-            File.TryDelete(installer.FilePath);
+                if (installationResult == PrerequisiteInstallerResult.RebootRequired)
+                    isRebootRequired = true;
 
-            if (installationResult == PrerequisiteInstallerResult.RebootRequired)
-                isRebootRequired = true;
-
-            currentStep++;
+                currentStep++;
+            }
         }
 
         using (Console.WithForegroundColor(ConsoleColor.White))

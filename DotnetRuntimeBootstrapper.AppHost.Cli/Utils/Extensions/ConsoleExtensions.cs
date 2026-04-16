@@ -1,6 +1,6 @@
 ﻿using System;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using PowerKit;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli.Utils.Extensions;
 

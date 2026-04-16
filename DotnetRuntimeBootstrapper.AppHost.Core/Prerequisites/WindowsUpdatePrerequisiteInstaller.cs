@@ -1,20 +1,21 @@
 ﻿using System.ComponentModel;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
+using PowerKit;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
-internal class WindowsUpdatePrerequisiteInstaller(IPrerequisite prerequisite, string filePath)
+internal class WindowsUpdatePrerequisiteInstaller(IPrerequisite prerequisite, TempFile tempFile)
     : IPrerequisiteInstaller
 {
     public IPrerequisite Prerequisite { get; } = prerequisite;
 
-    public string FilePath { get; } = filePath;
+    public void Dispose() => tempFile.Dispose();
 
     public PrerequisiteInstallerResult Run()
     {
         try
         {
-            var exitCode = CommandLine.Run("wusa", [FilePath, "/quiet", "/norestart"], true);
+            var exitCode = CommandLine.Run("wusa", [tempFile.Path, "/quiet", "/norestart"], true);
 
             // https://github.com/Tyrrrz/DotnetRuntimeBootstrapper/issues/24#issuecomment-1021447102
             if (exitCode is 3010 or 3011 or 1641)

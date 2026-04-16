@@ -4,7 +4,7 @@ using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
+using PowerKit;
 using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
@@ -69,7 +69,7 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
                 // Filter by file type
                 .Where(f =>
                     string.Equals(
-                        f.TryGetChild("name")?.TryGetString()?.Pipe(Path.GetExtension),
+                        Path.GetExtension(f.TryGetChild("name")?.TryGetString()),
                         ".exe",
                         StringComparison.OrdinalIgnoreCase
                     )
@@ -87,12 +87,19 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {
         var downloadUrl = GetInstallerDownloadUrl();
-        var filePath = Path.GenerateTempFilePath(
-            Url.TryExtractFileName(downloadUrl) ?? "installer.exe"
+        var fileName = Url.TryExtractFileName(downloadUrl) ?? "installer.exe";
+        var tempFile = new TempFile(
+            Path.Combine(
+                Path.GetTempPath(),
+                Path.GetFileNameWithoutExtension(fileName)
+                    + "."
+                    + Guid.NewGuid().ToString("N")
+                    + Path.GetExtension(fileName)
+            )
         );
 
-        Http.DownloadFile(downloadUrl, filePath, handleProgress);
+        Http.DownloadFile(downloadUrl, tempFile.Path, handleProgress);
 
-        return new ExecutablePrerequisiteInstaller(this, filePath);
+        return new ExecutablePrerequisiteInstaller(this, tempFile);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
+using PowerKit.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
