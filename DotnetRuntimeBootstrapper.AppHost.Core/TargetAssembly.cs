@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
+using PowerKit.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 

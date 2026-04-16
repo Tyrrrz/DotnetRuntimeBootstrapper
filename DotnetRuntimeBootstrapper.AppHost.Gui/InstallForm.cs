@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
@@ -71,48 +71,49 @@ public partial class InstallForm : Form
 
     private void Execute()
     {
-        var currentStep = 1;
         var totalSteps = _missingPrerequisites.Length * 2;
 
         // Download
         var installers = new List<IPrerequisiteInstaller>();
-        foreach (var prerequisite in _missingPrerequisites)
+        foreach (var (i, prerequisite) in _missingPrerequisites.Index())
         {
             UpdateStatus(
-                @$"[{currentStep}/{totalSteps}] Downloading {prerequisite.DisplayName}..."
+                @$"[{i + 1}/{totalSteps}] Downloading {prerequisite.DisplayName}..."
             );
             UpdateCurrentProgress(0);
 
             var installer = prerequisite.DownloadInstaller(p =>
             {
                 UpdateCurrentProgress(p);
-                UpdateTotalProgress((installers.Count + p) / (2.0 * _missingPrerequisites.Length));
+                UpdateTotalProgress((i + p) / (2.0 * _missingPrerequisites.Length));
             });
 
             installers.Add(installer);
-
-            currentStep++;
         }
 
         // Install
         var isRebootRequired = false;
-        var installersFinishedCount = 0;
-        foreach (var installer in installers)
+        try
         {
-            UpdateStatus(
-                @$"[{currentStep}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}..."
-            );
-            UpdateCurrentProgress(-1);
+            foreach (var (i, installer) in installers.Index())
+            {
+                UpdateStatus(
+                    @$"[{_missingPrerequisites.Length + i + 1}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}..."
+                );
+                UpdateCurrentProgress(-1);
 
-            var installationResult = installer.Run();
+                var installationResult = installer.Run();
 
-            File.TryDelete(installer.FilePath);
+                if (installationResult == PrerequisiteInstallerResult.RebootRequired)
+                    isRebootRequired = true;
 
-            if (installationResult == PrerequisiteInstallerResult.RebootRequired)
-                isRebootRequired = true;
-
-            UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
-            currentStep++;
+                UpdateTotalProgress(0.5 + (i + 1) / (2.0 * installers.Count));
+            }
+        }
+        finally
+        {
+            foreach (var installer in installers)
+                installer.Dispose();
         }
 
         // Finalize

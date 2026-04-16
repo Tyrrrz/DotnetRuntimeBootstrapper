@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils.Extensions;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 
@@ -88,14 +88,13 @@ public class Bootstrapper : BootstrapperBase
         using (Console.WithForegroundColor(ConsoleColor.White))
             Console.Out.WriteLine($"{targetAssembly.Name}: installing prerequisites");
 
-        var currentStep = 1;
         var totalSteps = missingPrerequisites.Length * 2;
 
         // Download
         var installers = new List<IPrerequisiteInstaller>();
-        foreach (var prerequisite in missingPrerequisites)
+        foreach (var (i, prerequisite) in missingPrerequisites.Index())
         {
-            Console.Out.Write($"[{currentStep}/{totalSteps}] ");
+            Console.Out.Write($"[{i + 1}/{totalSteps}] ");
             Console.Out.Write($"Downloading {prerequisite.DisplayName}... ");
 
             // Only write progress if running in interactive mode
@@ -111,28 +110,30 @@ public class Bootstrapper : BootstrapperBase
 
             Console.Out.Write("Done");
             Console.Out.WriteLine();
-
-            currentStep++;
         }
 
         // Install
         var isRebootRequired = false;
-        foreach (var installer in installers)
+        try
         {
-            Console.Out.Write($"[{currentStep}/{totalSteps}] ");
-            Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
+            foreach (var (i, installer) in installers.Index())
+            {
+                Console.Out.Write($"[{missingPrerequisites.Length + i + 1}/{totalSteps}] ");
+                Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
 
-            var installationResult = installer.Run();
+                var installationResult = installer.Run();
 
-            Console.Out.Write("Done");
-            Console.Out.WriteLine();
+                Console.Out.Write("Done");
+                Console.Out.WriteLine();
 
-            File.TryDelete(installer.FilePath);
-
-            if (installationResult == PrerequisiteInstallerResult.RebootRequired)
-                isRebootRequired = true;
-
-            currentStep++;
+                if (installationResult == PrerequisiteInstallerResult.RebootRequired)
+                    isRebootRequired = true;
+            }
+        }
+        finally
+        {
+            foreach (var installer in installers)
+                installer.Dispose();
         }
 
         using (Console.WithForegroundColor(ConsoleColor.White))

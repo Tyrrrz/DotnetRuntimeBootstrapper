@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
+using PowerKit.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 

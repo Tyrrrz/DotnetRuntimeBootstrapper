@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
+using PowerKit.Extensions;
 using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;

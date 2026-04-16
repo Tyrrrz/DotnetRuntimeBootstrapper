@@ -1,10 +1,10 @@
-﻿namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
+using System;
 
-public interface IPrerequisiteInstaller
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
+
+public interface IPrerequisiteInstaller : IDisposable
 {
     IPrerequisite Prerequisite { get; }
-
-    string FilePath { get; }
 
     PrerequisiteInstallerResult Run();
 }

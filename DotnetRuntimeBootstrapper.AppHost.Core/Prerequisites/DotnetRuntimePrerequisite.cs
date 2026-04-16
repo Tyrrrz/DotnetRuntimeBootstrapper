@@ -4,7 +4,8 @@ using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
-using DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;
+using PowerKit;
+using PowerKit.Extensions;
 using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
@@ -87,9 +88,8 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
     public IPrerequisiteInstaller DownloadInstaller(Action<double>? handleProgress)
     {
         var downloadUrl = GetInstallerDownloadUrl();
-        var filePath = Path.GenerateTempFilePath(
-            Url.TryExtractFileName(downloadUrl) ?? "installer.exe"
-        );
+        var fileName = Url.TryExtractFileName(downloadUrl) ?? "installer.exe";
+        var filePath = Path.ChangeExtension(TempFile.GeneratePath(), Path.GetExtension(fileName));
 
         Http.DownloadFile(downloadUrl, filePath, handleProgress);
 
