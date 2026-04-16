@@ -69,7 +69,7 @@ internal class DotnetRuntimePrerequisite(DotnetRuntime runtime) : IPrerequisite
                 // Filter by file type
                 .Where(f =>
                     string.Equals(
-                        Path.GetExtension(f.TryGetChild("name")?.TryGetString()),
+                        f.TryGetChild("name")?.TryGetString()?.Pipe(Path.GetExtension),
                         ".exe",
                         StringComparison.OrdinalIgnoreCase
                     )
