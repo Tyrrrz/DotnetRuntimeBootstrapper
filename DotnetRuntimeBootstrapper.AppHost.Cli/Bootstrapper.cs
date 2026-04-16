@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils;
 using DotnetRuntimeBootstrapper.AppHost.Cli.Utils.Extensions;
 using DotnetRuntimeBootstrapper.AppHost.Core;
@@ -87,14 +88,13 @@ public class Bootstrapper : BootstrapperBase
         using (Console.WithForegroundColor(ConsoleColor.White))
             Console.Out.WriteLine($"{targetAssembly.Name}: installing prerequisites");
 
-        var currentStep = 1;
         var totalSteps = missingPrerequisites.Length * 2;
 
         // Download
         var installers = new List<IPrerequisiteInstaller>();
-        foreach (var prerequisite in missingPrerequisites)
+        foreach (var (i, prerequisite) in missingPrerequisites.Index())
         {
-            Console.Out.Write($"[{currentStep}/{totalSteps}] ");
+            Console.Out.Write($"[{i + 1}/{totalSteps}] ");
             Console.Out.Write($"Downloading {prerequisite.DisplayName}... ");
 
             // Only write progress if running in interactive mode
@@ -110,17 +110,15 @@ public class Bootstrapper : BootstrapperBase
 
             Console.Out.Write("Done");
             Console.Out.WriteLine();
-
-            currentStep++;
         }
 
         // Install
         var isRebootRequired = false;
         try
         {
-            foreach (var installer in installers)
+            foreach (var (i, installer) in installers.Index())
             {
-                Console.Out.Write($"[{currentStep}/{totalSteps}] ");
+                Console.Out.Write($"[{missingPrerequisites.Length + i + 1}/{totalSteps}] ");
                 Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
 
                 var installationResult = installer.Run();
@@ -130,16 +128,12 @@ public class Bootstrapper : BootstrapperBase
 
                 if (installationResult == PrerequisiteInstallerResult.RebootRequired)
                     isRebootRequired = true;
-
-                currentStep++;
             }
         }
         finally
         {
             foreach (var installer in installers)
-            {
                 installer.Dispose();
-            }
         }
 
         using (Console.WithForegroundColor(ConsoleColor.White))

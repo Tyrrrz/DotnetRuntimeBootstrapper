@@ -5,6 +5,7 @@ using DotnetRuntimeBootstrapper.AppHost.Core.Dotnet;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 using PowerKit;
+using PowerKit.Extensions;
 using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
