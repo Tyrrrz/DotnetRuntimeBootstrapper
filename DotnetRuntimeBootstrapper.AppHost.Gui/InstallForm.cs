@@ -96,9 +96,9 @@ public partial class InstallForm : Form
         // Install
         var isRebootRequired = false;
         var installersFinishedCount = 0;
-        foreach (var installer in installers)
+        try
         {
-            using (installer)
+            foreach (var installer in installers)
             {
                 UpdateStatus(
                     @$"[{currentStep}/{totalSteps}] Installing {installer.Prerequisite.DisplayName}..."
@@ -113,6 +113,11 @@ public partial class InstallForm : Form
                 UpdateTotalProgress(0.5 + ++installersFinishedCount / (2.0 * installers.Count));
                 currentStep++;
             }
+        }
+        finally
+        {
+            foreach (var installer in installers)
+                installer.Dispose();
         }
 
         // Finalize
