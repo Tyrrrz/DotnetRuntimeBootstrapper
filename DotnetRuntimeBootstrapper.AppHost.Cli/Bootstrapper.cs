@@ -118,9 +118,8 @@ public class Bootstrapper : BootstrapperBase
         var isRebootRequired = false;
         try
         {
-            for (var installerIndex = 0; installerIndex < installers.Count; installerIndex++)
+            foreach (var installer in installers)
             {
-                var installer = installers[installerIndex];
                 Console.Out.Write($"[{currentStep}/{totalSteps}] ");
                 Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
 
