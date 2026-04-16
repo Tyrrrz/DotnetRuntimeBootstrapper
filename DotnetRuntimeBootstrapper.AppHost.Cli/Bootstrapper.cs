@@ -121,35 +121,25 @@ public class Bootstrapper : BootstrapperBase
             for (var installerIndex = 0; installerIndex < installers.Count; installerIndex++)
             {
                 var installer = installers[installerIndex];
-                try
-                {
-                    using (installer)
-                    {
-                        Console.Out.Write($"[{currentStep}/{totalSteps}] ");
-                        Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
+                Console.Out.Write($"[{currentStep}/{totalSteps}] ");
+                Console.Out.Write($"Installing {installer.Prerequisite.DisplayName}... ");
 
-                        var installationResult = installer.Run();
+                var installationResult = installer.Run();
 
-                        Console.Out.Write("Done");
-                        Console.Out.WriteLine();
+                Console.Out.Write("Done");
+                Console.Out.WriteLine();
 
-                        if (installationResult == PrerequisiteInstallerResult.RebootRequired)
-                            isRebootRequired = true;
+                if (installationResult == PrerequisiteInstallerResult.RebootRequired)
+                    isRebootRequired = true;
 
-                        currentStep++;
-                    }
-                }
-                finally
-                {
-                    installers[installerIndex] = null;
-                }
+                currentStep++;
             }
         }
         finally
         {
             foreach (var installer in installers)
             {
-                installer?.Dispose();
+                installer.Dispose();
             }
         }
 
