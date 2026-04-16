@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;

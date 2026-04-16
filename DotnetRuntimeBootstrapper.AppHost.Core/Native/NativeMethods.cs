@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Native;

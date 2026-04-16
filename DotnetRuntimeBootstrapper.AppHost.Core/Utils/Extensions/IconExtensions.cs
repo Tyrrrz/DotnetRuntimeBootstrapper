@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Utils.Extensions;

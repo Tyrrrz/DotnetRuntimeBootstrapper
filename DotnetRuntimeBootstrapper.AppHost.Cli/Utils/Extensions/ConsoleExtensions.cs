@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DotnetRuntimeBootstrapper.AppHost.Core.Native;
 using PowerKit;
 

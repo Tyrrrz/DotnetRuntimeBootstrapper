@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 

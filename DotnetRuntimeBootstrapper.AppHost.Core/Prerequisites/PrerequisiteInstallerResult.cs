@@ -1,4 +1,4 @@
-﻿namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
 
 public enum PrerequisiteInstallerResult
 {

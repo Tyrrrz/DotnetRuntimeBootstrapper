@@ -1,4 +1,4 @@
-﻿namespace DotnetRuntimeBootstrapper.Demo.Gui
+namespace DotnetRuntimeBootstrapper.Demo.Gui
 {
     partial class MainForm
     {

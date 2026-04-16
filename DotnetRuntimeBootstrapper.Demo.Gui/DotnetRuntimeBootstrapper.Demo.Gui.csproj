@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <!-- Props/targets are automatically imported by NuGet, but here we need to do it manually. -->
   <!-- This needs to be done before any other props or targets, to match NuGet's behavior. -->
   <Import Project="../DotnetRuntimeBootstrapper/DotnetRuntimeBootstrapper.Local.props" />

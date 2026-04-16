@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.IO;
 using DotnetRuntimeBootstrapper.AppHost.Core.Utils;
 using PowerKit.Extensions;

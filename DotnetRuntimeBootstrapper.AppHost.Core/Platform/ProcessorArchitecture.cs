@@ -1,4 +1,4 @@
-﻿namespace DotnetRuntimeBootstrapper.AppHost.Core.Platform;
+namespace DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 
 internal enum ProcessorArchitecture
 {
