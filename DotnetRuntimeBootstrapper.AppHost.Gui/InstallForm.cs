@@ -77,9 +77,7 @@ public partial class InstallForm : Form
         var installers = new List<IPrerequisiteInstaller>();
         foreach (var (i, prerequisite) in _missingPrerequisites.Index())
         {
-            UpdateStatus(
-                @$"[{i + 1}/{totalSteps}] Downloading {prerequisite.DisplayName}..."
-            );
+            UpdateStatus(@$"[{i + 1}/{totalSteps}] Downloading {prerequisite.DisplayName}...");
             UpdateCurrentProgress(0);
 
             var installer = prerequisite.DownloadInstaller(p =>
