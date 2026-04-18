@@ -2,7 +2,6 @@ using System;
 using System.Windows.Forms;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
-using DotnetRuntimeBootstrapper.AppHost.Gui.Utils;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Gui;
 
@@ -16,8 +15,6 @@ public class Bootstrapper : BootstrapperBase
         IPrerequisite[] missingPrerequisites
     )
     {
-        ApplicationEx.EnsureInitialized();
-
         using var promptForm = new PromptForm(targetAssembly, missingPrerequisites);
         Application.Run(promptForm);
 
@@ -29,8 +26,6 @@ public class Bootstrapper : BootstrapperBase
         IPrerequisite[] missingPrerequisites
     )
     {
-        ApplicationEx.EnsureInitialized();
-
         using var installForm = new InstallForm(targetAssembly, missingPrerequisites);
         Application.Run(installForm);
 
@@ -38,5 +33,11 @@ public class Bootstrapper : BootstrapperBase
     }
 
     [STAThread]
-    public static int Main(string[] args) => new Bootstrapper().Run(args);
+    public static int Main(string[] args)
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        return new Bootstrapper().Run(args);
+    }
 }

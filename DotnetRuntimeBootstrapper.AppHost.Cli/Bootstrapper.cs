@@ -7,6 +7,7 @@ using DotnetRuntimeBootstrapper.AppHost.Cli.Utils.Extensions;
 using DotnetRuntimeBootstrapper.AppHost.Core;
 using DotnetRuntimeBootstrapper.AppHost.Core.Platform;
 using DotnetRuntimeBootstrapper.AppHost.Core.Prerequisites;
+using PowerKit.Extensions;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Cli;
 

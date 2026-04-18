@@ -3,10 +3,10 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using DotnetRuntimeBootstrapper.Utils.Extensions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
+using PowerKit.Extensions;
 using Ressy;
 using Ressy.HighLevel.Versions;
 
@@ -56,12 +56,10 @@ public class BootstrapperTask : Task
 
         // Executable file
         assembly.ExtractManifestResource(resourceName, AppHostFilePath);
-
         Log.LogMessage("Extracted apphost to '{0}'.", AppHostFilePath);
 
         // Config file
         assembly.ExtractManifestResource(resourceName + ".config", AppHostFilePath + ".config");
-
         Log.LogMessage("Extracted apphost config to '{0}'.", AppHostFilePath + ".config");
     }
 
@@ -121,7 +119,7 @@ public class BootstrapperTask : Task
                 .SetAttribute(VersionAttributeName.OriginalFilename, AppHostFileName)
                 .SetAttribute(
                     "AppHost",
-                    $".NET Runtime Bootstrapper v{Version.ToString(3)} ({Variant})"
+                    $".NET Runtime Bootstrapper v{Version.ToSemanticString()} ({Variant})"
                 )
         );
 

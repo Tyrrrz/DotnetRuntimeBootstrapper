@@ -16,7 +16,9 @@ internal partial class NativeLibrary(nint handle) : NativeResource(handle)
             _functionsByName.TryGetValue(functionName, out var cached)
             && cached is TDelegate cachedCasted
         )
+        {
             return cachedCasted;
+        }
 
         var address = NativeMethods.GetProcAddress(Handle, functionName);
         if (address == 0)
