@@ -16,10 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Binternal" PrivateAssets="all" />
     <PackageReference Include="CSharpier.MsBuild" PrivateAssets="all" />
     <PackageReference Include="PolyShim" PrivateAssets="all" />
-    <PackageReference Include="PowerKit" PrivateAssets="all" />
-    <PackageReference Include="QuickJson" PrivateAssets="all" />
+    <PackageReference Include="PowerKit" Internalize="true" PrivateAssets="all" />
+    <PackageReference Include="QuickJson" Internalize="true" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

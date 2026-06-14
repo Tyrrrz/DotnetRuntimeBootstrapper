@@ -20,24 +20,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Binternal" PrivateAssets="all" />
     <PackageReference Include="CSharpier.MsBuild" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Build.Framework" PrivateAssets="all" />
     <PackageReference
       Include="Microsoft.Build.Utilities.Core"
-      PrivateAssets="all"
+      IncludeAssets="compile; build; native; contentfiles; analyzers; buildtransitive"
       ExcludeAssets="runtime"
-    >
-      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Mono.Cecil" PrivateAssets="all" GeneratePathProperty="true" />
+      PrivateAssets="all"
+    />
+    <PackageReference Include="Mono.Cecil" Internalize="true" PrivateAssets="all" />
     <PackageReference Include="PolyShim" PrivateAssets="all" />
-    <PackageReference Include="PowerKit" PrivateAssets="all" />
-    <PackageReference Include="Ressy" PrivateAssets="all" GeneratePathProperty="true" />
-  </ItemGroup>
-
-  <!-- Required for PowerKit -->
-  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <Reference Include="System.IO.Compression" />
+    <PackageReference Include="PowerKit" Internalize="true" PrivateAssets="all" />
+    <PackageReference Include="Ressy" Internalize="true" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Non-linking dependency on the apphost projects to ensure correct build order -->
@@ -109,26 +104,6 @@
         Include="$(ProjectDepsFilePath)"
         TargetPath="$(ProjectDepsFileName)"
         FinalOutputPath="$(ProjectDepsFilePath)"
-      />
-    </ItemGroup>
-  </Target>
-
-  <!-- Expose package references to dependent projects (only needed locally, not when distributed through NuGet) -->
-  <PropertyGroup>
-    <GetTargetPathDependsOn>
-      $(GetTargetPathDependsOn);GetDependencyTargetPaths
-    </GetTargetPathDependsOn>
-  </PropertyGroup>
-
-  <Target Name="GetDependencyTargetPaths">
-    <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGMono_Cecil)/lib/$(TargetFramework)/*.dll"
-        IncludeRuntimeDependency="false"
-      />
-      <TargetPathWithTargetPlatformMoniker
-        Include="$(PKGRessy)/lib/$(TargetFramework)/*.dll"
-        IncludeRuntimeDependency="false"
       />
     </ItemGroup>
   </Target>
