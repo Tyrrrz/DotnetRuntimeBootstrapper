@@ -87,14 +87,21 @@ After that, no further configuration is required.
 In order to create a sharable distribution of your application, run `dotnet publish` as you normally would.
 This should produce the following files in the output directory:
 
-```txt
-MyApp.exe                 <-- bootstrapper's application host
-MyApp.exe.config          <-- assembly config required by the application host
-MyApp.runtimeconfig.json  <-- runtime config required by the application host
-MyApp.dll                 <-- main assembly of your application
-MyApp.pdb
-MyApp.deps.json
-... other application dependencies ...
+```diff
+  MyApp
+  ├── bin
+  │   └── Release
+  │       └── net11.0
+  │           └── publish
++ │               ├── MyApp.exe
++ │               ├── MyApp.exe.config
++ │               ├── MyApp.runtimeconfig.json
+  │               ├── MyApp.dll
+  │               ├── MyApp.pdb
+  │               ├── MyApp.deps.json
+  │               └── (...)
+  ├── MyApp.csproj
+  └── (...)
 ```
 
 Make sure to include all highlighted files in your application distribution.
@@ -155,7 +162,7 @@ If you want to also have it created on regular builds as well, set the `<Generat
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net11.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Create bootstrapper on every build, in addition to every publish -->
@@ -181,7 +188,7 @@ You can override the default behavior and specify the preferred variant explicit
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net11.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Specify bootstrapper variant explicitly (GUI or CLI) -->
@@ -203,7 +210,7 @@ You can override the default value (which is inferred from the `<TargetFramework
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net11.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Specify target runtime version explicitly -->
@@ -225,7 +232,7 @@ You can disable this prompt by setting the `<BootstrapperPromptRequired>` projec
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net11.0-windows</TargetFramework>
     <!-- ... -->
 
     <!-- Skip the confirmation prompt and install prerequisites straight away -->
