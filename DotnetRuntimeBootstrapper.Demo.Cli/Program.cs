@@ -7,14 +7,14 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        // Show routed command line arguments
+        Console.WriteLine("Hello world!");
+
+        // Show command line arguments
         if (args.Any())
         {
-            Console.WriteLine("Routed command line arguments:");
+            Console.WriteLine("Command line arguments:");
             Console.WriteLine(string.Join(" ", args));
             Console.WriteLine();
         }
-
-        Console.WriteLine("Hello world!");
     }
 }
