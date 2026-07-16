@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -19,8 +18,7 @@ public class BootstrapperTask : Task
     public string? RuntimeIdentifier { get; init; }
 
     public bool IsWindowsTarget =>
-        string.IsNullOrWhiteSpace(RuntimeIdentifier)
-            && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        string.IsNullOrWhiteSpace(RuntimeIdentifier) && OperatingSystem.IsWindows()
         || RuntimeIdentifier?.StartsWith("win", StringComparison.OrdinalIgnoreCase) == true;
 
     [Required]
