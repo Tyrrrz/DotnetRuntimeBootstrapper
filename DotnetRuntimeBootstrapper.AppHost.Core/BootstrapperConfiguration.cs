@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using PowerKit.Extensions;
+using QuickJson;
 
 namespace DotnetRuntimeBootstrapper.AppHost.Core;
 
@@ -19,28 +19,29 @@ public partial class BootstrapperConfiguration
         var data = Assembly
             .GetExecutingAssembly()
             .GetManifestResourceString(nameof(BootstrapperConfiguration));
-        var parsed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var line in data.Split('\n'))
-        {
-            var components = line.Split('=');
-            if (components.Length != 2)
-                continue;
+        var json =
+            Json.TryParse(data)
+            ?? throw new InvalidOperationException(
+                "Failed to parse bootstrapper configuration. Ensure the embedded resource contains valid JSON."
+            );
 
-            var key = components[0].Trim();
-            var value = components[1].Trim();
+        var targetFileName =
+            json.TryGetChild(nameof(TargetFileName))?.TryGetString()
+            ?? throw new InvalidOperationException(
+                $"Failed to read '{nameof(TargetFileName)}' from bootstrapper configuration."
+            );
 
-            parsed[key] = value;
-        }
+        var isPromptRequired =
+            json.TryGetChild(nameof(IsPromptRequired))?.TryGetBool()
+            ?? throw new InvalidOperationException(
+                $"Failed to read '{nameof(IsPromptRequired)}' from bootstrapper configuration."
+            );
 
         return new BootstrapperConfiguration
         {
-            TargetFileName = parsed[nameof(TargetFileName)],
-            IsPromptRequired = string.Equals(
-                parsed[nameof(IsPromptRequired)],
-                "true",
-                StringComparison.OrdinalIgnoreCase
-            ),
+            TargetFileName = targetFileName,
+            IsPromptRequired = isPromptRequired,
         };
     }
 }
