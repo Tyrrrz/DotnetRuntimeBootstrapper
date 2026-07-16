@@ -67,10 +67,10 @@ public class BootstrapperTask : Task
     {
         Log.LogMessage("Injecting configuration...");
 
-        var configuration = $$$"""
+        var configuration = $$"""
             {
-              "TargetFileName": "{{{TargetFileName}}}",
-              "IsPromptRequired": {{{IsPromptRequired.ToString().ToLowerInvariant()}}}
+              "TargetFileName": "{{TargetFileName}}",
+              "IsPromptRequired": {{IsPromptRequired.ToString().ToLowerInvariant()}}
             }
             """;
 
