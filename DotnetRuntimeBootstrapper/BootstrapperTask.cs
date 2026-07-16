@@ -65,9 +65,11 @@ public class BootstrapperTask : Task
     {
         Log.LogMessage("Injecting configuration...");
 
-        var configuration = $"""
-            TargetFileName={TargetFileName}
-            IsPromptRequired={IsPromptRequired}
+        var configuration = $$"""
+            {
+              "TargetFileName": "{{TargetFileName}}",
+              "IsPromptRequired": {{IsPromptRequired.ToString().ToLowerInvariant()}}
+            }
             """;
 
         using var assembly = AssemblyDefinition.ReadAssembly(
