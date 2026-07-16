@@ -41,7 +41,7 @@ Currently, .NET offers two main ways of [distributing applications](https://docs
 Both of them come with a set of obvious and somewhat less obvious drawbacks.
 
 - **Framework-dependent** deployment:
-  - Requires the user to have the correct .NET runtime installed on their machine. Not only will many users inevitably miss or ignore this requirement, the task of installing the _correct_ .NET runtime can be very challenging for non-technical individuals. Depending on their machine and the specifics of your application, they will need to carefully examine the [download page](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) to find the installer for the right version, framework (i.e. base, desktop, or aspnet), CPU architecture, and operating system.
+  - Requires the user to have the correct .NET runtime installed on their machine. Not only will many users inevitably miss or ignore this requirement, the task of installing the _correct_ .NET runtime can be very challenging for non-technical individuals. Depending on their machine and the specifics of your application, they will need to carefully examine the [download page](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) to find the installer for the right version, framework (i.e., base, desktop, or aspnet), CPU architecture, and operating system.
   - Comes with an application host that is _not platform-agnostic_. Even though the application itself (the `dll` file) is portable in the sense that it can run on any platform where the target runtime is supported, the application host (the `exe` file) is a native executable built for a specific platform (by default, the same platform as the dev machine). This means that if the application was built on Windows x64, a user running on Windows x86 will not be able to launch the application through the `exe` file, even if they have the correct runtime installed (`dotnet myapp.dll` will still work, however).
 - **Self-contained** deployment:
   - While eliminating the need for installing the correct runtime, this method comes at a significant file size overhead. A very basic WinForms application, for example, starts at around 100 MB in size. This can be very cumbersome when doing auto-updates, but also seems quite wasteful if you consider that the user may end up with multiple .NET applications each bringing their own runtime.
@@ -154,7 +154,7 @@ Additionally, version info resource is further modified to contain the following
 
 #### Generate bootstrapper on build
 
-By default, bootstrapper is only created when publishing the project (i.e. when running `dotnet publish`).
+By default, bootstrapper is only created when publishing the project (i.e., when running `dotnet publish`).
 If you want to also have it created on regular builds as well, set the `<GenerateBootstrapperOnBuild>` project property to `true`:
 
 ```xml
@@ -180,7 +180,7 @@ If you want to also have it created on regular builds as well, set the `<Generat
 
 #### Override bootstrapper variant
 
-Depending on your application type (i.e. the value of the `<OutputType>` project property), the build process will generate either a CLI-based or a GUI-based bootstrapper.
+Depending on your application type (i.e., the value of the `<OutputType>` project property), the build process will generate either a CLI-based or a GUI-based bootstrapper.
 You can override the default behavior and specify the preferred variant explicitly using the `<BootstrapperVariant>` project property:
 
 ```xml
