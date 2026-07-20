@@ -12,6 +12,6 @@
     <PackageVersion Include="PolyShim" Version="2.11.0" />
     <PackageVersion Include="PowerKit" Version="2.0.0" />
     <PackageVersion Include="QuickJson" Version="2.0.0" />
-    <PackageVersion Include="Ressy" Version="1.0.3" />
+    <PackageVersion Include="Ressy" Version="2.0.0" />
   </ItemGroup>
 </Project>

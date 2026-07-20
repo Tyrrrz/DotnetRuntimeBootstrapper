@@ -7,7 +7,7 @@ using Microsoft.Build.Utilities;
 using Mono.Cecil;
 using PowerKit.Extensions;
 using Ressy;
-using Ressy.HighLevel.Versions;
+using Ressy.Versions;
 
 namespace DotnetRuntimeBootstrapper;
 
@@ -98,19 +98,14 @@ public class BootstrapperTask : Task
     {
         Log.LogMessage("Injecting resources...");
 
-        var sourcePortableExecutable = new PortableExecutable(TargetFilePath);
-        var targetPortableExecutable = new PortableExecutable(AppHostFilePath);
+        using var sourcePortableExecutable = PortableExecutable.OpenRead(TargetFilePath);
+        using var targetPortableExecutable = PortableExecutable.OpenWrite(AppHostFilePath);
 
-        targetPortableExecutable.ClearResources();
+        targetPortableExecutable.RemoveResources();
 
         // Copy resources
-        foreach (var identifier in sourcePortableExecutable.GetResourceIdentifiers())
-        {
-            targetPortableExecutable.SetResource(
-                identifier,
-                sourcePortableExecutable.GetResource(identifier).Data
-            );
-        }
+        foreach (var resource in sourcePortableExecutable.GetResources())
+            targetPortableExecutable.SetResource(resource);
 
         // Modify the version info resource
         targetPortableExecutable.SetVersionInfo(v =>
