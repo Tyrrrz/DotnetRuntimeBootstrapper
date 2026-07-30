@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using System.Net;
 
@@ -84,20 +85,26 @@ internal static class Http
         using var source = GetContentStream(url, out var contentLength);
         using var destination = File.Create(outputFilePath);
 
-        var buffer = new byte[81920];
-
-        var totalBytesCopied = 0L;
-        while (true)
+        var buffer = ArrayPool<byte>.Shared.Rent(81920);
+        try
         {
-            var bytesCopied = source.Read(buffer, 0, buffer.Length);
-            if (bytesCopied <= 0)
-                break;
+            var totalBytesCopied = 0L;
+            while (true)
+            {
+                var bytesCopied = source.Read(buffer, 0, 81920);
+                if (bytesCopied <= 0)
+                    break;
 
-            destination.Write(buffer, 0, bytesCopied);
+                destination.Write(buffer, 0, bytesCopied);
 
-            // Report progress
-            totalBytesCopied += bytesCopied;
-            handleProgress?.Invoke(1.0 * totalBytesCopied / contentLength);
+                // Report progress
+                totalBytesCopied += bytesCopied;
+                handleProgress?.Invoke(1.0 * totalBytesCopied / contentLength);
+            }
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
         }
     }
 }
