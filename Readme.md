@@ -163,13 +163,16 @@ If you want to also have it created on regular builds as well, set the `<Generat
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net11.0-windows</TargetFramework>
-    <!-- ... -->
+  </PropertyGroup>
 
+  <PropertyGroup>
     <!-- Create bootstrapper on every build, in addition to every publish -->
     <GenerateBootstrapperOnBuild>true</GenerateBootstrapperOnBuild>
   </PropertyGroup>
 
-  <!-- ... -->
+  <ItemGroup>
+    <PackageReference Include="DotnetRuntimeBootstrapper" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>
 ```
@@ -189,13 +192,16 @@ You can override the default behavior and specify the preferred variant explicit
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net11.0-windows</TargetFramework>
-    <!-- ... -->
+  </PropertyGroup>
 
+  <PropertyGroup>
     <!-- Specify bootstrapper variant explicitly (GUI or CLI) -->
     <BootstrapperVariant>GUI</BootstrapperVariant>
   </PropertyGroup>
 
-  <!-- ... -->
+  <ItemGroup>
+    <PackageReference Include="DotnetRuntimeBootstrapper" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>
 ```
@@ -211,13 +217,16 @@ You can override the default value (which is inferred from the `<TargetFramework
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net11.0-windows</TargetFramework>
-    <!-- ... -->
+  </PropertyGroup>
 
+  <PropertyGroup>
     <!-- Specify target runtime version explicitly -->
     <RuntimeFrameworkVersion>8.0.1</RuntimeFrameworkVersion>
   </PropertyGroup>
 
-  <!-- ... -->
+  <ItemGroup>
+    <PackageReference Include="DotnetRuntimeBootstrapper" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>
 ```
@@ -233,13 +242,16 @@ You can disable this prompt by setting the `<BootstrapperPromptRequired>` projec
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net11.0-windows</TargetFramework>
-    <!-- ... -->
+  </PropertyGroup>
 
+  <PropertyGroup>
     <!-- Skip the confirmation prompt and install prerequisites straight away -->
     <BootstrapperPromptRequired>false</BootstrapperPromptRequired>
   </PropertyGroup>
 
-  <!-- ... -->
+  <ItemGroup>
+    <PackageReference Include="DotnetRuntimeBootstrapper" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>
 ```
